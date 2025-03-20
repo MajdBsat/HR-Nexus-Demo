@@ -1,0 +1,100 @@
+*{
+  padding: 0px;
+  margin: 0px;
+  box-sizing: border-box;
+}
+:root{
+  --primary-color:#0077B6;
+  --secondary-color:#FFFFFF;
+  --third-color: #333A40;
+}
+
+.flex{
+  display: flex;
+}
+
+.center{
+  text-align: center;
+  justify-content: center;
+}
+
+.text-start{
+  text-align: start;
+}
+
+.content-start{
+  justify-content: start;
+}
+
+.space-evenly{
+  justify-content: space-evenly;
+}
+
+.space-around{
+  justify-content: space-around;
+}
+
+.width100{
+  width: 100%;
+}
+
+.width75{
+  width: 75%;
+}
+
+.width50{
+  width: 50%;
+}
+
+.width25{
+  width: 25%;
+}
+
+.height100{
+  height: 100%;
+}
+
+.height75{
+  height: 75%;
+}
+
+.height50{
+  height: 50%;
+}
+
+.height25{
+  height: 25%;
+}
+
+/* * */
+.width100vw{
+  width: 100vw;
+}
+
+.width75vw{
+  width: 75vw;
+}
+
+.width50vw{
+  width: 50vw;
+}
+
+.width25vw{
+  width: 25vw;
+}
+
+.height100vh{
+  height: 100vh;
+}
+
+.height75vh{
+  height: 75vh;
+}
+
+.height50vh{
+  height: 50vh;
+}
+
+.height25vh{
+  height: 25vh;
+}
