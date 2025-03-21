@@ -29,20 +29,20 @@
 }
 
 .center{
-  text-align: center;
+  align-items: center;
   justify-content: center;
 }
 
-.text-start{
-  text-align: start;
+.item-start{
+  align-items: start;
 }
 
 .content-start{
   justify-content: start;
 }
 
-.text-end{
-  text-align: end;
+.item-end{
+  align-items: end;
 }
 
 .content-end{

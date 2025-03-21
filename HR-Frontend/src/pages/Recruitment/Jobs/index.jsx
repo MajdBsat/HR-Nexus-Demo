@@ -13,14 +13,14 @@ const Jobs = () => {
                     ];
     return(
         <>
-            <div className="r1 flex center content-end width100 height100">
-                <div className='recruitment flex column center width100'>
+            <div className="r1 flex center content-end">
+                <div className='main flex column center'>
                     <Recruitment_Header/>
                 </div>
             </div>
             
-            <div className="r1 flex center content-end width100 height100">
-                <div className='jobs flex row center wrap width100'>
+            <div className="r1 flex center content-end">
+                <div className='main flex row center wrap'>
                     {
                         jobs.map((job,index) => {
                             return <Jobs_Card key={index} props={job}/>

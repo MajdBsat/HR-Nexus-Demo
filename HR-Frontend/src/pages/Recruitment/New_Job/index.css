@@ -1,0 +1,39 @@
+form{
+    gap: 20px;
+    width: 40%;
+    height: 70%;
+    border-radius: 25px;
+    background-color: var(--light-bg);
+}
+form .cancel-btn{
+    height: 100%;
+    border: solid 2px;
+    border-color: var(--primary-color);
+    color: var(--primary-color);
+    background-color: transparent;
+
+}
+
+form .add-btn{
+    height: 100%;
+    background-color: var(--primary-color);
+    color: var(--secondary-color);
+}
+
+
+.buttons{
+    height: 44px;
+    gap: 60px;
+}
+
+.buttons button{
+    font-size: 16px;
+    font-weight: bold;
+    width: 25%;
+    border-radius: 10px;
+}
+
+.form_title{
+    color: var(--primary-color);
+    font-size: 34px;
+}

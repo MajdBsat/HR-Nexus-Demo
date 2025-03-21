@@ -9,7 +9,7 @@ const Jobs_Card = ({props}) => {
             <p className="job_title">{props["title"]}</p>
             <p className="job_description">{props["description"]}</p>
             <p className="job_requirements">{props["requirements"]}</p>
-            <div className="button flex content-end">
+            <div className="button flex content-end width100">
                 <button className="" onClick={deleteJob}>Delete</button>
             </div>
         </div>

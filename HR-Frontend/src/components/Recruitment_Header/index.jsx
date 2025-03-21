@@ -13,11 +13,10 @@ const Recruitment_Header = () =>{
         navigate("/hr/recruitment/onboarding/")
     } 
     const addNewJob = () =>{
-        navigate("newJob")
+        navigate("/hr/recruitment/jobs/newjob/")
     } 
 
     const getSelected = () =>{
-        // .reverse()[0].toLowerCase()
         const tab_arr = window.location.href.split('/').filter(item => item !== "");
         const tab = tab_arr.reverse()[0].toLowerCase();
         const buttons = document.querySelectorAll('.recruitment-nav button');
@@ -37,14 +36,14 @@ const Recruitment_Header = () =>{
     useEffect(getSelected,[]);
 
     return(
-        <div className='recruitment-head flex row center'>
-            <div className='recruitment-nav flex row center content-start'>
+        <div className='recruitment-head flex row center width100'>
+            <div className='recruitment-nav flex row center content-start height100'>
                 <button className='' onClick={goToJobs}>Jobs</button>
                 <button className='' onClick={goToCandidates}>Candidates</button>
                 <button className='' onClick={goToOnboarding}>Onboarding</button>
             </div>
 
-            <div className='recruitment-search-new flex row center content-end'>
+            <div className='recruitment-search-new flex row center content-end height100'>
                 <input id='search' type="search" placeholder='Search...'/>
                 <button onClick={addNewJob}>New</button>
             </div>
