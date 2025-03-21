@@ -1,6 +1,6 @@
-import './index.css'
-import Recruitment_Header from '../../components/Recruitment_Header'
-const Recruitment = () =>{
+import Recruitment_Header from "../../../components/Recruitment_Header"
+
+const Candidates = () => {
     return(
         <div className="r1 flex center content-end width100 height100">
             <div className='recruitment flex column center width100'>
@@ -8,5 +8,5 @@ const Recruitment = () =>{
             </div>
         </div>
     )
-} 
-export default Recruitment;
+}
+export default Candidates

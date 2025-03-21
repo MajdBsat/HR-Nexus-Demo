@@ -2,15 +2,25 @@
   padding: 0px;
   margin: 0px;
   box-sizing: border-box;
+  border: 0px;
 }
 :root{
   --primary-color:#0077B6;
   --secondary-color:#FFFFFF;
   --third-color: #333A40;
+  --light-bg: #EEEEEE;
 }
 
 .flex{
   display: flex;
+}
+
+.row{
+  flex-direction: row;
+}
+
+.column{
+  flex-direction: column;
 }
 
 .center{
@@ -26,12 +36,24 @@
   justify-content: start;
 }
 
+.text-end{
+  text-align: end;
+}
+
+.content-end{
+  justify-content: end;
+}
+
 .space-evenly{
   justify-content: space-evenly;
 }
 
 .space-around{
   justify-content: space-around;
+}
+
+.space-between{
+  justify-content: space-between;
 }
 
 .width100{
@@ -66,7 +88,6 @@
   height: 25%;
 }
 
-/* * */
 .width100vw{
   width: 100vw;
 }
