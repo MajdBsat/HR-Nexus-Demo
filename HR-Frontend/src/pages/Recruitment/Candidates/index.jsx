@@ -1,4 +1,4 @@
-import Recruitment_Header from "../../../components/Recruitment_Header"
+import Recruitment_Header_without_new from "../../../components/Recruitment_Header_without_new";
 import Table from "../../../components/Table"
 
 const Candidates = () => {
@@ -35,7 +35,7 @@ const Candidates = () => {
         <>
             <div className="r1 flex center content-end width100 height100">
                 <div className='main flex column center width100'>
-                    <Recruitment_Header/>
+                    <Recruitment_Header_without_new/>
                 </div>
             </div>
 

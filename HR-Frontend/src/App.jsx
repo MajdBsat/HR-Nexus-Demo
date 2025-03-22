@@ -6,6 +6,7 @@ import Candidates from './pages/Recruitment/Candidates'
 import Onboarding from './pages/Recruitment/Onboarding'
 import Jobs_Emp from './pages/Recruitment/Jobs_Emp'
 import Add_new_job from './pages/Recruitment/New_Job'
+import Add_New_Onboarding_Task from './pages/Recruitment/New_Onboarding_Task'
 
 function App() {
 
@@ -21,13 +22,18 @@ function App() {
                 <Route path='newJob' element={<Add_new_job/>}/>
               </Route>
               <Route path="candidates" element={<Candidates />} />
-              <Route path="onboarding" element={<Onboarding />} />
+              <Route path="onboarding" >
+                <Route path='' element={<Onboarding />} />
+                <Route path='newTask' element={<Add_New_Onboarding_Task/>}/>
+              </Route>
           </Route>
         </Route>
 
         <Route path="/emp">
           <Route path="recruitment">
-              <Route path="jobs" element={<Jobs_Emp />} />
+              <Route path="jobs" element={<Jobs_Emp />}>
+                
+              </Route>
           </Route>
         </Route>
         

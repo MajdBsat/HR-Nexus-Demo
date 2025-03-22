@@ -1,4 +1,5 @@
-import Recruitment_Header from "../../../components/Recruitment_Header"
+import { useNavigate } from "react-router-dom";
+import Recruitment_Header from "../../../components/Recruitment_Header";
 import Table from "../../../components/Table"
 
 const Onboarding = () => {
@@ -73,11 +74,16 @@ const Onboarding = () => {
             const onBoardingAction = (text) => {
                 console.log(text)
             }
+            const navigate = useNavigate();
+
+            const newOnboarding = () => {
+                navigate("/hr/recruitment/onboarding/newTask")
+            }
     return(
         <>
             <div className="r1 flex center content-end width100 height100">
                 <div className='main flex column center'>
-                    <Recruitment_Header/>
+                    <Recruitment_Header fun={newOnboarding}/>
                 </div>
             </div>
             <div className="r1 flex center content-end width100 height100">

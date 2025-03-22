@@ -1,7 +1,7 @@
 import { useEffect } from 'react';
 import './index.css'
 import {useNavigate} from 'react-router-dom'
-const Recruitment_Header = ({fun}) =>{
+const Recruitment_Header_without_new = () =>{
     const navigate = useNavigate();
     const goToJobs = ()=>{
         navigate("/hr/recruitment/jobs/")
@@ -11,9 +11,6 @@ const Recruitment_Header = ({fun}) =>{
     } 
     const goToOnboarding = () =>{
         navigate("/hr/recruitment/onboarding/")
-    } 
-    const newFunction = () =>{
-        fun()
     } 
 
     const getSelected = () =>{
@@ -45,9 +42,8 @@ const Recruitment_Header = ({fun}) =>{
 
             <div className='recruitment-search-new flex row center content-end height100'>
                 <input id='search' type="search" placeholder='Search...'/>
-                <button onClick={()=>newFunction()}>New</button>
             </div>
         </div>
     )
 } 
-export default Recruitment_Header;
+export default Recruitment_Header_without_new;
