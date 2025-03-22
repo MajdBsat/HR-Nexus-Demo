@@ -48,7 +48,7 @@ class AuthController extends Controller
             'user' => $user,
             'token' => $token,
             'token_type' => 'bearer',
-            'expires_in' => auth()->factory()->getTTL() * 60
+            'expires_in' => auth('api')->factory()->getTTL() * 60
         ], 201);
     }
 
@@ -86,7 +86,7 @@ class AuthController extends Controller
             'user' => $user,
             'token' => $token,
             'token_type' => 'bearer',
-            'expires_in' => auth()->factory()->getTTL() * 60
+            'expires_in' => auth('api')->factory()->getTTL() * 60
         ]);
     }
 
@@ -122,7 +122,7 @@ class AuthController extends Controller
         return response()->json([
             'token' => auth()->refresh(),
             'token_type' => 'bearer',
-            'expires_in' => auth()->factory()->getTTL() * 60
+            'expires_in' => auth('api')->factory()->getTTL() * 60
         ]);
     }
 }
