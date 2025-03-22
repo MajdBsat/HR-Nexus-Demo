@@ -2,6 +2,8 @@
 
 use App\Http\Controllers\AttendanceController;
 use App\Http\Controllers\BaseSalaryController;
+use App\Http\Controllers\BenefitPlanController;
+use App\Http\Controllers\CandidateController;
 use App\Http\Controllers\DepartmentController;
 use App\Http\Controllers\HrProjectTaskController;
 use App\Http\Controllers\UserController;
@@ -64,6 +66,33 @@ Route::prefix('base-salaries')->group(function () {
 
     // Additional specialized route
     Route::get('/user/{userId}', [BaseSalaryController::class, 'getByUserId']);
+});
+
+// Benefit Plan routes
+Route::prefix('benefit-plans')->group(function () {
+    Route::get('/', [BenefitPlanController::class, 'index']);
+    Route::post('/', [BenefitPlanController::class, 'store']);
+    Route::get('/{id}', [BenefitPlanController::class, 'show']);
+    Route::put('/{id}', [BenefitPlanController::class, 'update']);
+    Route::delete('/{id}', [BenefitPlanController::class, 'destroy']);
+
+    // Additional specialized routes
+    Route::get('/user/{userId}', [BenefitPlanController::class, 'getByUserId']);
+    Route::get('/active', [BenefitPlanController::class, 'getActivePlans']);
+});
+
+// Candidate routes
+Route::prefix('candidates')->group(function () {
+    Route::get('/', [CandidateController::class, 'index']);
+    Route::post('/', [CandidateController::class, 'store']);
+    Route::get('/{id}', [CandidateController::class, 'show']);
+    Route::put('/{id}', [CandidateController::class, 'update']);
+    Route::delete('/{id}', [CandidateController::class, 'destroy']);
+
+    // Additional specialized routes
+    Route::get('/position/{position}', [CandidateController::class, 'getByPosition']);
+    Route::get('/status/{status}', [CandidateController::class, 'getByStatus']);
+    Route::post('/search', [CandidateController::class, 'search']);
 });
 
 // HR Project Task routes
