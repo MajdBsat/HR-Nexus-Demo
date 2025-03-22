@@ -24,14 +24,14 @@ class AuthController extends Controller
             'name' => 'required|string|max:255',
             'email' => 'required|string|email|max:255|unique:users',
             'password' => 'required|string|min:6|confirmed',
-            'user_type' => 'nullable|integer|in:0,1,2',
+            'user_type' => 'sometimes|nullable|integer|in:0,1,2',
         ]);
 
         if ($validator->fails()) {
             return response()->json(['errors' => $validator->errors()], 422);
         }
 
-        $userType = $request->input('user_type', 0); // Default to guest (0)
+        $userType = $request->input('user_type', 0); // Always default to guest (0) if not provided
 
         $user = User::create([
             'name' => $request->input('name'),
@@ -44,7 +44,7 @@ class AuthController extends Controller
         $token = JWTAuth::fromUser($user);
 
         return response()->json([
-            'message' => 'User successfully registered',
+            'message' => 'User successfully registered as ' . ($userType === 0 ? 'Guest' : ($userType === 1 ? 'Employee' : 'HR')),
             'user' => $user,
             'token' => $token,
             'token_type' => 'bearer',
