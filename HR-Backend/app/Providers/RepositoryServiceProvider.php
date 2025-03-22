@@ -2,8 +2,12 @@
 
 namespace App\Providers;
 
+use App\Repositories\AttendanceRepository;
+use App\Repositories\BaseSalaryRepository;
 use App\Repositories\DepartmentRepository;
 use App\Repositories\HrProjectTaskRepository;
+use App\Repositories\Interfaces\AttendanceRepositoryInterface;
+use App\Repositories\Interfaces\BaseSalaryRepositoryInterface;
 use App\Repositories\Interfaces\DepartmentRepositoryInterface;
 use App\Repositories\Interfaces\HrProjectTaskRepositoryInterface;
 use App\Repositories\Interfaces\UserRepositoryInterface;
@@ -32,6 +36,16 @@ class RepositoryServiceProvider extends ServiceProvider
         $this->app->bind(
             DepartmentRepositoryInterface::class,
             DepartmentRepository::class
+        );
+
+        $this->app->bind(
+            AttendanceRepositoryInterface::class,
+            AttendanceRepository::class
+        );
+
+        $this->app->bind(
+            BaseSalaryRepositoryInterface::class,
+            BaseSalaryRepository::class
         );
     }
 

@@ -1,5 +1,7 @@
 <?php
 
+use App\Http\Controllers\AttendanceController;
+use App\Http\Controllers\BaseSalaryController;
 use App\Http\Controllers\DepartmentController;
 use App\Http\Controllers\HrProjectTaskController;
 use App\Http\Controllers\UserController;
@@ -37,6 +39,31 @@ Route::prefix('departments')->group(function () {
     Route::get('/{id}', [DepartmentController::class, 'show']);
     Route::put('/{id}', [DepartmentController::class, 'update']);
     Route::delete('/{id}', [DepartmentController::class, 'destroy']);
+});
+
+// Attendance routes
+Route::prefix('attendances')->group(function () {
+    Route::get('/', [AttendanceController::class, 'index']);
+    Route::post('/', [AttendanceController::class, 'store']);
+    Route::get('/{id}', [AttendanceController::class, 'show']);
+    Route::put('/{id}', [AttendanceController::class, 'update']);
+    Route::delete('/{id}', [AttendanceController::class, 'destroy']);
+
+    // Additional specialized routes
+    Route::get('/user/{userId}', [AttendanceController::class, 'getByUserId']);
+    Route::post('/date-range', [AttendanceController::class, 'getByDateRange']);
+});
+
+// Base Salary routes
+Route::prefix('base-salaries')->group(function () {
+    Route::get('/', [BaseSalaryController::class, 'index']);
+    Route::post('/', [BaseSalaryController::class, 'store']);
+    Route::get('/{id}', [BaseSalaryController::class, 'show']);
+    Route::put('/{id}', [BaseSalaryController::class, 'update']);
+    Route::delete('/{id}', [BaseSalaryController::class, 'destroy']);
+
+    // Additional specialized route
+    Route::get('/user/{userId}', [BaseSalaryController::class, 'getByUserId']);
 });
 
 // HR Project Task routes
