@@ -7,8 +7,13 @@ use App\Http\Controllers\CandidateController;
 use App\Http\Controllers\ComplianceController;
 use App\Http\Controllers\DepartmentController;
 use App\Http\Controllers\DocumentController;
+use App\Http\Controllers\HrProjectController;
 use App\Http\Controllers\HrProjectTaskController;
 use App\Http\Controllers\UserController;
+use App\Http\Controllers\InsurancePlanController;
+use App\Http\Controllers\JobController;
+use App\Http\Controllers\JobApplicationController;
+use App\Http\Controllers\MonthlyPayrollController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
@@ -139,6 +144,21 @@ Route::prefix('hr-project-tasks')->group(function () {
     Route::get('/task/{taskId}/projects', [HrProjectTaskController::class, 'getTaskProjects']);
 });
 
+// HR Project routes
+Route::prefix('hr-projects')->group(function () {
+    Route::get('/', [HrProjectController::class, 'index']);
+    Route::post('/', [HrProjectController::class, 'store']);
+    Route::get('/{id}', [HrProjectController::class, 'show']);
+    Route::put('/{id}', [HrProjectController::class, 'update']);
+    Route::delete('/{id}', [HrProjectController::class, 'destroy']);
+
+    // Additional specialized routes
+    Route::get('/user/{userId}', [HrProjectController::class, 'getByAssignedUserId']);
+    Route::get('/status/{status}', [HrProjectController::class, 'getByStatus']);
+    Route::get('/priority/{priority}', [HrProjectController::class, 'getByPriority']);
+    Route::get('/upcoming/{days?}', [HrProjectController::class, 'getUpcomingProjects']);
+});
+
 Route::group(['middleware' => 'auth:api'], function () {
     // Health Care Plan routes
     Route::apiResource('health-care-plans', \App\Http\Controllers\HealthCarePlanController::class);
@@ -146,4 +166,68 @@ Route::group(['middleware' => 'auth:api'], function () {
     Route::get('health-care-plans/active', [\App\Http\Controllers\HealthCarePlanController::class, 'getActivePlans']);
     Route::get('health-care-plans/provider/{provider}', [\App\Http\Controllers\HealthCarePlanController::class, 'getByProvider']);
     Route::get('health-care-plans/user/{userId}', [\App\Http\Controllers\HealthCarePlanController::class, 'getByUserId']);
+});
+
+// Insurance Plan Routes
+Route::prefix('insurance-plans')->group(function () {
+    Route::get('/', [InsurancePlanController::class, 'index']);
+    Route::post('/', [InsurancePlanController::class, 'store']);
+    Route::get('/{id}', [InsurancePlanController::class, 'show'])->where('id', '[0-9]+');
+    Route::put('/{id}', [InsurancePlanController::class, 'update'])->where('id', '[0-9]+');
+    Route::delete('/{id}', [InsurancePlanController::class, 'destroy'])->where('id', '[0-9]+');
+    Route::get('/type/{type}', [InsurancePlanController::class, 'getByType']);
+    Route::get('/status/{status}', [InsurancePlanController::class, 'getByStatus']);
+    Route::get('/provider/{provider}', [InsurancePlanController::class, 'getByProvider']);
+    Route::get('/active', [InsurancePlanController::class, 'getActivePlans']);
+    Route::get('/user/{userId}', [InsurancePlanController::class, 'getByUserId'])->where('userId', '[0-9]+');
+});
+
+// Job Routes
+Route::prefix('jobs')->group(function () {
+    Route::get('/', [JobController::class, 'index']);
+    Route::post('/', [JobController::class, 'store']);
+    Route::get('/{id}', [JobController::class, 'show'])->where('id', '[0-9]+');
+    Route::put('/{id}', [JobController::class, 'update'])->where('id', '[0-9]+');
+    Route::delete('/{id}', [JobController::class, 'destroy'])->where('id', '[0-9]+');
+    Route::get('/status/{status}', [JobController::class, 'getByStatus']);
+    Route::get('/department/{department}', [JobController::class, 'getByDepartment']);
+    Route::get('/type/{jobType}', [JobController::class, 'getByJobType']);
+    Route::get('/active', [JobController::class, 'getActiveJobs']);
+    Route::get('/location/{location}', [JobController::class, 'getByLocation']);
+    Route::get('/remote/{isRemote}', [JobController::class, 'getByRemoteStatus'])->where('isRemote', '[0-1]');
+    Route::post('/search', [JobController::class, 'search']);
+});
+
+// Job Application Routes
+Route::prefix('job-applications')->group(function () {
+    Route::get('/', [JobApplicationController::class, 'index']);
+    Route::post('/', [JobApplicationController::class, 'store']);
+    Route::get('/{id}', [JobApplicationController::class, 'show'])->where('id', '[0-9]+');
+    Route::put('/{id}', [JobApplicationController::class, 'update'])->where('id', '[0-9]+');
+    Route::delete('/{id}', [JobApplicationController::class, 'destroy'])->where('id', '[0-9]+');
+    Route::get('/job/{jobId}', [JobApplicationController::class, 'getByJobId'])->where('jobId', '[0-9]+');
+    Route::get('/user/{userId}', [JobApplicationController::class, 'getByUserId'])->where('userId', '[0-9]+');
+    Route::get('/status/{status}', [JobApplicationController::class, 'getByStatus']);
+    Route::post('/date-range', [JobApplicationController::class, 'getByDateRange']);
+    Route::get('/recent/{days?}', [JobApplicationController::class, 'getRecent'])->where('days', '[0-9]+');
+});
+
+// MonthlyPayroll routes
+Route::middleware('auth:sanctum')->group(function () {
+    Route::get('monthly-payrolls', [MonthlyPayrollController::class, 'index']);
+    Route::post('monthly-payrolls', [MonthlyPayrollController::class, 'store']);
+    Route::get('monthly-payrolls/{id}', [MonthlyPayrollController::class, 'show']);
+    Route::put('monthly-payrolls/{id}', [MonthlyPayrollController::class, 'update']);
+    Route::delete('monthly-payrolls/{id}', [MonthlyPayrollController::class, 'destroy']);
+
+    // Additional monthly payroll routes
+    Route::get('monthly-payrolls/month-year/{month}/{year}', [MonthlyPayrollController::class, 'getByMonthYear']);
+    Route::get('monthly-payrolls/user/{userId}', [MonthlyPayrollController::class, 'getByUserId']);
+    Route::get('monthly-payrolls/status/{status}', [MonthlyPayrollController::class, 'getByStatus']);
+    Route::get('monthly-payrolls/department/{departmentId}', [MonthlyPayrollController::class, 'getByDepartmentId']);
+    Route::post('monthly-payrolls/date-range', [MonthlyPayrollController::class, 'getByDateRange']);
+    Route::get('monthly-payrolls/total/{month}/{year}', [MonthlyPayrollController::class, 'getTotalPayrollAmount']);
+    Route::post('monthly-payrolls/{id}/approve', [MonthlyPayrollController::class, 'approvePayroll']);
+    Route::post('monthly-payrolls/{id}/mark-paid', [MonthlyPayrollController::class, 'markAsPaid']);
+    Route::post('monthly-payrolls/{id}/cancel', [MonthlyPayrollController::class, 'cancelPayroll']);
 });

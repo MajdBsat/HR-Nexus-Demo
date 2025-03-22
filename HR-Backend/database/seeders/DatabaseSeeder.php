@@ -22,6 +22,10 @@ class DatabaseSeeder extends Seeder
 
         $this->call([
             HealthCarePlanSeeder::class,
+            HrProjectSeeder::class,
+            TaskSeeder::class,
+            MonthlyPayrollSeeder::class,
+            JobApplicationSeeder::class,
         ]);
     }
 }
