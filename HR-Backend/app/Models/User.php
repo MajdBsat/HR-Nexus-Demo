@@ -8,13 +8,15 @@ use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\Relations\HasOne;
+use Laravel\Sanctum\HasApiTokens;
+use Tymon\JWTAuth\Contracts\JWTSubject;
 
-class User extends Authenticatable
+class User extends Authenticatable implements JWTSubject
 {
     /** @use HasFactory<\Database\Factories\UserFactory> */
-    use HasFactory, Notifiable;
+    use HasApiTokens, HasFactory, Notifiable;
 
-   
+
     protected $fillable = [
         'first_name',
         'last_name',
@@ -112,5 +114,57 @@ class User extends Authenticatable
     public function onboardingTasks()
     {
         return $this->hasMany(OnboardingTask::class, 'employee_id');
+    }
+
+    /**
+     * Get the identifier that will be stored in the subject claim of the JWT.
+     *
+     * @return mixed
+     */
+    public function getJWTIdentifier()
+    {
+        return $this->getKey();
+    }
+
+    /**
+     * Return a key value array, containing any custom claims to be added to the JWT.
+     *
+     * @return array
+     */
+    public function getJWTCustomClaims()
+    {
+        return [
+            'user_type' => $this->user_type
+        ];
+    }
+
+    /**
+     * Check if user is a guest.
+     *
+     * @return bool
+     */
+    public function isGuest(): bool
+    {
+        return $this->user_type === 0;
+    }
+
+    /**
+     * Check if user is an employee.
+     *
+     * @return bool
+     */
+    public function isEmployee(): bool
+    {
+        return $this->user_type === 1;
+    }
+
+    /**
+     * Check if user is HR.
+     *
+     * @return bool
+     */
+    public function isHR(): bool
+    {
+        return $this->user_type === 2;
     }
 }

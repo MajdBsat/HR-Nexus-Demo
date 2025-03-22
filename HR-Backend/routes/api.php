@@ -19,6 +19,8 @@ use App\Http\Controllers\RoleController;
 use App\Http\Controllers\OnboardingTaskController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
+use App\Http\Controllers\AuthController;
+use App\Http\Controllers\HealthCarePlanController;
 
 /*
 |--------------------------------------------------------------------------
@@ -33,6 +35,124 @@ use Illuminate\Support\Facades\Route;
 
 Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
     return $request->user();
+});
+
+// Authentication routes - public
+Route::group(['prefix' => 'auth'], function () {
+    Route::post('register', [AuthController::class, 'register']);
+    Route::post('login', [AuthController::class, 'login']);
+
+    // Protected authentication routes
+    Route::group(['middleware' => 'jwt'], function () {
+        Route::post('logout', [AuthController::class, 'logout']);
+        Route::post('refresh', [AuthController::class, 'refresh']);
+        Route::get('me', [AuthController::class, 'me']);
+    });
+});
+
+// Public routes
+Route::get('jobs', [JobController::class, 'index']); // Available to everyone
+
+// Guest routes - User type 0
+Route::group(['middleware' => ['jwt', 'role:guest']], function () {
+    // Jobs - read only
+    Route::get('jobs/{id}', [JobController::class, 'show']);
+});
+
+// Employee routes - User type 1
+Route::group(['middleware' => ['jwt', 'role:employee']], function () {
+    // Tasks
+    Route::get('tasks', [TaskController::class, 'index']);
+    Route::get('tasks/{id}', [TaskController::class, 'show']);
+    Route::post('tasks', [TaskController::class, 'store']);
+    Route::put('tasks/{id}', [TaskController::class, 'update']);
+    Route::delete('tasks/{id}', [TaskController::class, 'destroy']);
+    Route::get('tasks/status/{status}', [TaskController::class, 'getByStatus']);
+    Route::get('tasks/priority/{priority}', [TaskController::class, 'getByPriority']);
+    Route::get('tasks/user/{userId}', [TaskController::class, 'getByUserId']);
+    Route::get('tasks/upcoming/{days?}', [TaskController::class, 'getUpcomingTasks']);
+
+    // Job Applications
+    Route::get('job-applications', [JobApplicationController::class, 'index']);
+    Route::get('job-applications/{id}', [JobApplicationController::class, 'show']);
+    Route::post('job-applications', [JobApplicationController::class, 'store']);
+    Route::put('job-applications/{id}', [JobApplicationController::class, 'update']);
+    Route::delete('job-applications/{id}', [JobApplicationController::class, 'destroy']);
+
+    // Jobs
+    Route::post('jobs', [JobController::class, 'store']);
+    Route::put('jobs/{id}', [JobController::class, 'update']);
+    Route::delete('jobs/{id}', [JobController::class, 'destroy']);
+    Route::get('jobs/status/{status}', [JobController::class, 'getByStatus']);
+    Route::get('jobs/department/{department}', [JobController::class, 'getByDepartment']);
+    Route::get('jobs/type/{jobType}', [JobController::class, 'getByJobType']);
+    Route::get('jobs/active', [JobController::class, 'getActiveJobs']);
+    Route::get('jobs/location/{location}', [JobController::class, 'getByLocation']);
+    Route::get('jobs/remote/{isRemote}', [JobController::class, 'getByRemoteStatus']);
+    Route::post('jobs/search', [JobController::class, 'searchJobs']);
+
+    // Insurance Plans
+    Route::get('insurance-plans', [InsurancePlanController::class, 'index']);
+    Route::get('insurance-plans/{id}', [InsurancePlanController::class, 'show']);
+
+    // Health Care Plans
+    Route::get('healthcare-plans', [HealthCarePlanController::class, 'index']);
+    Route::get('healthcare-plans/{id}', [HealthCarePlanController::class, 'show']);
+
+    // Documents
+    Route::get('documents', [DocumentController::class, 'index']);
+    Route::get('documents/{id}', [DocumentController::class, 'show']);
+    Route::post('documents', [DocumentController::class, 'store']);
+    Route::put('documents/{id}', [DocumentController::class, 'update']);
+    Route::delete('documents/{id}', [DocumentController::class, 'destroy']);
+
+    // Benefit Plans
+    Route::get('benefit-plans', [BenefitPlanController::class, 'index']);
+    Route::get('benefit-plans/{id}', [BenefitPlanController::class, 'show']);
+});
+
+// HR routes - User type 2
+Route::group(['middleware' => ['jwt', 'role:hr']], function () {
+    // Insurance Plans - additional operations
+    Route::post('insurance-plans', [InsurancePlanController::class, 'store']);
+    Route::put('insurance-plans/{id}', [InsurancePlanController::class, 'update']);
+    Route::delete('insurance-plans/{id}', [InsurancePlanController::class, 'destroy']);
+
+    // Health Care Plans - additional operations
+    Route::post('healthcare-plans', [HealthCarePlanController::class, 'store']);
+    Route::put('healthcare-plans/{id}', [HealthCarePlanController::class, 'update']);
+    Route::delete('healthcare-plans/{id}', [HealthCarePlanController::class, 'destroy']);
+
+    // Benefit Plans - additional operations
+    Route::post('benefit-plans', [BenefitPlanController::class, 'store']);
+    Route::put('benefit-plans/{id}', [BenefitPlanController::class, 'update']);
+    Route::delete('benefit-plans/{id}', [BenefitPlanController::class, 'destroy']);
+
+    // Roles
+    Route::get('roles', [RoleController::class, 'index']);
+    Route::get('roles/{id}', [RoleController::class, 'show']);
+    Route::post('roles', [RoleController::class, 'store']);
+    Route::put('roles/{id}', [RoleController::class, 'update']);
+    Route::delete('roles/{id}', [RoleController::class, 'destroy']);
+    Route::get('roles/{id}/tasks', [RoleController::class, 'getTasks']);
+
+    // Onboarding Tasks
+    Route::get('onboarding-tasks', [OnboardingTaskController::class, 'index']);
+    Route::get('onboarding-tasks/{id}', [OnboardingTaskController::class, 'show']);
+    Route::post('onboarding-tasks', [OnboardingTaskController::class, 'store']);
+    Route::put('onboarding-tasks/{id}', [OnboardingTaskController::class, 'update']);
+    Route::delete('onboarding-tasks/{id}', [OnboardingTaskController::class, 'destroy']);
+    Route::get('onboarding-tasks/employee/{employeeId}', [OnboardingTaskController::class, 'getByEmployeeId']);
+    Route::get('onboarding-tasks/role/{roleId}', [OnboardingTaskController::class, 'getByRoleId']);
+    Route::get('onboarding-tasks/roles', [OnboardingTaskController::class, 'roles']);
+    Route::get('onboarding-tasks/roles/{id}', [OnboardingTaskController::class, 'roleShow']);
+    Route::post('onboarding-tasks/roles', [OnboardingTaskController::class, 'roleStore']);
+    Route::put('onboarding-tasks/roles/{id}', [OnboardingTaskController::class, 'roleUpdate']);
+    Route::delete('onboarding-tasks/roles/{id}', [OnboardingTaskController::class, 'roleDestroy']);
+    Route::get('onboarding-tasks/roles/{roleId}/tasks', [OnboardingTaskController::class, 'getTasksByRoleId']);
+    Route::post('onboarding-tasks/roles/assign-task', [OnboardingTaskController::class, 'assignTaskToRole']);
+    Route::post('onboarding-tasks/roles/remove-task', [OnboardingTaskController::class, 'removeTaskFromRole']);
+    Route::post('onboarding-tasks/employees/assign-role-tasks', [OnboardingTaskController::class, 'assignRoleTasksToEmployee']);
 });
 
 // User routes
