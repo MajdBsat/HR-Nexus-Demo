@@ -21,6 +21,7 @@ use App\Repositories\HrProjectRepository;
 use App\Repositories\InsurancePlanRepository;
 use App\Repositories\JobApplicationRepository;
 use App\Repositories\MonthlyPayrollRepository;
+use App\Repositories\OnboardingTaskRepository;
 use App\Repositories\Interfaces\AttendanceRepositoryInterface;
 use App\Repositories\Interfaces\BaseSalaryRepositoryInterface;
 use App\Repositories\Interfaces\BenefitPlanRepositoryInterface;
@@ -42,6 +43,7 @@ use App\Repositories\Interfaces\HrProjectRepositoryInterface;
 use App\Repositories\Interfaces\InsurancePlanRepositoryInterface;
 use App\Repositories\Interfaces\JobApplicationRepositoryInterface;
 use App\Repositories\Interfaces\MonthlyPayrollRepositoryInterface;
+use App\Repositories\Interfaces\OnboardingTaskRepositoryInterface;
 use Illuminate\Support\ServiceProvider;
 
 class RepositoryServiceProvider extends ServiceProvider
@@ -109,6 +111,7 @@ class RepositoryServiceProvider extends ServiceProvider
         $this->app->bind(InsurancePlanRepositoryInterface::class, InsurancePlanRepository::class);
         $this->app->bind(JobApplicationRepositoryInterface::class, JobApplicationRepository::class);
         $this->app->bind(MonthlyPayrollRepositoryInterface::class, MonthlyPayrollRepository::class);
+        $this->app->bind(OnboardingTaskRepositoryInterface::class, OnboardingTaskRepository::class);
     }
 
     /**

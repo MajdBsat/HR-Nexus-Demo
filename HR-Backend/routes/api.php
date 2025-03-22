@@ -14,6 +14,9 @@ use App\Http\Controllers\InsurancePlanController;
 use App\Http\Controllers\JobController;
 use App\Http\Controllers\JobApplicationController;
 use App\Http\Controllers\MonthlyPayrollController;
+use App\Http\Controllers\TaskController;
+use App\Http\Controllers\RoleController;
+use App\Http\Controllers\OnboardingTaskController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
@@ -230,4 +233,55 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::post('monthly-payrolls/{id}/approve', [MonthlyPayrollController::class, 'approvePayroll']);
     Route::post('monthly-payrolls/{id}/mark-paid', [MonthlyPayrollController::class, 'markAsPaid']);
     Route::post('monthly-payrolls/{id}/cancel', [MonthlyPayrollController::class, 'cancelPayroll']);
+});
+
+// Task routes
+Route::prefix('tasks')->group(function () {
+    Route::get('/', [TaskController::class, 'index']);
+    Route::post('/', [TaskController::class, 'store']);
+    Route::get('/{id}', [TaskController::class, 'show']);
+    Route::put('/{id}', [TaskController::class, 'update']);
+    Route::delete('/{id}', [TaskController::class, 'destroy']);
+
+    // Additional specialized routes
+    Route::get('/status/{status}', [TaskController::class, 'getByStatus']);
+    Route::get('/priority/{priority}', [TaskController::class, 'getByPriority']);
+    Route::get('/user/{userId}', [TaskController::class, 'getByUserId']);
+    Route::get('/upcoming/{days?}', [TaskController::class, 'getUpcomingTasks']);
+});
+
+// Role routes
+Route::prefix('roles')->group(function () {
+    Route::get('/', [RoleController::class, 'index']);
+    Route::post('/', [RoleController::class, 'store']);
+    Route::get('/{id}', [RoleController::class, 'show']);
+    Route::put('/{id}', [RoleController::class, 'update']);
+    Route::delete('/{id}', [RoleController::class, 'destroy']);
+
+    // Additional specialized routes
+    Route::get('/{id}/tasks', [RoleController::class, 'getTasks']);
+});
+
+// Onboarding Task routes
+Route::prefix('onboarding-tasks')->group(function () {
+    Route::get('/', [OnboardingTaskController::class, 'index']);
+    Route::post('/', [OnboardingTaskController::class, 'store']);
+    Route::get('/{id}', [OnboardingTaskController::class, 'show']);
+    Route::put('/{id}', [OnboardingTaskController::class, 'update']);
+    Route::delete('/{id}', [OnboardingTaskController::class, 'destroy']);
+
+    // Additional specialized routes
+    Route::get('/employee/{employeeId}', [OnboardingTaskController::class, 'getByEmployeeId']);
+    Route::get('/role/{roleId}', [OnboardingTaskController::class, 'getByRoleId']);
+
+    // Role management routes
+    Route::get('/roles', [OnboardingTaskController::class, 'roles']);
+    Route::get('/roles/{id}', [OnboardingTaskController::class, 'roleShow']);
+    Route::post('/roles', [OnboardingTaskController::class, 'roleStore']);
+    Route::put('/roles/{id}', [OnboardingTaskController::class, 'roleUpdate']);
+    Route::delete('/roles/{id}', [OnboardingTaskController::class, 'roleDestroy']);
+    Route::get('/roles/{roleId}/tasks', [OnboardingTaskController::class, 'getTasksByRoleId']);
+    Route::post('/roles/assign-task', [OnboardingTaskController::class, 'assignTaskToRole']);
+    Route::post('/roles/remove-task', [OnboardingTaskController::class, 'removeTaskFromRole']);
+    Route::post('/employee/assign-role-tasks', [OnboardingTaskController::class, 'assignRoleTasksToEmployee']);
 });
