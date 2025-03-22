@@ -3,12 +3,30 @@
 namespace App\Http\Controllers;
 
 use App\Models\Role;
-use App\Models\Task;
+use App\Services\RoleService;
 use Illuminate\Http\Request;
 use Illuminate\Http\JsonResponse;
 
 class RoleController extends Controller
 {
+    /**
+     * The role service instance.
+     *
+     * @var RoleService
+     */
+    protected $roleService;
+
+    /**
+     * Create a new controller instance.
+     *
+     * @param RoleService $roleService
+     * @return void
+     */
+    public function __construct(RoleService $roleService)
+    {
+        $this->roleService = $roleService;
+    }
+
     /**
      * Display a listing of the roles.
      *
@@ -16,7 +34,7 @@ class RoleController extends Controller
      */
     public function index(): JsonResponse
     {
-        $roles = Role::all();
+        $roles = $this->roleService->getAllRoles();
         return response()->json(['data' => $roles]);
     }
 
@@ -28,14 +46,16 @@ class RoleController extends Controller
      */
     public function store(Request $request): JsonResponse
     {
-        $validated = $request->validate([
-            'title' => 'required|string|max:255',
-            'description' => 'required|string',
-            'requirements' => 'nullable|string',
-        ]);
+        $result = $this->roleService->createRole($request->all());
 
-        $role = Role::create($validated);
-        return response()->json(['message' => 'Role created successfully', 'data' => $role], 201);
+        if (!$result['success']) {
+            return response()->json($result, 422);
+        }
+
+        return response()->json([
+            'message' => $result['message'],
+            'data' => $result['data']
+        ], 201);
     }
 
     /**
@@ -46,7 +66,7 @@ class RoleController extends Controller
      */
     public function show(int $id): JsonResponse
     {
-        $role = Role::find($id);
+        $role = $this->roleService->getRoleById($id);
 
         if (!$role) {
             return response()->json(['message' => 'Role not found'], 404);
@@ -64,20 +84,19 @@ class RoleController extends Controller
      */
     public function update(Request $request, int $id): JsonResponse
     {
-        $role = Role::find($id);
+        $result = $this->roleService->updateRole($id, $request->all());
 
-        if (!$role) {
-            return response()->json(['message' => 'Role not found'], 404);
+        if (!$result['success']) {
+            if ($result['message'] === 'Role not found') {
+                return response()->json(['message' => $result['message']], 404);
+            }
+            return response()->json($result, 422);
         }
 
-        $validated = $request->validate([
-            'title' => 'sometimes|required|string|max:255',
-            'description' => 'sometimes|required|string',
-            'requirements' => 'nullable|string',
+        return response()->json([
+            'message' => $result['message'],
+            'data' => $result['data']
         ]);
-
-        $role->update($validated);
-        return response()->json(['message' => 'Role updated successfully', 'data' => $role]);
     }
 
     /**
@@ -88,19 +107,13 @@ class RoleController extends Controller
      */
     public function destroy(int $id): JsonResponse
     {
-        $role = Role::find($id);
+        $result = $this->roleService->deleteRole($id);
 
-        if (!$role) {
-            return response()->json(['message' => 'Role not found'], 404);
+        if (!$result['success']) {
+            return response()->json(['message' => $result['message']], $result['message'] === 'Role not found' ? 404 : 422);
         }
 
-        // Check if role has associated onboarding tasks
-        if ($role->onboardingTasks()->count() > 0) {
-            return response()->json(['message' => 'Cannot delete role with associated onboarding tasks'], 422);
-        }
-
-        $role->delete();
-        return response()->json(['message' => 'Role deleted successfully']);
+        return response()->json(['message' => $result['message']]);
     }
 
     /**
@@ -111,16 +124,12 @@ class RoleController extends Controller
      */
     public function getTasks(int $id): JsonResponse
     {
-        $role = Role::find($id);
+        $result = $this->roleService->getTasksByRoleId($id);
 
-        if (!$role) {
-            return response()->json(['message' => 'Role not found'], 404);
+        if (!$result['success']) {
+            return response()->json(['message' => $result['message']], 404);
         }
 
-        // Get all tasks associated with this role through onboarding tasks
-        $taskIds = $role->onboardingTasks()->pluck('task_id')->unique();
-        $tasks = Task::whereIn('id', $taskIds)->get();
-
-        return response()->json(['data' => $tasks]);
+        return response()->json(['data' => $result['data']]);
     }
 }

@@ -3,11 +3,30 @@
 namespace App\Http\Controllers;
 
 use App\Models\Task;
+use App\Services\TaskService;
 use Illuminate\Http\Request;
 use Illuminate\Http\JsonResponse;
 
 class TaskController extends Controller
 {
+    /**
+     * The task service instance.
+     *
+     * @var TaskService
+     */
+    protected $taskService;
+
+    /**
+     * Create a new controller instance.
+     *
+     * @param TaskService $taskService
+     * @return void
+     */
+    public function __construct(TaskService $taskService)
+    {
+        $this->taskService = $taskService;
+    }
+
     /**
      * Display a listing of the tasks.
      *
@@ -15,7 +34,7 @@ class TaskController extends Controller
      */
     public function index(): JsonResponse
     {
-        $tasks = Task::all();
+        $tasks = $this->taskService->getAllTasks();
         return response()->json(['data' => $tasks]);
     }
 
@@ -27,19 +46,16 @@ class TaskController extends Controller
      */
     public function store(Request $request): JsonResponse
     {
-        $validated = $request->validate([
-            'title' => 'required|string|max:255',
-            'description' => 'nullable|string',
-            'status' => 'required|string|in:pending,in_progress,completed,cancelled',
-            'priority' => 'required|string|in:low,medium,high,urgent',
-            'assigned_to' => 'nullable|exists:users,id',
-            'due_date' => 'nullable|date',
-            'estimated_hours' => 'nullable|integer',
-            'actual_hours' => 'nullable|integer',
-        ]);
+        $result = $this->taskService->createTask($request->all());
 
-        $task = Task::create($validated);
-        return response()->json(['message' => 'Task created successfully', 'data' => $task], 201);
+        if (!$result['success']) {
+            return response()->json($result, 422);
+        }
+
+        return response()->json([
+            'message' => $result['message'],
+            'data' => $result['data']
+        ], 201);
     }
 
     /**
@@ -50,7 +66,7 @@ class TaskController extends Controller
      */
     public function show(int $id): JsonResponse
     {
-        $task = Task::find($id);
+        $task = $this->taskService->getTaskById($id);
 
         if (!$task) {
             return response()->json(['message' => 'Task not found'], 404);
@@ -68,25 +84,19 @@ class TaskController extends Controller
      */
     public function update(Request $request, int $id): JsonResponse
     {
-        $task = Task::find($id);
+        $result = $this->taskService->updateTask($id, $request->all());
 
-        if (!$task) {
-            return response()->json(['message' => 'Task not found'], 404);
+        if (!$result['success']) {
+            if ($result['message'] === 'Task not found') {
+                return response()->json(['message' => $result['message']], 404);
+            }
+            return response()->json($result, 422);
         }
 
-        $validated = $request->validate([
-            'title' => 'sometimes|required|string|max:255',
-            'description' => 'nullable|string',
-            'status' => 'sometimes|required|string|in:pending,in_progress,completed,cancelled',
-            'priority' => 'sometimes|required|string|in:low,medium,high,urgent',
-            'assigned_to' => 'nullable|exists:users,id',
-            'due_date' => 'nullable|date',
-            'estimated_hours' => 'nullable|integer',
-            'actual_hours' => 'nullable|integer',
+        return response()->json([
+            'message' => $result['message'],
+            'data' => $result['data']
         ]);
-
-        $task->update($validated);
-        return response()->json(['message' => 'Task updated successfully', 'data' => $task]);
     }
 
     /**
@@ -97,14 +107,13 @@ class TaskController extends Controller
      */
     public function destroy(int $id): JsonResponse
     {
-        $task = Task::find($id);
+        $result = $this->taskService->deleteTask($id);
 
-        if (!$task) {
-            return response()->json(['message' => 'Task not found'], 404);
+        if (!$result['success']) {
+            return response()->json(['message' => $result['message']], 404);
         }
 
-        $task->delete();
-        return response()->json(['message' => 'Task deleted successfully']);
+        return response()->json(['message' => $result['message']]);
     }
 
     /**
@@ -115,7 +124,7 @@ class TaskController extends Controller
      */
     public function getByStatus(string $status): JsonResponse
     {
-        $tasks = Task::byStatus($status)->get();
+        $tasks = $this->taskService->getTasksByStatus($status);
         return response()->json(['data' => $tasks]);
     }
 
@@ -127,31 +136,36 @@ class TaskController extends Controller
      */
     public function getByPriority(string $priority): JsonResponse
     {
-        $tasks = Task::byPriority($priority)->get();
+        $tasks = $this->taskService->getTasksByPriority($priority);
         return response()->json(['data' => $tasks]);
     }
 
     /**
-     * Get tasks by assigned user.
+     * Get tasks by user ID.
      *
      * @param int $userId
      * @return JsonResponse
      */
     public function getByUserId(int $userId): JsonResponse
     {
-        $tasks = Task::byAssignedUser($userId)->get();
-        return response()->json(['data' => $tasks]);
+        $result = $this->taskService->getTasksByUserId($userId);
+
+        if (!$result['success']) {
+            return response()->json(['message' => $result['message']], 404);
+        }
+
+        return response()->json(['data' => $result['data']]);
     }
 
     /**
-     * Get upcoming tasks for the next specified days.
+     * Get upcoming tasks.
      *
      * @param int $days
      * @return JsonResponse
      */
     public function getUpcomingTasks(int $days = 7): JsonResponse
     {
-        $tasks = Task::upcoming($days)->get();
+        $tasks = $this->taskService->getUpcomingTasks($days);
         return response()->json(['data' => $tasks]);
     }
 }
