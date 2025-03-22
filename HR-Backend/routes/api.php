@@ -138,3 +138,12 @@ Route::prefix('hr-project-tasks')->group(function () {
     Route::get('/project/{projectId}/tasks', [HrProjectTaskController::class, 'getProjectTasks']);
     Route::get('/task/{taskId}/projects', [HrProjectTaskController::class, 'getTaskProjects']);
 });
+
+Route::group(['middleware' => 'auth:api'], function () {
+    // Health Care Plan routes
+    Route::apiResource('health-care-plans', \App\Http\Controllers\HealthCarePlanController::class);
+    Route::get('health-care-plans/coverage-type/{coverageType}', [\App\Http\Controllers\HealthCarePlanController::class, 'getByCoverageType']);
+    Route::get('health-care-plans/active', [\App\Http\Controllers\HealthCarePlanController::class, 'getActivePlans']);
+    Route::get('health-care-plans/provider/{provider}', [\App\Http\Controllers\HealthCarePlanController::class, 'getByProvider']);
+    Route::get('health-care-plans/user/{userId}', [\App\Http\Controllers\HealthCarePlanController::class, 'getByUserId']);
+});
