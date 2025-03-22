@@ -4,7 +4,9 @@ use App\Http\Controllers\AttendanceController;
 use App\Http\Controllers\BaseSalaryController;
 use App\Http\Controllers\BenefitPlanController;
 use App\Http\Controllers\CandidateController;
+use App\Http\Controllers\ComplianceController;
 use App\Http\Controllers\DepartmentController;
+use App\Http\Controllers\DocumentController;
 use App\Http\Controllers\HrProjectTaskController;
 use App\Http\Controllers\UserController;
 use Illuminate\Http\Request;
@@ -93,6 +95,36 @@ Route::prefix('candidates')->group(function () {
     Route::get('/position/{position}', [CandidateController::class, 'getByPosition']);
     Route::get('/status/{status}', [CandidateController::class, 'getByStatus']);
     Route::post('/search', [CandidateController::class, 'search']);
+});
+
+// Compliance routes
+Route::prefix('compliance')->group(function () {
+    Route::get('/', [ComplianceController::class, 'index']);
+    Route::post('/', [ComplianceController::class, 'store']);
+    Route::get('/{id}', [ComplianceController::class, 'show']);
+    Route::put('/{id}', [ComplianceController::class, 'update']);
+    Route::delete('/{id}', [ComplianceController::class, 'destroy']);
+
+    // Additional specialized routes
+    Route::get('/user/{userId}', [ComplianceController::class, 'getByUserId']);
+    Route::get('/status/{status}', [ComplianceController::class, 'getByStatus']);
+    Route::get('/type/{type}', [ComplianceController::class, 'getByType']);
+    Route::get('/expiring', [ComplianceController::class, 'getExpiring']);
+});
+
+// Document routes
+Route::prefix('documents')->group(function () {
+    Route::get('/', [DocumentController::class, 'index']);
+    Route::post('/', [DocumentController::class, 'store']);
+    Route::get('/{id}', [DocumentController::class, 'show']);
+    Route::put('/{id}', [DocumentController::class, 'update']);
+    Route::delete('/{id}', [DocumentController::class, 'destroy']);
+
+    // Additional specialized routes
+    Route::get('/user/{userId}', [DocumentController::class, 'getByUserId']);
+    Route::get('/category/{category}', [DocumentController::class, 'getByCategory']);
+    Route::get('/type/{documentType}', [DocumentController::class, 'getByType']);
+    Route::post('/search', [DocumentController::class, 'search']);
 });
 
 // HR Project Task routes
