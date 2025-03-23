@@ -21,16 +21,24 @@ class DatabaseSeeder extends Seeder
         ]);
 
         $this->call([
-            // Add departments and jobs first since other seeders depend on them
             DepartmentSeeder::class,
             JobSeeder::class,
-
-            // Then run the rest of the seeders
             HealthCarePlanSeeder::class,
             HrProjectSeeder::class,
             TaskSeeder::class,
+            InsurancePlanSeeder::class,
+            JobInsurancePlanSeeder::class,
+            HrProjectTaskSeeder::class,
             MonthlyPayrollSeeder::class,
             JobApplicationSeeder::class,
+            RoleSeeder::class,
+            BenefitPlanSeeder::class,
+            AttendanceSeeder::class,
+            BaseSalarySeeder::class,
+            CandidateSeeder::class,
+            ComplianceSeeder::class,
+            DocumentSeeder::class,
+            OnboardingTaskSeeder::class,
         ]);
     }
 }
