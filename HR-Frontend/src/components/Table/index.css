@@ -1,0 +1,24 @@
+.table{
+    gap: 2em;
+    text-align: center;
+    font-size: 1em;
+    font-weight: medium;
+}
+.table-head .cell p{
+    padding: 0.25px;
+    width: 95%;
+    background-color: var(--light-bg);
+    border-radius: 5px;
+}
+.cell{
+    flex: 2;
+    width: fit-content;
+}
+
+.btn button{
+    padding: 0.4em;
+    border-radius: 0.25em;
+    background-color: var(--primary-color);
+    color: var(--secondary-color);
+    font-weight: bold;
+}

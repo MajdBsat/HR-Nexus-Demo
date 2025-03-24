@@ -1,0 +1,55 @@
+
+.recruitment-head{
+    height: 2.5em;
+}
+
+.recruitment-nav{
+    width: 50%;
+    gap: 1.25em;
+}
+
+.recruitment-search-new{
+    width: 50%;
+    gap: 5px;
+}
+
+.recruitment-search-new input{
+    padding: 0px 0.5em;
+    background-color: var(--light-bg);
+    font-size: 1em;
+    height: 100%;
+    width: 55%;
+    border-radius: 10px;
+}
+
+.recruitment-search-new input::placeholder{
+    background-image: url('../../assets/Vector.png');
+    background-repeat:no-repeat;
+    font-size: 1em;
+    font-weight: medium;
+    padding-left: 1.5em;
+    color: black;
+    height: 100%;
+    width: 55%;
+    border-radius: 10px;
+}
+
+.recruitment-head button{
+    background-color: var(--primary-color);
+    color: var(--secondary-color);
+    font-weight: bold;
+    font-size: 1em;
+    height: 100%;
+    width: 20%;
+    border-radius: 10px;
+}
+
+.recruitment-head .selected{
+    background-color: var(--third-color);
+    color: var(--secondary-color);
+    font-weight: bold;
+    font-size: 1em;
+    height: 100%;
+    width: 20%;
+    border-radius: 10px;
+}
