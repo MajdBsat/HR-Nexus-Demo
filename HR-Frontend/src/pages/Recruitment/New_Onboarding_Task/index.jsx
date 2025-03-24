@@ -12,6 +12,11 @@ const Add_New_Onboarding_Task = () => {
         e.preventDefault()
         console.log('Add')
     }
+
+    const updateSpinner= (e) =>{
+        e.preventDefault()
+        console.log(e.target.value)
+    }
     return(
         <div className="onboarding-task back-div flex column center width100vw height100vh">
             <form className="flex column center">
@@ -34,8 +39,8 @@ const Add_New_Onboarding_Task = () => {
                 </div>
 
                 <div className="label_input flex column width50">
-                    <label htmlFor="description">Priority</label>
-                    <select id="spinner-select" name="description" onchange="updateSpinner()">
+                    <label htmlFor="priority">Priority</label>
+                    <select id="spinner-select" name="priority" onChange={(e)=>updateSpinner(e)}>
                         <option value="high">High</option>
                         <option value="medium">Medium</option>
                         <option value="low">Low</option>

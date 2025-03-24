@@ -1,8 +1,10 @@
+import { useNavigate } from "react-router-dom";
 import "./index.css"
 const Job_Emp_Card = ({props}) => {
     console.log({props});
+    const navigate = useNavigate();
     const applyJob = () =>{
-        console.log("applied")
+        navigate("apply", { state: { props } });
     }
     return(
         <div className="emp_job_card flex column center item-start">
