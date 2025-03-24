@@ -6,9 +6,6 @@ const Emp_Recruitment_Header = () =>{
     const goToJobs = ()=>{
         navigate("/emp/recruitment/jobs/")
     }
-    const goToCandidates = () =>{
-        navigate("/emp/recruitment/candidates/")
-    } 
     const goToOnboarding = () =>{
         navigate("/emp/recruitment/onboarding/")
     } 
@@ -36,7 +33,6 @@ const Emp_Recruitment_Header = () =>{
         <div className='recruitment-head flex row center width100'>
             <div className='recruitment-nav flex row center content-start height100'>
                 <button className='' onClick={goToJobs}>Jobs</button>
-                <button className='' onClick={goToCandidates}>Candidates</button>
                 <button className='' onClick={goToOnboarding}>Onboarding</button>
             </div>
 

@@ -1,7 +1,7 @@
 form{
-    gap: 20px;
+    gap: 1.5em;
     width: 40%;
-    height: 70%;
+    height: 85%;
     border-radius: 25px;
     background-color: var(--light-bg);
 }
@@ -22,12 +22,12 @@ form .add-btn{
 
 
 .buttons{
-    height: 44px;
-    gap: 60px;
+    height: 2.5em;
+    gap: 3.75em;
 }
 
 .buttons button{
-    font-size: 16px;
+    font-size: 1em;
     font-weight: bold;
     width: 50%;
     border-radius: 10px;
@@ -35,29 +35,29 @@ form .add-btn{
 
 .form_title{
     color: var(--primary-color);
-    font-size: 34px;
+    font-size: 2.5em;
 }
 
 .label_input{
-    gap: 8px;
+    gap: 0.5em;
 }
 
 .label_input{
-    gap: 8px;
+    gap: 0.5em;
 }
 
 .label_input #title{
-    height: 40px;
+    height: 2.5px;
     border-radius: 5px;
 }
 
 .label_input #requirements{
-    height: 150px;
+    height: 9.5em;
     border-radius: 5px;
 }
 
 .label_input #description{
-    height: 150px;
+    height: 9.5em;
     border-radius: 5px;
 }
 
@@ -70,6 +70,6 @@ form .add-btn{
 }
 
 input, textarea{
-    padding: 10px;
+    padding: 0.75em;
     background-color: var(--light-bg);
 }
