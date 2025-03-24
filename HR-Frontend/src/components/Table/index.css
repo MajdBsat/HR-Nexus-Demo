@@ -14,3 +14,11 @@
     flex: 2;
     width: fit-content;
 }
+
+.btn button{
+    padding: 0.4em;
+    border-radius: 0.25em;
+    background-color: var(--primary-color);
+    color: var(--secondary-color);
+    font-weight: bold;
+}

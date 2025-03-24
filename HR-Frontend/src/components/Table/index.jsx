@@ -22,10 +22,10 @@ const Table = ({header, data, fun}) => {
                                 }
                                 const isColor = Object.prototype.hasOwnProperty.call(colors, data[value].toUpperCase())
                                 const color = isColor ? colors[data[value].toUpperCase()] : '#333A40';
-                                if(data[value].toLowerCase()=='button'){
-                                    return  <div on className="cell btn" key={value}><button onClick={()=>fun(data["id"])} style={{color:color}} key={value}>{data[value]}</button></div>
+                                if(value.toLowerCase()=='action'){
+                                    return  <div on className="cell btn" key={value}><button onClick={()=>fun(data["id"])} key={value}>{data[value]}</button></div>
                                 }
-                                return  <div className="cell" key={value}><p style={{color:color}} key={value}>{data[value]}</p></div>
+                                return  <div className="cell flex center" key={value}><p style={{color:color}} key={value}>{data[value]}</p></div>
                             })}
                         </div>
                     )
