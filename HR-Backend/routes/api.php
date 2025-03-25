@@ -34,7 +34,7 @@ use App\Http\Controllers\ProfileController;
 |
 */
 
-Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
+Route::middleware(['auth:sanctum'])->get('/user', function (Request $request) {
     return $request->user();
 });
 
@@ -44,7 +44,7 @@ Route::group(['prefix' => 'auth'], function () {
     Route::post('login', [AuthController::class, 'login']);
 
     // Protected authentication routes
-    Route::group(['middleware' => 'auth:api'], function () {
+    Route::group(['middleware' => ['auth.api']], function () {
         Route::post('logout', [AuthController::class, 'logout']);
         Route::post('refresh', [AuthController::class, 'refresh']);
         Route::get('me', [AuthController::class, 'me']);
@@ -337,7 +337,7 @@ Route::prefix('job-applications')->group(function () {
 });
 
 // MonthlyPayroll routes
-Route::middleware('auth:sanctum')->group(function () {
+Route::group(['middleware' => ['auth:sanctum']], function () {
     Route::get('monthly-payrolls', [MonthlyPayrollController::class, 'index']);
     Route::post('monthly-payrolls', [MonthlyPayrollController::class, 'store']);
     Route::get('monthly-payrolls/{id}', [MonthlyPayrollController::class, 'show']);
@@ -408,7 +408,7 @@ Route::prefix('onboarding-tasks')->group(function () {
 });
 
 // Profile routes
-Route::middleware('auth:api')->group(function () {
+Route::group(['middleware' => ['auth.api']], function () {
     Route::get('/profile', [ProfileController::class, 'show']);
     Route::put('/profile', [ProfileController::class, 'update']);
 });

@@ -1,11 +1,15 @@
 import axios from "axios";
 
+// Define the API base URL
+const API_BASE_URL = "http://localhost:8000";
+
 // Create axios instance with default config
 const api = axios.create({
-  baseURL: "/", // Use relative path - the proxy in vite.config.js will handle forwarding
+  baseURL: API_BASE_URL,
   headers: {
     "Content-Type": "application/json",
   },
+  withCredentials: true, // Include cookies in cross-site requests
 });
 
 // Add a request interceptor to include auth token
@@ -20,7 +24,11 @@ api.interceptors.request.use(
       config.headers.Authorization = `Bearer ${token}`;
     }
 
-    console.log("API Request:", config.method.toUpperCase(), config.url);
+    console.log(
+      "API Request:",
+      config.method.toUpperCase(),
+      config.baseURL + config.url
+    );
     return config;
   },
   (error) => {
