@@ -59,6 +59,7 @@ class UserController extends Controller
             'dob' => 'nullable|date',
             'phone_nb' => 'nullable|string|max:20',
             'user_type' => 'required|integer|in:0,1,2',
+            'department_id' => 'nullable|integer|exists:departments,id',
         ]);
 
         if ($validator->fails()) {
@@ -124,6 +125,7 @@ class UserController extends Controller
             'dob' => 'nullable|date',
             'phone_nb' => 'nullable|string|max:20',
             'user_type' => 'sometimes|required|integer|in:0,1,2',
+            'department_id' => 'nullable|integer|exists:departments,id',
         ]);
 
         if ($validator->fails()) {
@@ -141,6 +143,9 @@ class UserController extends Controller
                 'message' => 'User not found or email already in use.'
             ], Response::HTTP_NOT_FOUND);
         }
+
+        // Load the department relationship for the response
+        $user->load('department');
 
         return response()->json([
             'success' => true,

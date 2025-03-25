@@ -155,47 +155,64 @@ const useUsers = () => {
     async (userId, userData) => {
       try {
         setLoading(true);
-        const response = await apiClient.put(`/api/users/${userId}`, userData);
 
-        // Check if response has success field
+        // Log the request data for debugging
+        console.log(`Starting user update for ID ${userId}:`, userData);
+
+        // Simplify data to just what's needed
+        const updateData = {
+          name: userData.name,
+          email: userData.email,
+          user_type: userData.user_type,
+        };
+
+        // Only include department_id if it's actually set
+        if (
+          userData.department_id !== null &&
+          userData.department_id !== undefined &&
+          userData.department_id !== ""
+        ) {
+          updateData.department_id = Number(userData.department_id);
+        }
+
+        console.log(`Simplified update data:`, updateData);
+
+        // Make the API request
+        const response = await apiClient.put(
+          `/api/users/${userId}`,
+          updateData
+        );
+        console.log("Update response:", response);
+
+        // Parse the response
         const success =
-          response.data && response.data.success !== undefined
+          response.data && typeof response.data.success !== "undefined"
             ? response.data.success
-            : true; // Default to true if no success field
+            : true;
 
         if (!success) {
-          const errorMessage =
-            response.data?.message || "Failed to update user";
-          return { success: false, error: errorMessage };
+          console.error(
+            "Update failed:",
+            response.data?.message || "Unknown error"
+          );
+          return {
+            success: false,
+            error: response.data?.message || "Failed to update user",
+          };
         }
 
-        // Get department name for the updated user
-        if (userData.department_id) {
-          try {
-            const deptResponse = await apiClient.get(
-              `/api/departments/${userData.department_id}`
-            );
+        // Update UI optimistically
+        console.log("Update successful, updating UI");
+        updateUser(userId, {
+          ...userData,
+          department_name: userData.department_id
+            ? await getDepartmentName(userData.department_id)
+            : null,
+        });
 
-            // Check if department response has success and data fields
-            const deptData =
-              deptResponse.data && deptResponse.data.success
-                ? deptResponse.data.data
-                : deptResponse.data;
-
-            const departmentName = deptData.name;
-            updateUser(userId, {
-              ...userData,
-              department_name: departmentName,
-            });
-          } catch (err) {
-            updateUser(userId, userData);
-            console.error("Error fetching department:", err);
-          }
-        } else {
-          updateUser(userId, userData);
-        }
         return { success: true };
       } catch (err) {
+        console.error("Error updating user:", err);
         const errorMessage =
           err.response?.data?.message ||
           "Failed to update user. Please try again.";
@@ -206,6 +223,28 @@ const useUsers = () => {
     },
     [updateUser]
   );
+
+  // Helper function to get department name
+  const getDepartmentName = async (departmentId) => {
+    try {
+      console.log(`Fetching name for department ${departmentId}`);
+      const response = await apiClient.get(`/api/departments/${departmentId}`);
+
+      // Handle different response formats
+      let departmentData;
+      if (response.data && response.data.success && response.data.data) {
+        departmentData = response.data.data;
+      } else {
+        departmentData = response.data;
+      }
+
+      console.log(`Department data:`, departmentData);
+      return departmentData?.name || "Unknown Department";
+    } catch (err) {
+      console.error(`Error fetching department ${departmentId}:`, err);
+      return "Unknown Department";
+    }
+  };
 
   // Load users on initial mount
   useEffect(() => {

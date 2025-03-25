@@ -10,7 +10,7 @@ class Department extends Model
 {
     use HasFactory;
 
-    
+
     protected $fillable = [
         'name',
         'manager_id',
@@ -22,5 +22,13 @@ class Department extends Model
     public function manager(): BelongsTo
     {
         return $this->belongsTo(User::class, 'manager_id');
+    }
+
+    /**
+     * Get the users that belong to the department.
+     */
+    public function users()
+    {
+        return $this->hasMany(User::class);
     }
 }

@@ -30,10 +30,56 @@ const EditUserModal = ({ user, onClose, onUserUpdated }) => {
 
   const fetchDepartments = async () => {
     try {
+      console.log("Fetching departments...");
       const response = await apiClient.get("/api/departments");
-      setDepartments(response.data);
+      console.log("Departments response:", response);
+
+      // Check for different response formats
+      let departmentsData;
+
+      if (response.data && Array.isArray(response.data)) {
+        // Direct array format
+        departmentsData = response.data;
+      } else if (
+        response.data &&
+        response.data.success &&
+        Array.isArray(response.data.data)
+      ) {
+        // {success: true, data: [...]} format
+        departmentsData = response.data.data;
+      } else if (response.data && typeof response.data === "object") {
+        // If it's an object but not in expected format, try to extract array
+        const possibleArrays = Object.values(response.data).filter((val) =>
+          Array.isArray(val)
+        );
+        if (possibleArrays.length > 0) {
+          departmentsData = possibleArrays[0];
+        } else {
+          console.error(
+            "Could not find departments array in response:",
+            response.data
+          );
+          departmentsData = [];
+        }
+      } else {
+        console.error("Unexpected departments response format:", response.data);
+        departmentsData = [];
+      }
+
+      // Ensure it's an array of objects with id and name
+      const validDepartments = departmentsData.filter(
+        (dept) =>
+          dept &&
+          typeof dept === "object" &&
+          dept.id !== undefined &&
+          dept.name !== undefined
+      );
+
+      console.log(`Processed ${validDepartments.length} valid departments`);
+      setDepartments(validDepartments);
     } catch (err) {
       console.error("Error fetching departments:", err);
+      setDepartments([]); // Set to empty array on error
     }
   };
 
@@ -73,7 +119,30 @@ const EditUserModal = ({ user, onClose, onUserUpdated }) => {
     setLoading(true);
 
     try {
-      const result = await updateUserApi(user.id, formData);
+      // Create a copy of the formData to ensure proper formatting
+      const formattedData = { ...formData };
+
+      // Ensure department_id is sent as a number, null, or undefined based on what the API expects
+      if (
+        formattedData.department_id === "" ||
+        formattedData.department_id === null
+      ) {
+        console.log("No department selected, setting to null");
+        formattedData.department_id = null;
+      } else {
+        // Ensure it's a number
+        console.log(`Department selected: ${formattedData.department_id}`);
+        formattedData.department_id = parseInt(formattedData.department_id, 10);
+
+        // Add explicit department relation for Laravel - some APIs need this format
+        formattedData.department = {
+          id: formattedData.department_id,
+        };
+      }
+
+      console.log("Submitting user data:", formattedData);
+
+      const result = await updateUserApi(user.id, formattedData);
 
       if (result.success) {
         onUserUpdated();
@@ -148,11 +217,15 @@ const EditUserModal = ({ user, onClose, onUserUpdated }) => {
               onChange={handleChange}
             >
               <option value="">Not Assigned</option>
-              {departments.map((dept) => (
-                <option key={dept.id} value={dept.id}>
-                  {dept.name}
-                </option>
-              ))}
+              {Array.isArray(departments) && departments.length > 0 ? (
+                departments.map((dept) => (
+                  <option key={dept.id} value={dept.id}>
+                    {dept.name}
+                  </option>
+                ))
+              ) : (
+                <option disabled>Loading departments...</option>
+              )}
             </select>
           </div>
 
