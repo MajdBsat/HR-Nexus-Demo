@@ -23,10 +23,18 @@ const UserProfile = () => {
       try {
         const token = localStorage.getItem("token");
         if (!token) {
-          navigate("/login");
+          console.log("No token found, redirecting to login");
+          setOffline(true);
+          setError(
+            "You are not logged in. Please log in to access your profile."
+          );
+          // Uncomment to redirect automatically: navigate("/login");
+          setLoading(false);
           return;
         }
 
+        // Log token for debugging (remove in production)
+        console.log("Token found:", token.substring(0, 20) + "...");
         console.log("Fetching profile data...");
 
         // Set a timeout to detect if the request is taking too long
@@ -70,7 +78,28 @@ const UserProfile = () => {
         }
       } catch (err) {
         console.error("Profile fetch error:", err);
-        setError("Failed to load profile data. Please try again later.");
+
+        // Check for specific error cases
+        if (err.response) {
+          if (err.response.status === 401) {
+            setError("Authentication failed. Please login again.");
+            // Redirect to login page after 3 seconds
+            setTimeout(() => navigate("/login"), 3000);
+          } else if (err.response.status === 500) {
+            setError("A server error occurred. Please try again later.");
+          } else {
+            setError(
+              `Failed to load profile data (${err.response.status}): ${
+                err.response.data?.message || "Unknown error"
+              }`
+            );
+          }
+        } else if (err.request) {
+          setError("No response from server. Please check your connection.");
+        } else {
+          setError("Failed to load profile data. Please try again later.");
+        }
+
         setLoading(false);
       }
     };

@@ -16,6 +16,7 @@ api.interceptors.request.use(
 
     // If token exists, add it to the authorization header
     if (token) {
+      // Use Bearer format for auth:api middleware
       config.headers.Authorization = `Bearer ${token}`;
     }
 

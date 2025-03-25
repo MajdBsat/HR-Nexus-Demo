@@ -44,7 +44,7 @@ Route::group(['prefix' => 'auth'], function () {
     Route::post('login', [AuthController::class, 'login']);
 
     // Protected authentication routes
-    Route::group(['middleware' => 'jwt'], function () {
+    Route::group(['middleware' => 'auth:api'], function () {
         Route::post('logout', [AuthController::class, 'logout']);
         Route::post('refresh', [AuthController::class, 'refresh']);
         Route::get('me', [AuthController::class, 'me']);
@@ -408,7 +408,7 @@ Route::prefix('onboarding-tasks')->group(function () {
 });
 
 // Profile routes
-Route::middleware(['jwt'])->group(function () {
+Route::middleware('auth:api')->group(function () {
     Route::get('/profile', [ProfileController::class, 'show']);
     Route::put('/profile', [ProfileController::class, 'update']);
 });
