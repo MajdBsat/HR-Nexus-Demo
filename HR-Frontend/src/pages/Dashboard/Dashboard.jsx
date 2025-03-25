@@ -57,6 +57,16 @@ const Dashboard = () => {
     "#ec4899", // pink
   ];
 
+  // Safe formatter function that handles non-numeric values
+  const safeFormatter = (value, suffix = "", precision = 0) => {
+    if (typeof value !== "number" || isNaN(value)) {
+      return [`N/A ${suffix}`, "Value"];
+    }
+    return precision > 0
+      ? [`${value.toFixed(precision)} ${suffix}`, "Value"]
+      : [`${value} ${suffix}`, "Value"];
+  };
+
   useEffect(() => {
     const fetchDashboardData = async () => {
       try {
@@ -165,7 +175,8 @@ const Dashboard = () => {
     )
       return 0;
     const total = dashboardData.attendanceHours.reduce(
-      (sum, day) => sum + day.average_hours,
+      (sum, day) =>
+        sum + (typeof day.average_hours === "number" ? day.average_hours : 0),
       0
     );
     return (total / dashboardData.attendanceHours.length).toFixed(1);
@@ -329,7 +340,11 @@ const Dashboard = () => {
                     cy="50%"
                     outerRadius={80}
                     label={({ name, percent }) =>
-                      `${name}: ${(percent * 100).toFixed(0)}%`
+                      `${name}: ${
+                        percent && typeof percent === "number"
+                          ? (percent * 100).toFixed(0)
+                          : 0
+                      }%`
                     }
                   >
                     {dashboardData.departmentStats.map((entry, index) => (
@@ -340,7 +355,11 @@ const Dashboard = () => {
                     ))}
                   </Pie>
                   <Tooltip
-                    formatter={(value) => [`${value} employees`, "Count"]}
+                    formatter={(value) =>
+                      typeof value === "number"
+                        ? [`${value} employees`, "Count"]
+                        : ["N/A", "Count"]
+                    }
                   />
                   <Legend />
                 </PieChart>
@@ -362,7 +381,9 @@ const Dashboard = () => {
                   <CartesianGrid strokeDasharray="3 3" vertical={false} />
                   <XAxis dataKey="type" />
                   <YAxis />
-                  <Tooltip formatter={(value) => [`${value} users`, "Count"]} />
+                  <Tooltip
+                    formatter={(value) => safeFormatter(value, "users")}
+                  />
                   <Legend />
                   <Bar dataKey="count" fill="#3b82f6" radius={[4, 4, 0, 0]} />
                 </BarChart>
@@ -385,7 +406,7 @@ const Dashboard = () => {
                   <XAxis dataKey="date" />
                   <YAxis />
                   <Tooltip
-                    formatter={(value) => [`${value} employees`, "Total"]}
+                    formatter={(value) => safeFormatter(value, "employees")}
                   />
                   <Legend />
                   <Area
@@ -416,10 +437,7 @@ const Dashboard = () => {
                   <XAxis dataKey="day" />
                   <YAxis domain={[0, "dataMax + 2"]} />
                   <Tooltip
-                    formatter={(value) => [
-                      `${value.toFixed(2)} hours`,
-                      "Average",
-                    ]}
+                    formatter={(value) => safeFormatter(value, "hours", 2)}
                   />
                   <Legend />
                   <Line
@@ -454,7 +472,11 @@ const Dashboard = () => {
                     cy="50%"
                     outerRadius={80}
                     label={({ name, percent }) =>
-                      `${name}: ${(percent * 100).toFixed(0)}%`
+                      `${name}: ${
+                        percent && typeof percent === "number"
+                          ? (percent * 100).toFixed(0)
+                          : 0
+                      }%`
                     }
                   >
                     {dashboardData.attendanceLocations.map((entry, index) => (
@@ -465,7 +487,7 @@ const Dashboard = () => {
                     ))}
                   </Pie>
                   <Tooltip
-                    formatter={(value) => [`${value} employees`, "Count"]}
+                    formatter={(value) => safeFormatter(value, "employees")}
                   />
                   <Legend />
                 </PieChart>
@@ -486,7 +508,9 @@ const Dashboard = () => {
                   <CartesianGrid strokeDasharray="3 3" vertical={false} />
                   <XAxis dataKey="status" />
                   <YAxis />
-                  <Tooltip formatter={(value) => [`${value} jobs`, "Count"]} />
+                  <Tooltip
+                    formatter={(value) => safeFormatter(value, "jobs")}
+                  />
                   <Legend />
                   <Bar dataKey="count" fill="#f59e0b" radius={[4, 4, 0, 0]} />
                 </BarChart>
@@ -517,7 +541,9 @@ const Dashboard = () => {
                   fillOpacity={0.6}
                 />
                 <Legend />
-                <Tooltip />
+                <Tooltip
+                  formatter={(value) => safeFormatter(value, "applications")}
+                />
               </RadarChart>
             </ResponsiveContainer>
           </div>
@@ -536,7 +562,11 @@ const Dashboard = () => {
                   cx="50%"
                   cy="50%"
                   outerRadius={100}
-                  label
+                  label={({ name, percent }) =>
+                    name && percent && typeof percent === "number"
+                      ? `${name}: ${(percent * 100).toFixed(0)}%`
+                      : ""
+                  }
                 >
                   {dashboardData.projectStats.map((entry, index) => (
                     <Cell
@@ -545,7 +575,9 @@ const Dashboard = () => {
                     />
                   ))}
                 </Pie>
-                <Tooltip />
+                <Tooltip
+                  formatter={(value) => safeFormatter(value, "projects")}
+                />
                 <Legend />
               </PieChart>
             </ResponsiveContainer>
@@ -561,7 +593,7 @@ const Dashboard = () => {
                 <CartesianGrid strokeDasharray="3 3" />
                 <XAxis dataKey="name" />
                 <YAxis domain={[0, 100]} />
-                <Tooltip formatter={(value) => [`${value}%`, "Completion"]} />
+                <Tooltip formatter={(value) => safeFormatter(value, "%")} />
                 <Legend />
                 <Bar dataKey="percentage" fill="#82ca9d" />
               </BarChart>
@@ -609,7 +641,7 @@ const Dashboard = () => {
                 <CartesianGrid strokeDasharray="3 3" />
                 <XAxis dataKey="date" />
                 <YAxis />
-                <Tooltip />
+                <Tooltip formatter={(value) => safeFormatter(value, "tasks")} />
                 <Legend />
                 <Area
                   type="monotone"
