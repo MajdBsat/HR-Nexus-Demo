@@ -22,6 +22,7 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\HealthCarePlanController;
 use App\Http\Controllers\ProfileController;
+use App\Http\Controllers\DashboardController;
 
 /*
 |--------------------------------------------------------------------------
@@ -160,18 +161,18 @@ Route::group(['middleware' => ['jwt', 'role:hr']], function () {
 Route::prefix('users')->group(function () {
     Route::get('/', [UserController::class, 'index']);
     Route::post('/', [UserController::class, 'store']);
-    Route::get('/{id}', [UserController::class, 'show']);
-    Route::put('/{id}', [UserController::class, 'update']);
-    Route::delete('/{id}', [UserController::class, 'destroy']);
+    Route::get('/{id}', [UserController::class, 'show'])->where('id', '[0-9]+');
+    Route::put('/{id}', [UserController::class, 'update'])->where('id', '[0-9]+');
+    Route::delete('/{id}', [UserController::class, 'destroy'])->where('id', '[0-9]+');
 });
 
 // Department routes
 Route::prefix('departments')->group(function () {
     Route::get('/', [DepartmentController::class, 'index']);
     Route::post('/', [DepartmentController::class, 'store']);
-    Route::get('/{id}', [DepartmentController::class, 'show']);
-    Route::put('/{id}', [DepartmentController::class, 'update']);
-    Route::delete('/{id}', [DepartmentController::class, 'destroy']);
+    Route::get('/{id}', [DepartmentController::class, 'show'])->where('id', '[0-9]+');
+    Route::put('/{id}', [DepartmentController::class, 'update'])->where('id', '[0-9]+');
+    Route::delete('/{id}', [DepartmentController::class, 'destroy'])->where('id', '[0-9]+');
 });
 
 // Attendance routes
@@ -360,15 +361,15 @@ Route::group(['middleware' => ['auth:sanctum']], function () {
 Route::prefix('tasks')->group(function () {
     Route::get('/', [TaskController::class, 'index']);
     Route::post('/', [TaskController::class, 'store']);
-    Route::get('/{id}', [TaskController::class, 'show']);
-    Route::put('/{id}', [TaskController::class, 'update']);
-    Route::delete('/{id}', [TaskController::class, 'destroy']);
+    Route::get('/{id}', [TaskController::class, 'show'])->where('id', '[0-9]+');
+    Route::put('/{id}', [TaskController::class, 'update'])->where('id', '[0-9]+');
+    Route::delete('/{id}', [TaskController::class, 'destroy'])->where('id', '[0-9]+');
 
     // Additional specialized routes
     Route::get('/status/{status}', [TaskController::class, 'getByStatus']);
     Route::get('/priority/{priority}', [TaskController::class, 'getByPriority']);
-    Route::get('/user/{userId}', [TaskController::class, 'getByUserId']);
-    Route::get('/upcoming/{days?}', [TaskController::class, 'getUpcomingTasks']);
+    Route::get('/user/{userId}', [TaskController::class, 'getByUserId'])->where('userId', '[0-9]+');
+    Route::get('/upcoming/{days?}', [TaskController::class, 'getUpcomingTasks'])->where('days', '[0-9]+');
 });
 
 // Role routes
@@ -411,4 +412,19 @@ Route::prefix('onboarding-tasks')->group(function () {
 Route::group(['middleware' => ['auth.api']], function () {
     Route::get('/profile', [ProfileController::class, 'show']);
     Route::put('/profile', [ProfileController::class, 'update']);
+});
+
+// Dashboard routes
+Route::group(['middleware' => ['auth.api']], function () {
+    Route::get('/departments/stats', [DashboardController::class, 'getDepartmentStats']);
+    Route::get('/users/type-distribution', [DashboardController::class, 'getUserTypeDistribution']);
+    Route::get('/users/growth', [DashboardController::class, 'getEmployeeGrowth']);
+    Route::get('/attendance/hours', [DashboardController::class, 'getAttendanceHoursStats']);
+    Route::get('/attendance/locations', [DashboardController::class, 'getAttendanceLocationStats']);
+    Route::get('/jobs/stats', [DashboardController::class, 'getJobStats']);
+    Route::get('/job-applications/stats', [DashboardController::class, 'getJobApplicationsStats']);
+    Route::get('/projects/stats', [DashboardController::class, 'getProjectStats']);
+    Route::get('/onboarding/progress', [DashboardController::class, 'getOnboardingProgress']);
+    Route::get('/departments/managers', [DashboardController::class, 'getDepartmentManagerStats']);
+    Route::get('/tasks/completion', [DashboardController::class, 'getTaskCompletionStats']);
 });

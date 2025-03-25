@@ -66,13 +66,17 @@ class TaskController extends Controller
      */
     public function show(int $id): JsonResponse
     {
-        $task = $this->taskService->getTaskById($id);
+        try {
+            $task = $this->taskService->getTaskById((int)$id);
 
-        if (!$task) {
-            return response()->json(['message' => 'Task not found'], 404);
+            if (!$task) {
+                return response()->json(['message' => 'Task not found'], 404);
+            }
+
+            return response()->json(['data' => $task]);
+        } catch (\TypeError $e) {
+            return response()->json(['message' => 'Invalid task ID format'], 400);
         }
-
-        return response()->json(['data' => $task]);
     }
 
     /**
