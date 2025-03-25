@@ -4,6 +4,7 @@ namespace Database\Seeders;
 
 use Illuminate\Database\Seeder;
 use App\Models\Job;
+use App\Models\Department;
 use Illuminate\Support\Facades\DB;
 
 class JobSeeder extends Seeder
@@ -15,11 +16,17 @@ class JobSeeder extends Seeder
      */
     public function run()
     {
+        // Get department IDs by name
+        $departments = Department::all()->pluck('id', 'name')->toArray();
+
+        // Default department ID if not found
+        $defaultDepartmentId = 1;
+
         // Create sample jobs
         $jobs = [
             [
                 'title' => 'HR Manager',
-                'department' => 'Human Resources',
+                'department_id' => $departments['Human Resources'] ?? $defaultDepartmentId,
                 'description' => 'Oversee all aspects of human resources operations within the company',
                 'requirements' => json_encode([
                     'Bachelor\'s degree in HR or related field',
@@ -32,22 +39,20 @@ class JobSeeder extends Seeder
                     'Manage employee relations and benefits'
                 ]),
                 'location' => 'New York, NY',
-                'job_type' => 'Full-time',
-                'job_level' => 'Senior',
+                'employment_type' => 'full-time',
+                'experience_years_min' => 5,
                 'salary_min' => 80000,
                 'salary_max' => 110000,
-                'salary_currency' => 'USD',
-                'salary_period' => 'yearly',
-                'is_remote' => false,
+                'remote_eligible' => false,
                 'posting_date' => now(),
-                'status' => 'Published',
-                'vacancies' => 1,
+                'status' => 'open',
+                'positions_available' => 1,
                 'created_at' => now(),
                 'updated_at' => now(),
             ],
             [
                 'title' => 'Software Developer',
-                'department' => 'Information Technology',
+                'department_id' => $departments['Information Technology'] ?? $defaultDepartmentId,
                 'description' => 'Develop and maintain software applications for internal and external use',
                 'requirements' => json_encode([
                     'Bachelor\'s degree in CS or related field',
@@ -60,22 +65,20 @@ class JobSeeder extends Seeder
                     'Collaborate with cross-functional teams'
                 ]),
                 'location' => 'Remote',
-                'job_type' => 'Full-time',
-                'job_level' => 'Mid',
+                'employment_type' => 'full-time',
+                'experience_years_min' => 3,
                 'salary_min' => 75000,
                 'salary_max' => 120000,
-                'salary_currency' => 'USD',
-                'salary_period' => 'yearly',
-                'is_remote' => true,
+                'remote_eligible' => true,
                 'posting_date' => now(),
-                'status' => 'Published',
-                'vacancies' => 2,
+                'status' => 'open',
+                'positions_available' => 2,
                 'created_at' => now(),
                 'updated_at' => now(),
             ],
             [
                 'title' => 'Financial Analyst',
-                'department' => 'Finance & Accounting',
+                'department_id' => $departments['Finance'] ?? $defaultDepartmentId,
                 'description' => 'Analyze financial data and provide insights for business decisions',
                 'requirements' => json_encode([
                     'Bachelor\'s degree in Finance or Accounting',
@@ -88,22 +91,20 @@ class JobSeeder extends Seeder
                     'Support budget planning process'
                 ]),
                 'location' => 'Chicago, IL',
-                'job_type' => 'Full-time',
-                'job_level' => 'Entry',
+                'employment_type' => 'full-time',
+                'experience_years_min' => 2,
                 'salary_min' => 65000,
                 'salary_max' => 90000,
-                'salary_currency' => 'USD',
-                'salary_period' => 'yearly',
-                'is_remote' => false,
+                'remote_eligible' => false,
                 'posting_date' => now(),
-                'status' => 'Published',
-                'vacancies' => 1,
+                'status' => 'open',
+                'positions_available' => 1,
                 'created_at' => now(),
                 'updated_at' => now(),
             ],
             [
                 'title' => 'Marketing Coordinator',
-                'department' => 'Marketing',
+                'department_id' => $departments['Marketing'] ?? $defaultDepartmentId,
                 'description' => 'Coordinate marketing campaigns and support marketing team activities',
                 'requirements' => json_encode([
                     'Bachelor\'s degree in Marketing or Communications',
@@ -116,22 +117,20 @@ class JobSeeder extends Seeder
                     'Track marketing metrics and report results'
                 ]),
                 'location' => 'Austin, TX',
-                'job_type' => 'Full-time',
-                'job_level' => 'Entry',
+                'employment_type' => 'full-time',
+                'experience_years_min' => 1,
                 'salary_min' => 50000,
                 'salary_max' => 70000,
-                'salary_currency' => 'USD',
-                'salary_period' => 'yearly',
-                'is_remote' => false,
+                'remote_eligible' => false,
                 'posting_date' => now(),
-                'status' => 'Published',
-                'vacancies' => 1,
+                'status' => 'open',
+                'positions_available' => 1,
                 'created_at' => now(),
                 'updated_at' => now(),
             ],
             [
                 'title' => 'Operations Manager',
-                'department' => 'Operations',
+                'department_id' => $departments['Operations'] ?? $defaultDepartmentId,
                 'description' => 'Oversee daily operations and ensure efficient business processes',
                 'requirements' => json_encode([
                     'Bachelor\'s degree in Business Administration or related field',
@@ -144,22 +143,22 @@ class JobSeeder extends Seeder
                     'Monitor performance metrics and suggest improvements'
                 ]),
                 'location' => 'Denver, CO',
-                'job_type' => 'Full-time',
-                'job_level' => 'Senior',
+                'employment_type' => 'full-time',
+                'experience_years_min' => 5,
                 'salary_min' => 85000,
                 'salary_max' => 115000,
-                'salary_currency' => 'USD',
-                'salary_period' => 'yearly',
-                'is_remote' => false,
+                'remote_eligible' => false,
                 'posting_date' => now(),
-                'status' => 'Published',
-                'vacancies' => 1,
+                'status' => 'open',
+                'positions_available' => 1,
                 'created_at' => now(),
                 'updated_at' => now(),
             ],
         ];
 
         // Insert the jobs
-        DB::table('jobs')->insert($jobs);
+        foreach ($jobs as $job) {
+            Job::create($job);
+        }
     }
 }
