@@ -57,19 +57,9 @@ class CandidateService
     public function createCandidate(array $data): array
     {
         $validator = Validator::make($data, [
-            'first_name' => 'required|string|max:100',
-            'last_name' => 'required|string|max:100',
-            'email' => 'required|email|unique:candidates,email',
-            'phone' => 'nullable|string|max:20',
-            'address' => 'nullable|string|max:255',
-            'resume_path' => 'nullable|string|max:255',
-            'position' => 'required|string|max:100',
-            'status' => 'required|in:applied,screening,interview,offered,hired,rejected',
-            'skills' => 'nullable|string|max:255',
-            'experience_years' => 'nullable|integer|min:0',
-            'education' => 'nullable|string|max:255',
-            'notes' => 'nullable|string',
-            'application_date' => 'required|date',
+            'status' => 'required|in:applied,interviewed,hired,rejected',
+            'job_id' => 'required|integer|exists:jobs,id',
+            'user_id' => 'required|integer|exists:users,id'
         ]);
 
         if ($validator->fails()) {
@@ -99,19 +89,9 @@ class CandidateService
     public function updateCandidate(int $id, array $data): array
     {
         $validator = Validator::make($data, [
-            'first_name' => 'sometimes|string|max:100',
-            'last_name' => 'sometimes|string|max:100',
-            'email' => 'sometimes|email|unique:candidates,email,' . $id,
-            'phone' => 'nullable|string|max:20',
-            'address' => 'nullable|string|max:255',
-            'resume_path' => 'nullable|string|max:255',
-            'position' => 'sometimes|string|max:100',
-            'status' => 'sometimes|in:applied,screening,interview,offered,hired,rejected',
-            'skills' => 'nullable|string|max:255',
-            'experience_years' => 'nullable|integer|min:0',
-            'education' => 'nullable|string|max:255',
-            'notes' => 'nullable|string',
-            'application_date' => 'sometimes|date',
+            'status' => 'required|in:applied,interviewed,hired,rejected',
+            'job_id' => 'required|integer|exists:jobs,id',
+            'user_id' => 'required|integer|exists:users,id'
         ]);
 
         if ($validator->fails()) {
@@ -167,15 +147,15 @@ class CandidateService
      * @param string $position
      * @return array
      */
-    public function getCandidatesByPosition(string $position): array
-    {
-        $candidates = $this->candidateRepository->getByPosition($position);
+    // public function getCandidatesByPosition(string $position): array
+    // {
+    //     $candidates = $this->candidateRepository->getByPosition($position);
 
-        return [
-            'success' => true,
-            'data' => $candidates
-        ];
-    }
+    //     return [
+    //         'success' => true,
+    //         'data' => $candidates
+    //     ];
+    // }
 
     /**
      * Get candidates by status.

@@ -53,7 +53,7 @@ interface CandidateRepositoryInterface
      * @param string $position
      * @return Collection
      */
-    public function getByPosition(string $position): Collection;
+    // public function getByPosition(string $position): Collection;
 
     /**
      * Get candidates by status

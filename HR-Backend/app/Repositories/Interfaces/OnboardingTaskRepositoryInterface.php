@@ -63,14 +63,14 @@ interface OnboardingTaskRepositoryInterface
      * @param int $roleId
      * @return Collection
      */
-    public function getByRoleId(int $roleId): Collection;
+    // public function getByRoleId(int $roleId): Collection;
 
     /**
      * Get all roles.
      *
      * @return Collection
      */
-    public function getAllRoles(): Collection;
+    // public function getAllRoles(): Collection;
 
     /**
      * Get role by ID.
@@ -78,7 +78,7 @@ interface OnboardingTaskRepositoryInterface
      * @param int $id
      * @return Role|null
      */
-    public function getRoleById(int $id): ?Role;
+    // public function getRoleById(int $id): ?Role;
 
     /**
      * Create a new role.
@@ -86,7 +86,7 @@ interface OnboardingTaskRepositoryInterface
      * @param array $data
      * @return Role
      */
-    public function createRole(array $data): Role;
+    // public function createRole(array $data): Role;
 
     /**
      * Update a role.
@@ -95,7 +95,7 @@ interface OnboardingTaskRepositoryInterface
      * @param array $data
      * @return Role|null
      */
-    public function updateRole(int $id, array $data): ?Role;
+    // public function updateRole(int $id, array $data): ?Role;
 
     /**
      * Delete a role.
@@ -103,7 +103,7 @@ interface OnboardingTaskRepositoryInterface
      * @param int $id
      * @return bool
      */
-    public function deleteRole(int $id): bool;
+    // public function deleteRole(int $id): bool;
 
     /**
      * Get all tasks for a specific role.
@@ -111,7 +111,7 @@ interface OnboardingTaskRepositoryInterface
      * @param int $roleId
      * @return Collection
      */
-    public function getTasksByRoleId(int $roleId): Collection;
+    // public function getTasksByRoleId(int $roleId): Collection;
 
     /**
      * Assign a task to a role.
@@ -120,7 +120,7 @@ interface OnboardingTaskRepositoryInterface
      * @param int $taskId
      * @return bool
      */
-    public function assignTaskToRole(int $roleId, int $taskId): bool;
+    // public function assignTaskToRole(int $roleId, int $taskId): bool;
 
     /**
      * Remove a task from a role.
@@ -129,7 +129,7 @@ interface OnboardingTaskRepositoryInterface
      * @param int $taskId
      * @return bool
      */
-    public function removeTaskFromRole(int $roleId, int $taskId): bool;
+    // public function removeTaskFromRole(int $roleId, int $taskId): bool;
 
     /**
      * Check if an employee exists.
@@ -145,7 +145,7 @@ interface OnboardingTaskRepositoryInterface
      * @param int $roleId
      * @return bool
      */
-    public function roleExists(int $roleId): bool;
+    // public function roleExists(int $roleId): bool;
 
     /**
      * Check if a task exists.

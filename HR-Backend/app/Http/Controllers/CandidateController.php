@@ -2,9 +2,12 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Candidate;
 use App\Services\CandidateService;
+use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Http\Request;
 use Illuminate\Http\JsonResponse;
+use PhpParser\ErrorHandler\Collecting;
 
 class CandidateController extends Controller
 {
@@ -125,11 +128,11 @@ class CandidateController extends Controller
      * @param string $position
      * @return JsonResponse
      */
-    public function getByPosition(string $position): JsonResponse
-    {
-        $result = $this->candidateService->getCandidatesByPosition($position);
-        return response()->json(['data' => $result['data']], 200);
-    }
+    // public function getByPosition(string $position): JsonResponse
+    // {
+    //     $result = $this->candidateService->getCandidatesByPosition($position);
+    //     return response()->json(['data' => $result['data']], 200);
+    // }
 
     /**
      * Get candidates by status
@@ -157,15 +160,10 @@ class CandidateController extends Controller
      * @param Request $request
      * @return JsonResponse
      */
-    public function search(Request $request): JsonResponse
+    public function search($searchTerm): Collection
     {
-        $searchTerm = $request->input('search');
-        $result = $this->candidateService->searchCandidates($searchTerm);
-
-        if (!$result['success']) {
-            return response()->json(['message' => $result['message']], 422);
-        }
-
-        return response()->json(['data' => $result['data']], 200);
+        return Candidate::where('email', 'like', "%{$searchTerm}%")
+            ->orWhere('name', 'like', "%{$searchTerm}%")
+            ->get();
     }
 }

@@ -8,27 +8,28 @@ return new class extends Migration
 {
     /**
      * Run the migrations.
+     *
+     * @return void
      */
-    public function up(): void
+    public function up()
     {
         Schema::create('tasks', function (Blueprint $table) {
             $table->id();
             $table->string('title');
-            $table->text('description')->nullable();
-            $table->enum('status', ['pending', 'in-progress', 'completed', 'on-hold', 'cancelled'])->default('pending');
-            $table->enum('priority', ['low', 'medium', 'high', 'urgent'])->default('medium');
+            $table->enum('status', ['pending', 'in-progress', 'completed'])->default('pending');
+            $table->enum('priority', ['low', 'medium', 'high', ])->default('medium');
             $table->foreignId('assigned_to')->nullable()->constrained('users')->onDelete('set null');
             $table->date('due_date')->nullable();
-            $table->integer('estimated_hours')->nullable();
-            $table->integer('actual_hours')->nullable();
             $table->timestamps();
         });
     }
 
     /**
      * Reverse the migrations.
+     *
+     * @return void
      */
-    public function down(): void
+    public function down()
     {
         Schema::dropIfExists('tasks');
     }

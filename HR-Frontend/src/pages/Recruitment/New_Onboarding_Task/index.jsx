@@ -25,16 +25,16 @@ const Add_New_Onboarding_Task = () => {
                     <label htmlFor="title">Task Title</label>
                     <input id="title" name="title" type="text" placeholder="Deploy on server"/>
                 </div>
+                {/* //Email */}
                 <div className="label_input flex column width50">
                     <label htmlFor="assign_to">Assign To</label>
-                    <input id="title" name="assign_to" type="text" placeholder="Deploy on server"/>
+                    <input id="assign_to" name="assign_to" type="text" placeholder="Deploy on server"/>
                 </div>
 
                 <div className="label_input flex column width50">
                     <label>Due Date</label>
                     <div className="input-group flex row center">
-                            <input type="date" id="date" className="width50"/>
-                            <input type="time" id="time" className="width50"/>
+                            <input type="date" id="date" className="width100"/>
                     </div>
                 </div>
 
