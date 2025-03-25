@@ -93,19 +93,26 @@ class UserController extends Controller
      */
     public function show(int $id): JsonResponse
     {
-        $user = $this->userService->getUserById($id);
+        try {
+            $user = $this->userService->getUserById((int)$id);
 
-        if (!$user) {
+            if (!$user) {
+                return response()->json([
+                    'success' => false,
+                    'message' => 'User not found.'
+                ], Response::HTTP_NOT_FOUND);
+            }
+
+            return response()->json([
+                'success' => true,
+                'data' => $user
+            ]);
+        } catch (\TypeError $e) {
             return response()->json([
                 'success' => false,
-                'message' => 'User not found.'
-            ], Response::HTTP_NOT_FOUND);
+                'message' => 'Invalid user ID format.'
+            ], Response::HTTP_BAD_REQUEST);
         }
-
-        return response()->json([
-            'success' => true,
-            'data' => $user
-        ]);
     }
 
     /**
@@ -117,41 +124,48 @@ class UserController extends Controller
      */
     public function update(Request $request, int $id): JsonResponse
     {
-        $validator = Validator::make($request->all(), [
-            'email' => 'sometimes|required|email',
-            'password' => 'sometimes|required|min:6',
-            'first_name' => 'sometimes|required|string|max:50',
-            'last_name' => 'sometimes|required|string|max:50',
-            'dob' => 'nullable|date',
-            'phone_nb' => 'nullable|string|max:20',
-            'user_type' => 'sometimes|required|integer|in:0,1,2',
-            'department_id' => 'nullable|integer|exists:departments,id',
-        ]);
+        try {
+            $validator = Validator::make($request->all(), [
+                'email' => 'sometimes|required|email',
+                'password' => 'sometimes|required|min:6',
+                'first_name' => 'sometimes|required|string|max:50',
+                'last_name' => 'sometimes|required|string|max:50',
+                'dob' => 'nullable|date',
+                'phone_nb' => 'nullable|string|max:20',
+                'user_type' => 'sometimes|required|integer|in:0,1,2',
+                'department_id' => 'nullable|integer|exists:departments,id',
+            ]);
 
-        if ($validator->fails()) {
+            if ($validator->fails()) {
+                return response()->json([
+                    'success' => false,
+                    'errors' => $validator->errors()
+                ], Response::HTTP_UNPROCESSABLE_ENTITY);
+            }
+
+            $user = $this->userService->updateUser((int)$id, $request->all());
+
+            if (!$user) {
+                return response()->json([
+                    'success' => false,
+                    'message' => 'User not found or email already in use.'
+                ], Response::HTTP_NOT_FOUND);
+            }
+
+            // Load the department relationship for the response
+            $user->load('department');
+
+            return response()->json([
+                'success' => true,
+                'data' => $user,
+                'message' => 'User updated successfully.'
+            ]);
+        } catch (\TypeError $e) {
             return response()->json([
                 'success' => false,
-                'errors' => $validator->errors()
-            ], Response::HTTP_UNPROCESSABLE_ENTITY);
+                'message' => 'Invalid user ID format.'
+            ], Response::HTTP_BAD_REQUEST);
         }
-
-        $user = $this->userService->updateUser($id, $request->all());
-
-        if (!$user) {
-            return response()->json([
-                'success' => false,
-                'message' => 'User not found or email already in use.'
-            ], Response::HTTP_NOT_FOUND);
-        }
-
-        // Load the department relationship for the response
-        $user->load('department');
-
-        return response()->json([
-            'success' => true,
-            'data' => $user,
-            'message' => 'User updated successfully.'
-        ]);
     }
 
     /**
@@ -162,18 +176,25 @@ class UserController extends Controller
      */
     public function destroy(int $id): JsonResponse
     {
-        $result = $this->userService->deleteUser($id);
+        try {
+            $result = $this->userService->deleteUser((int)$id);
 
-        if (!$result) {
+            if (!$result) {
+                return response()->json([
+                    'success' => false,
+                    'message' => 'User not found.'
+                ], Response::HTTP_NOT_FOUND);
+            }
+
+            return response()->json([
+                'success' => true,
+                'message' => 'User deleted successfully.'
+            ]);
+        } catch (\TypeError $e) {
             return response()->json([
                 'success' => false,
-                'message' => 'User not found.'
-            ], Response::HTTP_NOT_FOUND);
+                'message' => 'Invalid user ID format.'
+            ], Response::HTTP_BAD_REQUEST);
         }
-
-        return response()->json([
-            'success' => true,
-            'message' => 'User deleted successfully.'
-        ]);
     }
 }
