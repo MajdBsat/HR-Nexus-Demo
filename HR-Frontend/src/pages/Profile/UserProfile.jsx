@@ -1,5 +1,4 @@
 import React, { useState, useEffect } from "react";
-import { Card, Form, Button, Alert, Spinner } from "react-bootstrap";
 import { useNavigate } from "react-router-dom";
 import api from "../../utils/api";
 import "../../styles/UserProfile.css";
@@ -109,93 +108,90 @@ const UserProfile = () => {
 
   if (loading) {
     return (
-      <div
-        className="d-flex justify-content-center align-items-center"
-        style={{ height: "80vh" }}
-      >
-        <Spinner animation="border" role="status">
-          <span className="visually-hidden">Loading...</span>
-        </Spinner>
+      <div className="loading-container">
+        <div className="loader"></div>
+        <span className="visually-hidden">Loading...</span>
       </div>
     );
   }
 
   return (
     <div className="user-profile-container">
-      <h2 className="mb-4 text-center">Your Profile</h2>
-      <Card className="profile-card">
-        <Card.Body>
-          {error && <Alert variant="danger">{error}</Alert>}
-          {success && <Alert variant="success">{success}</Alert>}
+      <h2 className="profile-title">Your Profile</h2>
+      <div className="profile-card">
+        <div className="card-body">
+          {error && <div className="error-message">{error}</div>}
+          {success && <div className="success-message">{success}</div>}
 
-          <Form onSubmit={handleSubmit}>
-            <Form.Group className="mb-3">
-              <Form.Label>Name</Form.Label>
-              <Form.Control
+          <form onSubmit={handleSubmit} className="profile-form">
+            <div className="form-group">
+              <label htmlFor="name">Name</label>
+              <input
                 type="text"
+                id="name"
                 name="name"
                 value={formData.name}
                 onChange={handleChange}
                 required
+                className="form-input"
               />
-            </Form.Group>
+            </div>
 
-            <Form.Group className="mb-3">
-              <Form.Label>Email</Form.Label>
-              <Form.Control
+            <div className="form-group">
+              <label htmlFor="email">Email</label>
+              <input
                 type="email"
+                id="email"
                 name="email"
                 value={formData.email}
                 onChange={handleChange}
                 required
+                className="form-input"
               />
-            </Form.Group>
+            </div>
 
-            <Form.Group className="mb-3">
-              <Form.Label>
+            <div className="form-group">
+              <label htmlFor="password">
                 New Password (leave blank to keep current)
-              </Form.Label>
-              <Form.Control
+              </label>
+              <input
                 type="password"
+                id="password"
                 name="password"
                 value={formData.password}
                 onChange={handleChange}
                 autoComplete="new-password"
+                className="form-input"
               />
-            </Form.Group>
+            </div>
 
-            <Form.Group className="mb-3">
-              <Form.Label>Confirm New Password</Form.Label>
-              <Form.Control
+            <div className="form-group">
+              <label htmlFor="password_confirmation">
+                Confirm New Password
+              </label>
+              <input
                 type="password"
+                id="password_confirmation"
                 name="password_confirmation"
                 value={formData.password_confirmation}
                 onChange={handleChange}
                 autoComplete="new-password"
+                className="form-input"
               />
-            </Form.Group>
-
-            <div className="d-grid gap-2">
-              <Button variant="primary" type="submit" disabled={updating}>
-                {updating ? (
-                  <>
-                    <Spinner
-                      as="span"
-                      animation="border"
-                      size="sm"
-                      role="status"
-                      aria-hidden="true"
-                    />
-                    <span className="ms-2">Updating...</span>
-                  </>
-                ) : (
-                  "Update Profile"
-                )}
-              </Button>
             </div>
-          </Form>
-        </Card.Body>
-      </Card>
+
+            <div className="form-submit">
+              <button
+                type="submit"
+                className="submit-button"
+                disabled={updating}
+              >
+                {updating ? "Updating..." : "Update Profile"}
+              </button>
+            </div>
+          </form>
+        </div>
+      </div>
     </div>
   );
 };
