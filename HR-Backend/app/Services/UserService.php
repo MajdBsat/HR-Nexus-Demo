@@ -80,7 +80,14 @@ class UserService
             }
         }
 
-        return $this->repository->update($id, $data);
+        $user = $this->repository->update($id, $data);
+
+        // Load the department relationship for the updated user
+        if ($user) {
+            $user->load('department');
+        }
+
+        return $user;
     }
 
     /**

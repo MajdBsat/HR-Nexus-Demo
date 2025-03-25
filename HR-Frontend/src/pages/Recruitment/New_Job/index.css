@@ -1,0 +1,75 @@
+form{
+    gap: 1.5em;
+    width: 40%;
+    height: 85%;
+    border-radius: 25px;
+    background-color: var(--light-bg);
+}
+form .cancel-btn{
+    height: 100%;
+    border: solid 2px;
+    border-color: var(--primary-color);
+    color: var(--primary-color);
+    background-color: transparent;
+
+}
+
+form .add-btn{
+    height: 100%;
+    background-color: var(--primary-color);
+    color: var(--secondary-color);
+}
+
+
+.buttons{
+    height: 2.5em;
+    gap: 3.75em;
+}
+
+.buttons button{
+    font-size: 1em;
+    font-weight: bold;
+    width: 50%;
+    border-radius: 10px;
+}
+
+.form_title{
+    color: var(--primary-color);
+    font-size: 2.5em;
+}
+
+.label_input{
+    gap: 0.5em;
+}
+
+.label_input{
+    gap: 0.5em;
+}
+
+.label_input #title{
+    height: 2.5px;
+    border-radius: 5px;
+}
+
+.label_input #requirements{
+    height: 9.5em;
+    border-radius: 5px;
+}
+
+.label_input #description{
+    height: 9.5em;
+    border-radius: 5px;
+}
+
+.back-div{
+    background-color: var(--third-color);
+}
+
+.back-div form{
+    background-color: var(--secondary-color);
+}
+
+input, textarea{
+    padding: 0.75em;
+    background-color: var(--light-bg);
+}

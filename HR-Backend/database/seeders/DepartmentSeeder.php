@@ -2,69 +2,98 @@
 
 namespace Database\Seeders;
 
-use Illuminate\Database\Seeder;
 use App\Models\Department;
+use Illuminate\Database\Seeder;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Str;
 
 class DepartmentSeeder extends Seeder
 {
     /**
      * Run the database seeds.
-     *
-     * @return void
      */
-    public function run()
+    public function run(): void
     {
-        // Create sample departments
-        $departments = [
-            [
-                'name' => 'Human Resources',
-                'code' => 'HR',
-                'description' => 'Responsible for recruiting, onboarding, training, and employee relations',
-                'is_active' => true,
-                'budget' => 250000,
-                'created_at' => now(),
-                'updated_at' => now(),
-            ],
-            [
-                'name' => 'Information Technology',
-                'code' => 'IT',
-                'description' => 'Responsible for managing technology infrastructure and software systems',
-                'is_active' => true,
-                'budget' => 500000,
-                'created_at' => now(),
-                'updated_at' => now(),
-            ],
-            [
-                'name' => 'Finance & Accounting',
-                'code' => 'FIN',
-                'description' => 'Responsible for managing company finances, budgeting, and financial reporting',
-                'is_active' => true,
-                'budget' => 300000,
-                'created_at' => now(),
-                'updated_at' => now(),
-            ],
-            [
-                'name' => 'Marketing',
-                'code' => 'MKT',
-                'description' => 'Responsible for brand management, advertising, and market research',
-                'is_active' => true,
-                'budget' => 400000,
-                'created_at' => now(),
-                'updated_at' => now(),
-            ],
-            [
-                'name' => 'Operations',
-                'code' => 'OPS',
-                'description' => 'Responsible for day-to-day operational activities',
-                'is_active' => true,
-                'budget' => 350000,
-                'created_at' => now(),
-                'updated_at' => now(),
-            ],
-        ];
+        // Only seed if departments table is empty
+        if (Department::count() === 0) {
+            // Create the departments
+            $departments = [
+                [
+                    'name' => 'Human Resources',
+                    'code' => 'HR',
+                    'description' => 'Handles employee relations, recruitment, and workforce management',
+                    'is_active' => true,
+                    'budget' => 250000,
+                    'created_at' => now(),
+                    'updated_at' => now(),
+                ],
+                [
+                    'name' => 'Information Technology',
+                    'code' => 'IT',
+                    'description' => 'Manages technology infrastructure and software development',
+                    'is_active' => true,
+                    'budget' => 500000,
+                    'created_at' => now(),
+                    'updated_at' => now(),
+                ],
+                [
+                    'name' => 'Finance',
+                    'code' => 'FIN',
+                    'description' => 'Handles company finances, budgeting, and accounting',
+                    'is_active' => true,
+                    'budget' => 300000,
+                    'created_at' => now(),
+                    'updated_at' => now(),
+                ],
+                [
+                    'name' => 'Marketing',
+                    'code' => 'MKT',
+                    'description' => 'Responsible for company promotion and brand management',
+                    'is_active' => true,
+                    'budget' => 400000,
+                    'created_at' => now(),
+                    'updated_at' => now(),
+                ],
+                [
+                    'name' => 'Sales',
+                    'code' => 'SLS',
+                    'description' => 'Manages customer relationships and revenue generation',
+                    'is_active' => true,
+                    'budget' => 450000,
+                    'created_at' => now(),
+                    'updated_at' => now(),
+                ],
+                [
+                    'name' => 'Operations',
+                    'code' => 'OPS',
+                    'description' => 'Oversees day-to-day business operations and logistics',
+                    'is_active' => true,
+                    'budget' => 350000,
+                    'created_at' => now(),
+                    'updated_at' => now(),
+                ],
+                [
+                    'name' => 'Customer Support',
+                    'code' => 'CS',
+                    'description' => 'Handles customer inquiries and provides technical assistance',
+                    'is_active' => true,
+                    'budget' => 200000,
+                    'created_at' => now(),
+                    'updated_at' => now(),
+                ],
+                [
+                    'name' => 'Research & Development',
+                    'code' => 'R&D',
+                    'description' => 'Focuses on innovation and development of new products',
+                    'is_active' => true,
+                    'budget' => 600000,
+                    'created_at' => now(),
+                    'updated_at' => now(),
+                ],
+            ];
 
-        // Insert the departments
-        DB::table('departments')->insert($departments);
+            // Insert departments
+            Department::insert($departments);
+        }
     }
 }

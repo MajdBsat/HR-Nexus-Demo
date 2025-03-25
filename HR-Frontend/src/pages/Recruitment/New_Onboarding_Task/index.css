@@ -1,0 +1,76 @@
+.onboarding-task form{
+    gap: 1.5em;
+    width: 40%;
+    height: 85%;
+    border-radius: 25px;
+    background-color: var(--light-bg);
+}
+.onboarding-task form .cancel-btn{
+    height: 100%;
+    border: solid 2px;
+    border-color: var(--primary-color);
+    color: var(--primary-color);
+    background-color: transparent;
+
+}
+
+.onboarding-task form .add-btn{
+    height: 100%;
+    background-color: var(--primary-color);
+    color: var(--secondary-color);
+}
+
+
+.onboarding-task .buttons{
+    height: 2.5em;
+    gap: 3.75em;
+}
+
+.onboarding-task buttons button{
+    font-size: 1em;
+    font-weight: bold;
+    width: 50%;
+    border-radius: 10px;
+}
+
+.onboarding-task .form_title{
+    color: var(--primary-color);
+    font-size: 2.5em;
+}
+
+.onboarding-task .label_input{
+    gap: 0.5em;
+    padding: 0.75em;
+}
+
+.onboarding-task .label_input select{
+    gap: 0.5em;
+    background-color: var(--light-bg);
+    padding: 0.75em;
+    height: 2.5em;
+    border-radius: 5px;
+}
+
+.onboarding-task .label_input #title{
+    height: 2.5em;
+    border-radius: 5px;
+}
+
+.onboarding-task .label_input #requirements{
+    height: 9.5em;
+    border-radius: 5px;
+}
+
+.onboarding-task .label_input #description{
+    height: 9.5em;
+    border-radius: 5px;
+}
+
+.onboarding-task .back-div{
+    background-color: var(--third-color);
+}
+
+.onboarding-task .back-div form{
+    background-color: var(--secondary-color);
+}
+

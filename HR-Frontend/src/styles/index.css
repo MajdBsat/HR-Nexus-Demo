@@ -1,0 +1,126 @@
+*{
+  font-family: 'Poppins', sans-serif;
+  padding: 0px;
+  margin: 0px;
+  box-sizing: border-box;
+  border: 0px;
+}
+:root{
+  --primary-color:#0077B6;
+  --secondary-color:#FFFFFF;
+  --third-color: #333A40;
+  --light-bg: #EEEEEE;
+}
+
+.flex{
+  display: flex;
+}
+
+.wrap{
+  flex-wrap: wrap;
+}
+
+.row{
+  flex-direction: row;
+}
+
+.column{
+  flex-direction: column;
+}
+
+.center{
+  align-items: center;
+  justify-content: center;
+}
+
+.item-start{
+  align-items: start;
+}
+
+.content-start{
+  justify-content: start;
+}
+
+.item-end{
+  align-items: end;
+}
+
+.content-end{
+  justify-content: end;
+}
+
+.space-evenly{
+  justify-content: space-evenly;
+}
+
+.space-around{
+  justify-content: space-around;
+}
+
+.space-between{
+  justify-content: space-between;
+}
+
+.width100{
+  width: 100%;
+}
+
+.width75{
+  width: 75%;
+}
+
+.width50{
+  width: 50%;
+}
+
+.width25{
+  width: 25%;
+}
+
+.height100{
+  height: 100%;
+}
+
+.height75{
+  height: 75%;
+}
+
+.height50{
+  height: 50%;
+}
+
+.height25{
+  height: 25%;
+}
+
+.width100vw{
+  width: 100vw;
+}
+
+.width75vw{
+  width: 75vw;
+}
+
+.width50vw{
+  width: 50vw;
+}
+
+.width25vw{
+  width: 25vw;
+}
+
+.height100vh{
+  height: 100vh;
+}
+
+.height75vh{
+  height: 75vh;
+}
+
+.height50vh{
+  height: 50vh;
+}
+
+.height25vh{
+  height: 25vh;
+}
