@@ -13,6 +13,7 @@ import Login from "./components/Login";
 import Register from "./components/Register";
 import EmployeeList from "./pages/EmployeeManagement/EmployeeList";
 import UserProfile from "./pages/Profile/UserProfile";
+import Dashboard from "./pages/Dashboard/Dashboard";
 
 function App() {
   return (
@@ -22,6 +23,7 @@ function App() {
         <Route path="/register" element={<Register />} />
         <Route path="/profile" element={<UserProfile />} />
         <Route path="/hr">
+          <Route path="dashboard" element={<Dashboard />} />
           <Route path="employees" element={<EmployeeList />} />
           <Route path="recruitment">
             <Route path="" element={<Recruitment />} />

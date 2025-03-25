@@ -22,6 +22,7 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\HealthCarePlanController;
 use App\Http\Controllers\ProfileController;
+use App\Http\Controllers\DashboardController;
 
 /*
 |--------------------------------------------------------------------------
@@ -411,4 +412,12 @@ Route::prefix('onboarding-tasks')->group(function () {
 Route::group(['middleware' => ['auth.api']], function () {
     Route::get('/profile', [ProfileController::class, 'show']);
     Route::put('/profile', [ProfileController::class, 'update']);
+});
+
+// Dashboard routes
+Route::group(['middleware' => ['auth.api']], function () {
+    Route::get('/departments/stats', [DashboardController::class, 'getDepartmentStats']);
+    Route::get('/users/gender-distribution', [DashboardController::class, 'getGenderDistribution']);
+    Route::get('/users/growth', [DashboardController::class, 'getEmployeeGrowth']);
+    Route::get('/attendance/stats', [DashboardController::class, 'getAttendanceStats']);
 });
