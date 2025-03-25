@@ -1,19 +1,23 @@
-import { Route, Routes } from "react-router-dom";
-import Recruitment from "./pages/Recruitment";
-import "./styles/App.css";
-import Jobs from "./pages/Recruitment/Jobs";
-import Candidates from "./pages/Recruitment/Candidates";
-import Onboarding from "./pages/Recruitment/Onboarding";
-import Jobs_Emp from "./pages/Recruitment/Jobs_Emp";
-import Add_new_job from "./pages/Recruitment/New_Job";
-import Add_New_Onboarding_Task from "./pages/Recruitment/New_Onboarding_Task";
-import Apply_To_Job from "./pages/Recruitment/Apply_To_Job";
-import Onboarding_Emp from "./pages/Recruitment/Onboarding_Emp";
-import Login from "./components/Login";
-import Register from "./components/Register";
-import EmployeeList from "./pages/EmployeeManagement/EmployeeList";
-import UserProfile from "./pages/Profile/UserProfile";
-import Dashboard from "./pages/Dashboard/Dashboard";
+
+import {Route, Routes} from 'react-router-dom'
+import Recruitment from './pages/Recruitment'
+import './styles/App.css'
+import Jobs from './pages/Recruitment/Jobs'
+import Candidates from './pages/Recruitment/Candidates'
+import Onboarding from './pages/Recruitment/Onboarding'
+import Jobs_Emp from './pages/Recruitment/Jobs_Emp'
+import Add_new_job from './pages/Recruitment/New_Job'
+import Add_New_Onboarding_Task from './pages/Recruitment/New_Onboarding_Task'
+import Apply_To_Job from './pages/Recruitment/Apply_To_Job'
+import Onboarding_Emp from './pages/Recruitment/Onboarding_Emp'
+import PayrollMain from './pages/Payroll/Payroll_Main_Page'
+import Login from "./components/Login"
+import Register from "./components/Register"
+import EmployeeList from "./pages/EmployeeManagement/EmployeeList"
+import UserProfile from "./pages/Profile/UserProfile"
+import Dashboard from "./pages/Dashboard/Dashboard"
+
+
 
 function App() {
   return (
@@ -36,6 +40,9 @@ function App() {
               <Route path="" element={<Onboarding />} />
               <Route path="newTask" element={<Add_New_Onboarding_Task />} />
             </Route>
+          </Route>
+          <Route path="payroll">
+          <Route path='' element={<PayrollMain />} />
           </Route>
         </Route>
 
