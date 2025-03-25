@@ -59,17 +59,31 @@ const useUsers = () => {
       }
 
       // Format the data for the table
-      const formattedData = responseData.map((user) => ({
-        id: user.id,
-        ID: user.id,
-        Name: user.name,
-        Email: user.email,
-        "User Type": getUserType(user.user_type),
-        raw_user_type: user.user_type,
-        Department: user.department?.name || "Not Assigned",
-        department_id: user.department_id,
-        Action: "Edit",
-      }));
+      const formattedData = responseData.map((user) => {
+        // Ensure user has all required fields
+        const safeUser = {
+          id: user.id || 0,
+          name: user.name || "",
+          email: user.email || "",
+          user_type: user.user_type != null ? user.user_type : 0,
+          department: user.department || null,
+          department_id: user.department_id || null,
+        };
+
+        return {
+          id: safeUser.id,
+          ID: String(safeUser.id), // Convert to string to be safe
+          Name: String(safeUser.name),
+          Email: String(safeUser.email),
+          "User Type": getUserType(safeUser.user_type),
+          raw_user_type: safeUser.user_type,
+          Department: safeUser.department?.name
+            ? String(safeUser.department.name)
+            : "Not Assigned",
+          department_id: safeUser.department_id,
+          Action: "Edit",
+        };
+      });
 
       console.log(`Formatted ${formattedData.length} users`);
       setUsers(formattedData);
@@ -122,12 +136,14 @@ const useUsers = () => {
         user.id === userId
           ? {
               ...user,
-              Name: updatedUserData.name,
-              Email: updatedUserData.email,
+              Name: String(updatedUserData.name || ""),
+              Email: String(updatedUserData.email || ""),
               "User Type": getUserType(updatedUserData.user_type),
               raw_user_type: updatedUserData.user_type,
               department_id: updatedUserData.department_id,
-              Department: updatedUserData.department_name || "Not Assigned",
+              Department: updatedUserData.department_name
+                ? String(updatedUserData.department_name)
+                : "Not Assigned",
             }
           : user
       )
