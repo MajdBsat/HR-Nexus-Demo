@@ -25,6 +25,7 @@ import {
   ZAxis,
 } from "recharts";
 import api from "../../utils/api";
+import "./Dashboard.css";
 
 const Dashboard = () => {
   const [loading, setLoading] = useState(true);
@@ -77,19 +78,17 @@ const Dashboard = () => {
 
         const results = {};
 
-        // Use Promise.allSettled to handle partial failures
         const responses = await Promise.allSettled(
           endpoints.map((endpoint) => api.get(endpoint.url))
         );
 
-        // Process results
         responses.forEach((response, index) => {
           const key = endpoints[index].key;
           if (response.status === "fulfilled") {
             results[key] = response.value.data;
           } else {
             console.error(`Failed to fetch ${key}:`, response.reason);
-            results[key] = []; // Set empty array as fallback
+            results[key] = [];
           }
         });
 
@@ -107,29 +106,31 @@ const Dashboard = () => {
 
   if (loading) {
     return (
-      <div className="flex items-center justify-center h-screen">
-        <div className="text-2xl">Loading dashboard data...</div>
+      <div className="loading-container">
+        <div className="loading-text">Loading dashboard data...</div>
       </div>
     );
   }
 
   if (error) {
     return (
-      <div className="bg-red-100 p-4 rounded-lg text-red-700">{error}</div>
+      <div className="error-container">
+        <div className="error-text">{error}</div>
+      </div>
     );
   }
 
   return (
-    <div className="p-6 bg-gray-50">
-      <h1 className="text-3xl font-bold mb-8 text-gray-800">HR Dashboard</h1>
+    <div className="dashboard-container">
+      <div className="dashboard-header">
+        <h1 className="dashboard-title">HR Dashboard</h1>
+      </div>
 
-      <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-6">
+      <div className="dashboard-grid">
         {/* Department Distribution */}
-        <div className="bg-white p-4 rounded-lg shadow">
-          <h2 className="text-lg font-semibold mb-4 text-gray-700">
-            Department Distribution
-          </h2>
-          <div className="h-[300px]">
+        <div className="chart-card">
+          <h2 className="chart-title">Department Distribution</h2>
+          <div className="chart-container pie-chart-container">
             <ResponsiveContainer width="100%" height="100%">
               <PieChart>
                 <Pie
@@ -139,7 +140,6 @@ const Dashboard = () => {
                   cx="50%"
                   cy="50%"
                   outerRadius={100}
-                  fill="#8884d8"
                   label={({ name, percent }) =>
                     `${name}: ${(percent * 100).toFixed(0)}%`
                   }
@@ -161,11 +161,9 @@ const Dashboard = () => {
         </div>
 
         {/* User Type Distribution */}
-        <div className="bg-white p-4 rounded-lg shadow">
-          <h2 className="text-lg font-semibold mb-4 text-gray-700">
-            User Type Distribution
-          </h2>
-          <div className="h-[300px]">
+        <div className="chart-card">
+          <h2 className="chart-title">User Type Distribution</h2>
+          <div className="chart-container bar-chart-container">
             <ResponsiveContainer width="100%" height="100%">
               <BarChart data={dashboardData.userTypeDistribution}>
                 <CartesianGrid strokeDasharray="3 3" />
@@ -180,11 +178,9 @@ const Dashboard = () => {
         </div>
 
         {/* Employee Growth Over Time */}
-        <div className="bg-white p-4 rounded-lg shadow">
-          <h2 className="text-lg font-semibold mb-4 text-gray-700">
-            Employee Growth
-          </h2>
-          <div className="h-[300px]">
+        <div className="chart-card">
+          <h2 className="chart-title">Employee Growth</h2>
+          <div className="chart-container area-chart-container">
             <ResponsiveContainer width="100%" height="100%">
               <AreaChart data={dashboardData.employeeGrowth}>
                 <CartesianGrid strokeDasharray="3 3" />
@@ -205,11 +201,9 @@ const Dashboard = () => {
         </div>
 
         {/* Average Work Hours */}
-        <div className="bg-white p-4 rounded-lg shadow">
-          <h2 className="text-lg font-semibold mb-4 text-gray-700">
-            Daily Average Work Hours
-          </h2>
-          <div className="h-[300px]">
+        <div className="chart-card">
+          <h2 className="chart-title">Daily Average Work Hours</h2>
+          <div className="chart-container line-chart-container">
             <ResponsiveContainer width="100%" height="100%">
               <LineChart data={dashboardData.attendanceHours}>
                 <CartesianGrid strokeDasharray="3 3" />
@@ -234,11 +228,9 @@ const Dashboard = () => {
         </div>
 
         {/* Attendance Locations */}
-        <div className="bg-white p-4 rounded-lg shadow">
-          <h2 className="text-lg font-semibold mb-4 text-gray-700">
-            Attendance by Location
-          </h2>
-          <div className="h-[300px]">
+        <div className="chart-card">
+          <h2 className="chart-title">Attendance by Location</h2>
+          <div className="chart-container pie-chart-container">
             <ResponsiveContainer width="100%" height="100%">
               <PieChart>
                 <Pie
@@ -248,7 +240,9 @@ const Dashboard = () => {
                   cx="50%"
                   cy="50%"
                   outerRadius={100}
-                  fill="#8884d8"
+                  label={({ name, percent }) =>
+                    `${name}: ${(percent * 100).toFixed(0)}%`
+                  }
                 >
                   {dashboardData.attendanceLocations.map((entry, index) => (
                     <Cell
@@ -257,38 +251,36 @@ const Dashboard = () => {
                     />
                   ))}
                 </Pie>
-                <Tooltip />
+                <Tooltip
+                  formatter={(value) => [`${value} employees`, "Count"]}
+                />
                 <Legend />
               </PieChart>
             </ResponsiveContainer>
           </div>
         </div>
 
-        {/* Job Status */}
-        <div className="bg-white p-4 rounded-lg shadow">
-          <h2 className="text-lg font-semibold mb-4 text-gray-700">
-            Job Postings by Status
-          </h2>
-          <div className="h-[300px]">
+        {/* Job Statistics */}
+        <div className="chart-card">
+          <h2 className="chart-title">Job Statistics</h2>
+          <div className="chart-container bar-chart-container">
             <ResponsiveContainer width="100%" height="100%">
-              <BarChart data={dashboardData.jobStats} layout="vertical">
+              <BarChart data={dashboardData.jobStats}>
                 <CartesianGrid strokeDasharray="3 3" />
-                <XAxis type="number" />
-                <YAxis dataKey="status" type="category" />
-                <Tooltip />
+                <XAxis dataKey="status" />
+                <YAxis />
+                <Tooltip formatter={(value) => [`${value} jobs`, "Count"]} />
                 <Legend />
-                <Bar dataKey="count" fill="#8884d8" />
+                <Bar dataKey="count" fill="#82ca9d" />
               </BarChart>
             </ResponsiveContainer>
           </div>
         </div>
 
         {/* Job Applications */}
-        <div className="bg-white p-4 rounded-lg shadow">
-          <h2 className="text-lg font-semibold mb-4 text-gray-700">
-            Job Applications by Status
-          </h2>
-          <div className="h-[300px]">
+        <div className="chart-card">
+          <h2 className="chart-title">Job Applications by Status</h2>
+          <div className="chart-container radar-chart-container">
             <ResponsiveContainer width="100%" height="100%">
               <RadarChart
                 outerRadius={90}
@@ -312,11 +304,9 @@ const Dashboard = () => {
         </div>
 
         {/* Project Status */}
-        <div className="bg-white p-4 rounded-lg shadow">
-          <h2 className="text-lg font-semibold mb-4 text-gray-700">
-            Projects by Status
-          </h2>
-          <div className="h-[300px]">
+        <div className="chart-card">
+          <h2 className="chart-title">Projects by Status</h2>
+          <div className="chart-container pie-chart-container">
             <ResponsiveContainer width="100%" height="100%">
               <PieChart>
                 <Pie
@@ -326,7 +316,6 @@ const Dashboard = () => {
                   cx="50%"
                   cy="50%"
                   outerRadius={100}
-                  fill="#8884d8"
                   label
                 >
                   {dashboardData.projectStats.map((entry, index) => (
@@ -344,11 +333,9 @@ const Dashboard = () => {
         </div>
 
         {/* Onboarding Progress */}
-        <div className="bg-white p-4 rounded-lg shadow">
-          <h2 className="text-lg font-semibold mb-4 text-gray-700">
-            Employee Onboarding Progress
-          </h2>
-          <div className="h-[300px]">
+        <div className="chart-card">
+          <h2 className="chart-title">Employee Onboarding Progress</h2>
+          <div className="chart-container bar-chart-container">
             <ResponsiveContainer width="100%" height="100%">
               <BarChart data={dashboardData.onboardingProgress}>
                 <CartesianGrid strokeDasharray="3 3" />
@@ -363,11 +350,9 @@ const Dashboard = () => {
         </div>
 
         {/* Department Managers */}
-        <div className="bg-white p-4 rounded-lg shadow">
-          <h2 className="text-lg font-semibold mb-4 text-gray-700">
-            Department Managers
-          </h2>
-          <div className="h-[300px] overflow-auto">
+        <div className="chart-card">
+          <h2 className="chart-title">Department Managers</h2>
+          <div className="chart-container table-container">
             <table className="min-w-full">
               <thead>
                 <tr>
@@ -396,11 +381,9 @@ const Dashboard = () => {
         </div>
 
         {/* Task Completion */}
-        <div className="bg-white p-4 rounded-lg shadow">
-          <h2 className="text-lg font-semibold mb-4 text-gray-700">
-            Task Completion Trends
-          </h2>
-          <div className="h-[300px]">
+        <div className="chart-card">
+          <h2 className="chart-title">Task Completion Trends</h2>
+          <div className="chart-container area-chart-container">
             <ResponsiveContainer width="100%" height="100%">
               <AreaChart data={dashboardData.taskCompletion}>
                 <CartesianGrid strokeDasharray="3 3" />
