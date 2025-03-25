@@ -16,7 +16,7 @@ class UserRepository implements UserRepositoryInterface
      */
     public function getAll(): Collection
     {
-        return User::all();
+        return User::with('department')->get();
     }
 
     /**
@@ -27,7 +27,7 @@ class UserRepository implements UserRepositoryInterface
      */
     public function findById(int $id): ?User
     {
-        return User::find($id);
+        return User::with('department')->find($id);
     }
 
     /**
@@ -65,6 +65,10 @@ class UserRepository implements UserRepositoryInterface
         }
 
         $user->update($data);
+
+        // Refresh to get all updated data with relationships
+        $user->refresh();
+        $user->load('department');
 
         return $user;
     }

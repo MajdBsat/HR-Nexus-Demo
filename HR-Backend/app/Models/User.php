@@ -22,6 +22,7 @@ class User extends Authenticatable implements JWTSubject
         'email',
         'password',
         'user_type',
+        'department_id',
     ];
 
 
@@ -163,5 +164,13 @@ class User extends Authenticatable implements JWTSubject
     public function isHR(): bool
     {
         return $this->user_type === 2;
+    }
+
+    /**
+     * Get the department that the user belongs to.
+     */
+    public function department()
+    {
+        return $this->belongsTo(Department::class);
     }
 }

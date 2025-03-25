@@ -14,6 +14,8 @@ class Kernel extends HttpKernel
      * @var array<int, class-string|string>
      */
     protected $middleware = [
+        // \App\Http\Middleware\TrustHosts::class,
+        \Illuminate\Http\Middleware\HandleCors::class,
         //
     ];
 
@@ -29,6 +31,7 @@ class Kernel extends HttpKernel
 
         'api' => [
             // API middleware group
+            \Illuminate\Http\Middleware\HandleCors::class,
         ],
     ];
 
@@ -51,7 +54,6 @@ class Kernel extends HttpKernel
         'signed' => \App\Http\Middleware\ValidateSignature::class,
         'throttle' => \Illuminate\Routing\Middleware\ThrottleRequests::class,
         'verified' => \Illuminate\Auth\Middleware\EnsureEmailIsVerified::class,
-        'jwt' => \App\Http\Middleware\JwtMiddleware::class,
         'role' => \App\Http\Middleware\RoleMiddleware::class,
     ];
 
@@ -63,6 +65,8 @@ class Kernel extends HttpKernel
      * @var array<string, class-string|string>
      */
     protected $routeMiddleware = [
-        //
+        'jwt' => \App\Http\Middleware\JwtMiddleware::class,
+        'auth.api' => \Illuminate\Auth\Middleware\Authenticate::class.':api',
+        'role' => \App\Http\Middleware\RoleMiddleware::class,
     ];
 }
