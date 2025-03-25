@@ -33,17 +33,30 @@ class JobApplicationSeeder extends Seeder
 
         $this->command->info('Seeding job applications...');
 
+        // Clear existing data to avoid unique constraint violations
+        DB::table('job_applications')->truncate();
+
         // Define possible statuses and sources
         $statuses = ['Applied', 'Shortlisted', 'Interviewing', 'Offered', 'Hired', 'Rejected'];
         $sources = ['Company Website', 'LinkedIn', 'Indeed', 'Glassdoor', 'Referral'];
 
+        // Track already used user-job combinations to avoid duplicates
+        $usedCombinations = [];
+
         // Generate between 1-3 applications for each job
         foreach ($jobs as $job) {
-            $applicationsCount = mt_rand(1, 3);
+            $applicationsCount = min(mt_rand(1, 3), count($users));
+            $jobApplicants = $users->shuffle()->take($applicationsCount);
 
-            for ($i = 0; $i < $applicationsCount; $i++) {
-                // Get a random user to represent the applicant
-                $applicant = $users->random();
+            foreach ($jobApplicants as $applicant) {
+                // Check if this combination already exists
+                $key = $job->id . '-' . $applicant->id;
+                if (in_array($key, $usedCombinations)) {
+                    continue;
+                }
+
+                // Add to used combinations
+                $usedCombinations[] = $key;
 
                 // Randomize the application date (within the last 30 days)
                 $appliedDate = now()->subDays(mt_rand(1, 30));

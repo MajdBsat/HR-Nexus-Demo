@@ -14,13 +14,14 @@ return new class extends Migration
         Schema::create('hr_projects', function (Blueprint $table) {
             $table->id();
             $table->string('name');
+            $table->text('description')->nullable();
+            $table->foreignId('assigned_to')->nullable()->constrained('users')->onDelete('set null');
+            $table->date('due_date')->nullable();
             $table->enum('status', ['pending', 'in-progress', 'completed', 'on-hold', 'cancelled'])->default('pending');
             $table->enum('priority', ['low', 'medium', 'high', 'urgent'])->default('medium');
-            $table->date('due_date');
-            $table->foreignId('assigned_to')->constrained('users')->onDelete('cascade');
-            $table->text('description')->nullable();
             $table->json('metadata')->nullable();
             $table->timestamps();
+            $table->softDeletes();
         });
     }
 

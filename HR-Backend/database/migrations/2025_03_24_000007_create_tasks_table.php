@@ -15,13 +15,15 @@ return new class extends Migration
             $table->id();
             $table->string('title');
             $table->text('description')->nullable();
-            $table->enum('status', ['pending', 'in-progress', 'completed', 'on-hold', 'cancelled'])->default('pending');
-            $table->enum('priority', ['low', 'medium', 'high', 'urgent'])->default('medium');
             $table->foreignId('assigned_to')->nullable()->constrained('users')->onDelete('set null');
+            $table->foreignId('created_by')->nullable()->constrained('users')->onDelete('set null');
             $table->date('due_date')->nullable();
-            $table->integer('estimated_hours')->nullable();
-            $table->integer('actual_hours')->nullable();
+            $table->enum('status', ['pending', 'in-progress', 'completed', 'cancelled'])->default('pending');
+            $table->enum('priority', ['low', 'medium', 'high', 'urgent'])->default('medium');
+            $table->float('estimated_hours')->nullable();
+            $table->float('actual_hours')->nullable();
             $table->timestamps();
+            $table->softDeletes();
         });
     }
 

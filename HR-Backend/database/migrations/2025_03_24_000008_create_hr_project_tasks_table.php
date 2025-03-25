@@ -13,12 +13,14 @@ return new class extends Migration
     {
         Schema::create('hr_project_tasks', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('hr_project_id')->constrained()->onDelete('cascade');
-            $table->foreignId('task_id')->constrained()->onDelete('cascade');
+            $table->foreignId('project_id')->constrained('hr_projects')->onDelete('cascade');
+            $table->foreignId('task_id')->constrained('tasks')->onDelete('cascade');
+            $table->integer('order')->default(0);
+            $table->date('completed_at')->nullable();
             $table->timestamps();
 
-            // Prevent duplicate entries
-            $table->unique(['hr_project_id', 'task_id']);
+            // Add unique constraint to prevent duplicate tasks in a project
+            $table->unique(['project_id', 'task_id']);
         });
     }
 

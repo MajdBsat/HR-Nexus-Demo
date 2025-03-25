@@ -19,7 +19,11 @@ return new class extends Migration
             $table->string('email')->unique();
             $table->timestamp('email_verified_at')->nullable();
             $table->string('password');
-            $table->integer('user_type')->default(0); // 0: Guest, 1: Employee, 2: HR
+            $table->string('first_name')->nullable();
+            $table->string('last_name')->nullable();
+            $table->date('dob')->nullable();
+            $table->string('phone_nb')->nullable();
+            $table->tinyInteger('user_type')->default(0); // 0: employee, 1: manager, 2: admin
             $table->rememberToken();
             $table->timestamps();
         });
