@@ -87,19 +87,26 @@ class DepartmentController extends Controller
      */
     public function show(int $id): JsonResponse
     {
-        $department = $this->departmentService->getDepartmentById($id);
+        try {
+            $department = $this->departmentService->getDepartmentById((int)$id);
 
-        if (!$department) {
+            if (!$department) {
+                return response()->json([
+                    'success' => false,
+                    'message' => 'Department not found.'
+                ], Response::HTTP_NOT_FOUND);
+            }
+
+            return response()->json([
+                'success' => true,
+                'data' => $department
+            ]);
+        } catch (\TypeError $e) {
             return response()->json([
                 'success' => false,
-                'message' => 'Department not found.'
-            ], Response::HTTP_NOT_FOUND);
+                'message' => 'Invalid department ID format.'
+            ], Response::HTTP_BAD_REQUEST);
         }
-
-        return response()->json([
-            'success' => true,
-            'data' => $department
-        ]);
     }
 
     /**

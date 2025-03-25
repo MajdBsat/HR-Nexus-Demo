@@ -170,9 +170,9 @@ Route::prefix('users')->group(function () {
 Route::prefix('departments')->group(function () {
     Route::get('/', [DepartmentController::class, 'index']);
     Route::post('/', [DepartmentController::class, 'store']);
-    Route::get('/{id}', [DepartmentController::class, 'show']);
-    Route::put('/{id}', [DepartmentController::class, 'update']);
-    Route::delete('/{id}', [DepartmentController::class, 'destroy']);
+    Route::get('/{id}', [DepartmentController::class, 'show'])->where('id', '[0-9]+');
+    Route::put('/{id}', [DepartmentController::class, 'update'])->where('id', '[0-9]+');
+    Route::delete('/{id}', [DepartmentController::class, 'destroy'])->where('id', '[0-9]+');
 });
 
 // Attendance routes
@@ -417,7 +417,14 @@ Route::group(['middleware' => ['auth.api']], function () {
 // Dashboard routes
 Route::group(['middleware' => ['auth.api']], function () {
     Route::get('/departments/stats', [DashboardController::class, 'getDepartmentStats']);
-    Route::get('/users/gender-distribution', [DashboardController::class, 'getGenderDistribution']);
+    Route::get('/users/type-distribution', [DashboardController::class, 'getUserTypeDistribution']);
     Route::get('/users/growth', [DashboardController::class, 'getEmployeeGrowth']);
-    Route::get('/attendance/stats', [DashboardController::class, 'getAttendanceStats']);
+    Route::get('/attendance/hours', [DashboardController::class, 'getAttendanceHoursStats']);
+    Route::get('/attendance/locations', [DashboardController::class, 'getAttendanceLocationStats']);
+    Route::get('/jobs/stats', [DashboardController::class, 'getJobStats']);
+    Route::get('/job-applications/stats', [DashboardController::class, 'getJobApplicationsStats']);
+    Route::get('/projects/stats', [DashboardController::class, 'getProjectStats']);
+    Route::get('/onboarding/progress', [DashboardController::class, 'getOnboardingProgress']);
+    Route::get('/departments/managers', [DashboardController::class, 'getDepartmentManagerStats']);
+    Route::get('/tasks/completion', [DashboardController::class, 'getTaskCompletionStats']);
 });
