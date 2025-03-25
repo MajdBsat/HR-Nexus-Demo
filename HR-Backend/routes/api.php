@@ -361,15 +361,15 @@ Route::group(['middleware' => ['auth:sanctum']], function () {
 Route::prefix('tasks')->group(function () {
     Route::get('/', [TaskController::class, 'index']);
     Route::post('/', [TaskController::class, 'store']);
-    Route::get('/{id}', [TaskController::class, 'show']);
-    Route::put('/{id}', [TaskController::class, 'update']);
-    Route::delete('/{id}', [TaskController::class, 'destroy']);
+    Route::get('/{id}', [TaskController::class, 'show'])->where('id', '[0-9]+');
+    Route::put('/{id}', [TaskController::class, 'update'])->where('id', '[0-9]+');
+    Route::delete('/{id}', [TaskController::class, 'destroy'])->where('id', '[0-9]+');
 
     // Additional specialized routes
     Route::get('/status/{status}', [TaskController::class, 'getByStatus']);
     Route::get('/priority/{priority}', [TaskController::class, 'getByPriority']);
-    Route::get('/user/{userId}', [TaskController::class, 'getByUserId']);
-    Route::get('/upcoming/{days?}', [TaskController::class, 'getUpcomingTasks']);
+    Route::get('/user/{userId}', [TaskController::class, 'getByUserId'])->where('userId', '[0-9]+');
+    Route::get('/upcoming/{days?}', [TaskController::class, 'getUpcomingTasks'])->where('days', '[0-9]+');
 });
 
 // Role routes
