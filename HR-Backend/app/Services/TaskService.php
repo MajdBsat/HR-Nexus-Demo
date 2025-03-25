@@ -59,9 +59,8 @@ class TaskService
         // Validate data
         $validator = Validator::make($data, [
             'title' => 'required|string|max:255',
-            'description' => 'nullable|string',
-            'status' => 'required|string|in:pending,in_progress,completed,cancelled',
-            'priority' => 'required|string|in:low,medium,high,urgent',
+            'status' => 'required|string|in:pending,in_progress,completed',
+            'priority' => 'required|string|in:low,medium,high',
             'due_date' => 'required|date',
             'assigned_to' => 'nullable|integer|exists:users,id',
         ]);

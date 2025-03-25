@@ -82,10 +82,10 @@ class CandidateRepository implements CandidateRepositoryInterface
      * @param string $position
      * @return Collection
      */
-    public function getByPosition(string $position): Collection
-    {
-        return Candidate::where('position', $position)->get();
-    }
+    // public function getByPosition(string $position): Collection
+    // {
+    //     return Candidate::where('position', $position)->get();
+    // }
 
     /**
      * Get candidates by status
@@ -106,8 +106,7 @@ class CandidateRepository implements CandidateRepositoryInterface
      */
     public function search(string $searchTerm): Collection
     {
-        return Candidate::where('first_name', 'like', "%{$searchTerm}%")
-            ->orWhere('last_name', 'like', "%{$searchTerm}%")
+        return Candidate::where('name', 'like', "%{$searchTerm}%")
             ->orWhere('email', 'like', "%{$searchTerm}%")
             ->get();
     }

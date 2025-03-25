@@ -10,12 +10,22 @@ class Candidate extends Model
 {
     use HasFactory;
 
-    
     protected $fillable = [
+        'id',
         'job_id',
         'user_id',
-        'status',
+        'status'
     ];
+
+    protected function casts(): array
+    {
+        return [
+            'id' => 'integer',
+            'job_id' => 'integer',
+            'user_id' => 'integer',
+            'status' => 'string'
+        ];
+    }
 
     /**
      * Get the job for the candidate.

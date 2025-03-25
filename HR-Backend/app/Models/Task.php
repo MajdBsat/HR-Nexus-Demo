@@ -19,13 +19,10 @@ class Task extends Model
      */
     protected $fillable = [
         'title',
-        'description',
         'status',
         'priority',
         'assigned_to',
         'due_date',
-        'estimated_hours',
-        'actual_hours',
     ];
 
     /**
@@ -34,9 +31,8 @@ class Task extends Model
      * @var array<string, string>
      */
     protected $casts = [
+        'assigned_to'=>'integer',
         'due_date' => 'date',
-        'estimated_hours' => 'integer',
-        'actual_hours' => 'integer',
     ];
 
     /**

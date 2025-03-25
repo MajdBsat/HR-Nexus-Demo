@@ -96,20 +96,20 @@ class OnboardingTaskRepository implements OnboardingTaskRepositoryInterface
      * @param int $roleId
      * @return Collection
      */
-    public function getByRoleId(int $roleId): Collection
-    {
-        return OnboardingTask::where('role_id', $roleId)->get();
-    }
+    // public function getByRoleId(int $roleId): Collection
+    // {
+    //     return OnboardingTask::where('role_id', $roleId)->get();
+    // }
 
     /**
      * Get all roles.
      *
      * @return Collection
      */
-    public function getAllRoles(): Collection
-    {
-        return Role::all();
-    }
+    // public function getAllRoles(): Collection
+    // {
+    //     return Role::all();
+    // }
 
     /**
      * Get role by ID.
@@ -117,10 +117,10 @@ class OnboardingTaskRepository implements OnboardingTaskRepositoryInterface
      * @param int $id
      * @return Role|null
      */
-    public function getRoleById(int $id): ?Role
-    {
-        return Role::find($id);
-    }
+    // public function getRoleById(int $id): ?Role
+    // {
+    //     return Role::find($id);
+    // }
 
     /**
      * Create a new role.
@@ -128,10 +128,10 @@ class OnboardingTaskRepository implements OnboardingTaskRepositoryInterface
      * @param array $data
      * @return Role
      */
-    public function createRole(array $data): Role
-    {
-        return Role::create($data);
-    }
+    // public function createRole(array $data): Role
+    // {
+    //     return Role::create($data);
+    // }
 
     /**
      * Update a role.
@@ -140,17 +140,17 @@ class OnboardingTaskRepository implements OnboardingTaskRepositoryInterface
      * @param array $data
      * @return Role|null
      */
-    public function updateRole(int $id, array $data): ?Role
-    {
-        $role = $this->getRoleById($id);
+    // public function updateRole(int $id, array $data): ?Role
+    // {
+    //     $role = $this->getRoleById($id);
 
-        if ($role) {
-            $role->update($data);
-            return $role;
-        }
+    //     if ($role) {
+    //         $role->update($data);
+    //         return $role;
+    //     }
 
-        return null;
-    }
+    //     return null;
+    // }
 
     /**
      * Delete a role.
@@ -158,16 +158,16 @@ class OnboardingTaskRepository implements OnboardingTaskRepositoryInterface
      * @param int $id
      * @return bool
      */
-    public function deleteRole(int $id): bool
-    {
-        $role = $this->getRoleById($id);
+    // public function deleteRole(int $id): bool
+    // {
+    //     $role = $this->getRoleById($id);
 
-        if ($role) {
-            return $role->delete();
-        }
+    //     if ($role) {
+    //         return $role->delete();
+    //     }
 
-        return false;
-    }
+    //     return false;
+    // }
 
     /**
      * Get all tasks for a specific role.
@@ -175,14 +175,14 @@ class OnboardingTaskRepository implements OnboardingTaskRepositoryInterface
      * @param int $roleId
      * @return Collection
      */
-    public function getTasksByRoleId(int $roleId): Collection
-    {
-        $roleTasks = OnboardingTask::where('role_id', $roleId)
-            ->pluck('task_id')
-            ->toArray();
+    // public function getTasksByRoleId(int $roleId): Collection
+    // {
+    //     $roleTasks = OnboardingTask::where('role_id', $roleId)
+    //         ->pluck('task_id')
+    //         ->toArray();
 
-        return Task::whereIn('id', $roleTasks)->get();
-    }
+    //     return Task::whereIn('id', $roleTasks)->get();
+    // }
 
     /**
      * Assign a task to a role.
@@ -191,24 +191,24 @@ class OnboardingTaskRepository implements OnboardingTaskRepositoryInterface
      * @param int $taskId
      * @return bool
      */
-    public function assignTaskToRole(int $roleId, int $taskId): bool
-    {
-        // Check if the role-task assignment already exists
-        $exists = OnboardingTask::where('role_id', $roleId)
-            ->where('task_id', $taskId)
-            ->exists();
+    // public function assignTaskToRole(int $roleId, int $taskId): bool
+    // {
+    //     // Check if the role-task assignment already exists
+    //     $exists = OnboardingTask::where('role_id', $roleId)
+    //         ->where('task_id', $taskId)
+    //         ->exists();
 
-        if (!$exists) {
-            OnboardingTask::create([
-                'role_id' => $roleId,
-                'task_id' => $taskId,
-                'employee_id' => null // This is a template, not assigned to any employee yet
-            ]);
-            return true;
-        }
+    //     if (!$exists) {
+    //         OnboardingTask::create([
+    //             'role_id' => $roleId,
+    //             'task_id' => $taskId,
+    //             'employee_id' => null // This is a template, not assigned to any employee yet
+    //         ]);
+    //         return true;
+    //     }
 
-        return false;
-    }
+    //     return false;
+    // }
 
     /**
      * Remove a task from a role.
@@ -217,14 +217,14 @@ class OnboardingTaskRepository implements OnboardingTaskRepositoryInterface
      * @param int $taskId
      * @return bool
      */
-    public function removeTaskFromRole(int $roleId, int $taskId): bool
-    {
-        // Only delete template tasks (where employee_id is null)
-        return OnboardingTask::where('role_id', $roleId)
-            ->where('task_id', $taskId)
-            ->whereNull('employee_id')
-            ->delete() > 0;
-    }
+    // public function removeTaskFromRole(int $roleId, int $taskId): bool
+    // {
+    //     // Only delete template tasks (where employee_id is null)
+    //     return OnboardingTask::where('role_id', $roleId)
+    //         ->where('task_id', $taskId)
+    //         ->whereNull('employee_id')
+    //         ->delete() > 0;
+    // }
 
     /**
      * Check if an employee exists.
@@ -243,10 +243,10 @@ class OnboardingTaskRepository implements OnboardingTaskRepositoryInterface
      * @param int $roleId
      * @return bool
      */
-    public function roleExists(int $roleId): bool
-    {
-        return Role::where('id', $roleId)->exists();
-    }
+    // public function roleExists(int $roleId): bool
+    // {
+    //     return Role::where('id', $roleId)->exists();
+    // }
 
     /**
      * Check if a task exists.
