@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { Card, Form, Button, Alert, Spinner } from "react-bootstrap";
-import axios from "axios";
 import { useNavigate } from "react-router-dom";
+import api from "../../utils/api";
 import "../../styles/UserProfile.css";
 
 const UserProfile = () => {
@@ -27,14 +27,9 @@ const UserProfile = () => {
           return;
         }
 
-        const response = await axios.get(
-          `${import.meta.env.VITE_API_URL}/api/profile`,
-          {
-            headers: {
-              Authorization: `Bearer ${token}`,
-            },
-          }
-        );
+        console.log("Fetching profile data...");
+
+        const response = await api.get("/api/profile");
 
         setUser(response.data);
         setFormData({
@@ -45,12 +40,9 @@ const UserProfile = () => {
         });
         setLoading(false);
       } catch (err) {
+        console.error("Profile fetch error:", err);
         setError("Failed to load profile data");
         setLoading(false);
-        if (err.response && err.response.status === 401) {
-          localStorage.removeItem("token");
-          navigate("/login");
-        }
       }
     };
 
@@ -82,7 +74,6 @@ const UserProfile = () => {
     }
 
     try {
-      const token = localStorage.getItem("token");
       const dataToSend = {
         name: formData.name,
         email: formData.email,
@@ -94,16 +85,9 @@ const UserProfile = () => {
         dataToSend.password_confirmation = formData.password_confirmation;
       }
 
-      await axios.put(
-        `${import.meta.env.VITE_API_URL}/api/profile`,
-        dataToSend,
-        {
-          headers: {
-            Authorization: `Bearer ${token}`,
-            "Content-Type": "application/json",
-          },
-        }
-      );
+      console.log("Updating profile...");
+
+      await api.put("/api/profile", dataToSend);
 
       setSuccess("Profile updated successfully");
       // Reset password fields after successful update
@@ -113,6 +97,7 @@ const UserProfile = () => {
         password_confirmation: "",
       });
     } catch (err) {
+      console.error("Profile update error:", err);
       setError(
         err.response?.data?.message ||
           "Failed to update profile. Please try again."
