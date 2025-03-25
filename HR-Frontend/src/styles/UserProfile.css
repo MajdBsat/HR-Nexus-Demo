@@ -1,0 +1,25 @@
+.user-profile-container {
+  max-width: 800px;
+  margin: 2rem auto;
+  padding: 0 1rem;
+}
+
+.profile-card {
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  border-radius: 8px;
+  border: none;
+}
+
+.profile-card .card-body {
+  padding: 2rem;
+}
+
+@media (max-width: 768px) {
+  .user-profile-container {
+    margin: 1rem auto;
+  }
+
+  .profile-card .card-body {
+    padding: 1rem;
+  }
+}

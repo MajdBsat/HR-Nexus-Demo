@@ -21,6 +21,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\HealthCarePlanController;
+use App\Http\Controllers\ProfileController;
 
 /*
 |--------------------------------------------------------------------------
@@ -404,4 +405,10 @@ Route::prefix('onboarding-tasks')->group(function () {
     Route::post('/roles/assign-task', [OnboardingTaskController::class, 'assignTaskToRole']);
     Route::post('/roles/remove-task', [OnboardingTaskController::class, 'removeTaskFromRole']);
     Route::post('/employee/assign-role-tasks', [OnboardingTaskController::class, 'assignRoleTasksToEmployee']);
+});
+
+// Profile routes
+Route::middleware('auth:api')->group(function () {
+    Route::get('/profile', [ProfileController::class, 'show']);
+    Route::put('/profile', [ProfileController::class, 'update']);
 });

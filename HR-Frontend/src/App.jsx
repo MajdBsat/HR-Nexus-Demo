@@ -12,14 +12,15 @@ import Onboarding_Emp from "./pages/Recruitment/Onboarding_Emp";
 import Login from "./components/Login";
 import Register from "./components/Register";
 import EmployeeList from "./pages/EmployeeManagement/EmployeeList";
+import UserProfile from "./pages/Profile/UserProfile";
 
 function App() {
   return (
     <>
-      {/* <>SideBar</> */}
       <Routes>
         <Route path="/login" element={<Login />} />
         <Route path="/register" element={<Register />} />
+        <Route path="/profile" element={<UserProfile />} />
         <Route path="/hr">
           <Route path="employees" element={<EmployeeList />} />
           <Route path="recruitment">
