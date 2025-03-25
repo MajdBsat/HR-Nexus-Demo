@@ -25,14 +25,30 @@ const Login = () => {
     setLoading(true);
 
     try {
-      const response = await authService.login(formData);
+      await authService.login(formData);
 
-      // Save token to localStorage (already handled in authService)
-      if (response.data.access_token) {
-        localStorage.setItem("token", response.data.access_token);
-        navigate("/hr/recruitment"); // Redirect after successful login
+      // The token, user, and other data are already stored in localStorage by authService
+
+      // Check user type to determine redirect
+      const user = authService.getCurrentUser();
+      if (user && user.user_type !== undefined) {
+        // Redirect based on user type
+        switch (user.user_type) {
+          case 0: // Guest
+            navigate("/emp/recruitment/jobs");
+            break;
+          case 1: // Employee
+            navigate("/emp/recruitment/jobs");
+            break;
+          case 2: // HR
+            navigate("/hr/recruitment");
+            break;
+          default:
+            navigate("/login");
+        }
       } else {
-        throw new Error("No access token received");
+        // Default redirect
+        navigate("/hr/recruitment");
       }
     } catch (err) {
       setError(
