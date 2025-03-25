@@ -11,6 +11,7 @@ import Apply_To_Job from "./pages/Recruitment/Apply_To_Job";
 import Onboarding_Emp from "./pages/Recruitment/Onboarding_Emp";
 import Login from "./components/Login";
 import Register from "./components/Register";
+import EmployeeList from "./pages/EmployeeManagement/EmployeeList";
 
 function App() {
   return (
@@ -20,6 +21,7 @@ function App() {
         <Route path="/login" element={<Login />} />
         <Route path="/register" element={<Register />} />
         <Route path="/hr">
+          <Route path="employees" element={<EmployeeList />} />
           <Route path="recruitment">
             <Route path="" element={<Recruitment />} />
             <Route path="jobs">

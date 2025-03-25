@@ -1,0 +1,45 @@
+.employee-list-container {
+  width: 100%;
+  margin: 0 auto;
+  padding: 20px;
+}
+
+.header-section {
+  margin-bottom: 30px;
+  padding-bottom: 10px;
+  border-bottom: 1px solid #eaeaea;
+}
+
+.header-section h1 {
+  color: #333;
+  font-size: 28px;
+  margin: 0;
+}
+
+.table-container {
+  width: 100%;
+  background-color: #fff;
+  border-radius: 8px;
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+  overflow: hidden;
+}
+
+.error-message {
+  background-color: #ffeeee;
+  color: #e53935;
+  padding: 10px 15px;
+  border-radius: 4px;
+  margin-bottom: 20px;
+}
+
+.loading {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 200px;
+  background-color: #fff;
+  border-radius: 8px;
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+  font-size: 18px;
+  color: #666;
+}
