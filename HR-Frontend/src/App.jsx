@@ -10,6 +10,11 @@ import Add_New_Onboarding_Task from './pages/Recruitment/New_Onboarding_Task'
 import Apply_To_Job from './pages/Recruitment/Apply_To_Job'
 import Onboarding_Emp from './pages/Recruitment/Onboarding_Emp'
 import PayrollMain from './pages/Payroll/Payroll_Main_Page'
+import Login from "./components/Login"
+import Register from "./components/Register"
+import EmployeeList from "./pages/EmployeeManagement/EmployeeList"
+import UserProfile from "./pages/Profile/UserProfile"
+import Dashboard from "./pages/Dashboard/Dashboard"
 
 function App() {
 
