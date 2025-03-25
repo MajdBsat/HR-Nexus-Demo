@@ -41,6 +41,15 @@
   border: 1px solid #c3e6cb;
 }
 
+.warning-message {
+  background-color: #fff3cd;
+  color: #856404;
+  padding: 0.75rem 1.25rem;
+  margin-bottom: 1rem;
+  border-radius: 4px;
+  border: 1px solid #ffeeba;
+}
+
 .profile-form {
   display: flex;
   flex-direction: column;

@@ -3,6 +3,7 @@ import useUsers from "../../hooks/useUsers";
 import Table from "../../components/Table";
 import EditUserModal from "./EditUserModal";
 import "./EmployeeList.css";
+import { Link } from "react-router-dom";
 
 const EmployeeList = () => {
   const { users, loading, error, fetchUsers } = useUsers();
@@ -45,7 +46,7 @@ const EmployeeList = () => {
   return (
     <div className="employee-list-container">
       <div className="header-section">
-        <h1>Employee Management</h1>
+        <h2>Employee Management</h2>
         <div className="header-actions">
           <button
             className="refresh-button"
@@ -54,6 +55,9 @@ const EmployeeList = () => {
           >
             {loading ? "Loading..." : "Refresh"}
           </button>
+          <Link to="/profile" className="btn-secondary">
+            My Profile
+          </Link>
         </div>
       </div>
 

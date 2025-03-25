@@ -15,6 +15,7 @@ const UserProfile = () => {
   const [updating, setUpdating] = useState(false);
   const [error, setError] = useState("");
   const [success, setSuccess] = useState("");
+  const [offline, setOffline] = useState(false);
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -28,19 +29,48 @@ const UserProfile = () => {
 
         console.log("Fetching profile data...");
 
-        const response = await api.get("/api/profile");
+        // Set a timeout to detect if the request is taking too long
+        const timeoutId = setTimeout(() => {
+          console.log("Request timeout - switching to offline mode");
+          setOffline(true);
+          setLoading(false);
 
-        setUser(response.data);
-        setFormData({
-          name: response.data.name,
-          email: response.data.email,
-          password: "",
-          password_confirmation: "",
-        });
-        setLoading(false);
+          // Use mock data in offline mode
+          const mockUserData = {
+            name: "User (Offline Mode)",
+            email: "offline@example.com",
+          };
+
+          setUser(mockUserData);
+          setFormData({
+            name: mockUserData.name,
+            email: mockUserData.email,
+            password: "",
+            password_confirmation: "",
+          });
+        }, 5000); // 5 second timeout
+
+        try {
+          const response = await api.get("/api/profile");
+          clearTimeout(timeoutId);
+
+          if (response.data) {
+            setUser(response.data);
+            setFormData({
+              name: response.data.name,
+              email: response.data.email,
+              password: "",
+              password_confirmation: "",
+            });
+          }
+          setLoading(false);
+        } catch (apiError) {
+          clearTimeout(timeoutId);
+          throw apiError;
+        }
       } catch (err) {
         console.error("Profile fetch error:", err);
-        setError("Failed to load profile data");
+        setError("Failed to load profile data. Please try again later.");
         setLoading(false);
       }
     };
@@ -69,6 +99,14 @@ const UserProfile = () => {
     ) {
       setError("Passwords do not match");
       setUpdating(false);
+      return;
+    }
+
+    if (offline) {
+      setTimeout(() => {
+        setSuccess("Profile would be updated (currently in offline mode)");
+        setUpdating(false);
+      }, 1000);
       return;
     }
 
@@ -117,11 +155,19 @@ const UserProfile = () => {
 
   return (
     <div className="user-profile-container">
-      <h2 className="profile-title">Your Profile</h2>
+      <h2 className="profile-title">
+        Your Profile {offline && "(Offline Mode)"}
+      </h2>
       <div className="profile-card">
         <div className="card-body">
           {error && <div className="error-message">{error}</div>}
           {success && <div className="success-message">{success}</div>}
+          {offline && (
+            <div className="warning-message">
+              You are in offline mode because the server is not available.
+              Changes will not be saved until you reconnect.
+            </div>
+          )}
 
           <form onSubmit={handleSubmit} className="profile-form">
             <div className="form-group">

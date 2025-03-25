@@ -408,7 +408,7 @@ Route::prefix('onboarding-tasks')->group(function () {
 });
 
 // Profile routes
-Route::middleware('auth:api')->group(function () {
+Route::middleware(['jwt'])->group(function () {
     Route::get('/profile', [ProfileController::class, 'show']);
     Route::put('/profile', [ProfileController::class, 'update']);
 });
