@@ -115,6 +115,8 @@ Route::group(['middleware' => ['jwt', 'role:employee']], function () {
     // Attendance
     Route::post('clock-in', [AttendanceController::class, 'store']);
     Route::post('clock-update/{id}', [AttendanceController::class, 'update']);
+    // Documents
+    Route::post('/upload_document', [DocumentController::class, 'store']);
 });
 
 // HR routes - User type 2

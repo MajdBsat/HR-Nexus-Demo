@@ -6,6 +6,7 @@ use App\Models\Document;
 use App\Repositories\Interfaces\DocumentRepositoryInterface;
 use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Support\Facades\Validator;
+use Illuminate\Support\Facades\Storage;
 
 class DocumentService
 {
@@ -54,39 +55,53 @@ class DocumentService
      * @param array $data
      * @return array
      */
-    public function createDocument(array $data): array
+    public function createDocument($request,$user_id): array
     {
-        $validator = Validator::make($data, [
-            'user_id' => 'required|integer|exists:users,id',
-            'title' => 'required|string|max:255',
-            'description' => 'nullable|string',
-            'file_path' => 'required|string|max:255',
-            'file_type' => 'required|string|max:50',
-            'file_size' => 'required|integer',
-            'document_type' => 'required|string|max:100',
-            'category' => 'required|string|max:100',
-            'version' => 'nullable|string|max:50',
-            'status' => 'required|in:draft,active,archived,deleted',
-            'upload_date' => 'required|date',
-            'expiry_date' => 'nullable|date|after_or_equal:upload_date',
-            'tags' => 'nullable|string|max:255',
-        ]);
+        $data = $request->all();
 
-        if ($validator->fails()) {
-            return [
-                'success' => false,
-                'message' => 'Validation failed',
-                'errors' => $validator->errors()
-            ];
-        }
+    // Validation
+    $validator = Validator::make($data, [
+        'file' => 'required|file|max:2048', // Max 2MB
+        'type' => 'required|string',
+    ]);
 
-        $document = $this->documentRepository->create($data);
+    if ($validator->fails()) {
+        return [
+            'success' => false,
+            'message' => 'Validation failed',
+            'errors' => $validator->errors()
+        ];
+    }
 
+    $file = $request->file('file');
+    $type = $request->input('type');
+
+    // Convert to Base64
+    $fileContents = base64_encode(file_get_contents($file->getRealPath()));
+
+    // Define storage path
+    $fileName = time() . '.' . $file->getClientOriginalExtension();
+    $filePath = 'uploads/' . $fileName;
+
+    // Save file in storage
+    Storage::disk('public')->put($filePath, base64_decode($fileContents));
+
+    // Save to DB
+    $document = Document::create([
+        'type' => $type,
+        'file_path' => $filePath,
+        'user_id' => $user_id
+    ]);
+
+  
         return [
             'success' => true,
-            'message' => 'Document created successfully',
-            'data' => $document
-        ];
+            'message' => 'File uploaded successfully',
+            'data' => [
+            'id' => $document->id,
+            'fileUrl' => asset('storage/' . $filePath),
+        ]
+    ];
     }
 
     /**

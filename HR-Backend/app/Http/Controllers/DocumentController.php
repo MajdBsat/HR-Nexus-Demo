@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Services\DocumentService;
 use Illuminate\Http\Request;
 use Illuminate\Http\JsonResponse;
+use Illuminate\Support\Facades\Auth;
 
 class DocumentController extends Controller
 {
@@ -45,7 +46,9 @@ class DocumentController extends Controller
      */
     public function store(Request $request): JsonResponse
     {
-        $result = $this->documentService->createDocument($request->all());
+        $user = Auth::user();
+        $user_id = $user->id;
+        $result = $this->documentService->createDocument($request, $user_id);
 
         if (!$result['success']) {
             return response()->json([

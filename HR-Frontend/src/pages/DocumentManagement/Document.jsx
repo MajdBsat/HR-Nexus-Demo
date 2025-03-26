@@ -33,7 +33,7 @@ const Document = () => {
     formData.append("type", selectedType);
 
     try {
-      const response = await api.post(`/upload_document`, formData, {
+      const response = await api.post(`/api/upload_document`, formData, {
         headers: {
           Authorization: `Bearer ${localStorage.getItem("token")}`,
           "Content-Type": "multipart/form-data",
