@@ -19,6 +19,7 @@ import "./styles/Loading.css";
 import "./styles/ProtectedLayout.css";
 import "./styles/Sidebar.css";
 
+
 function App() {
   return (
     <>
@@ -50,6 +51,10 @@ function App() {
               </Route>
             </Route>
           </Route>
+          <Route path="payroll">
+          {/* <Route path='' element={<PayrollMain />} /> */}
+          </Route>
+        </Route>
 
           {/* Employee Routes */}
           <Route path="/emp">

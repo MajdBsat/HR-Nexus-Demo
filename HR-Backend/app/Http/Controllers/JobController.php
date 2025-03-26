@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Services\CandidateService;
 use App\Services\JobService;
 use Illuminate\Http\Request;
 use Illuminate\Http\JsonResponse;
@@ -118,80 +119,6 @@ class JobController extends Controller
         return response()->json($result);
     }
     /**
-     * Get jobs by department.
-     *
-     * @param string $department
-     * @return JsonResponse
-     */
-    // public function getByDepartment(string $department): JsonResponse
-    // {
-    //     $jobs = $this->jobService->getJobsByDepartment($department);
-    //     return response()->json([
-    //         'success' => true,
-    //         'data' => $jobs
-    //     ]);
-    // }
-
-    /**
-     * Get jobs by job type.
-     *
-     * @param string $jobType
-     * @return JsonResponse
-     */
-    // public function getByJobType(string $jobType): JsonResponse
-    // {
-    //     $jobs = $this->jobService->getJobsByJobType($jobType);
-    //     return response()->json([
-    //         'success' => true,
-    //         'data' => $jobs
-    //     ]);
-    // }
-
-    /**
-     * Get active jobs.
-     *
-     * @return JsonResponse
-     */
-    // public function getActiveJobs(): JsonResponse
-    // {
-    //     $jobs = $this->jobService->getActiveJobs();
-    //     return response()->json([
-    //         'success' => true,
-    //         'data' => $jobs
-    //     ]);
-    // }
-
-    /**
-     * Get jobs by location.
-     *
-     * @param string $location
-     * @return JsonResponse
-     */
-    // public function getByLocation(string $location): JsonResponse
-    // {
-    //     $jobs = $this->jobService->getJobsByLocation($location);
-    //     return response()->json([
-    //         'success' => true,
-    //         'data' => $jobs
-    //     ]);
-    // }
-
-    /**
-     * Get jobs by remote status.
-     *
-     * @param bool $isRemote
-     * @return JsonResponse
-     */
-    // public function getByRemoteStatus(bool $isRemote): JsonResponse
-    // {
-    //     $jobs = $this->jobService->getJobsByRemoteStatus($isRemote);
-    //     return response()->json([
-    //         'success' => true,
-    //         'data' => $jobs
-    //     ]);
-    // }
-
-    /**
      * Search jobs by criteria.
      *
      * @param Request $request
@@ -205,5 +132,13 @@ class JobController extends Controller
             'success' => true,
             'data' => $jobs
         ]);
+    }
+
+    public function getJobWithCandidates($job_id){
+        return $this->jobService->getJobWithCandidates($job_id);
+    }
+
+    public function getAllJobsWithCandidates(){
+        return $this->jobService->getAllJobsWithCandidates();
     }
 }

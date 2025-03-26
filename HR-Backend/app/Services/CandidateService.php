@@ -54,6 +54,12 @@ class CandidateService
         return $this->candidateRepository->findById($id);
     }
 
+    public function getCandidatebyUserID($user_id){
+        return $this->candidateRepository->getCandidatebyUserID($user_id);
+    }
+    public function findByUserIDandJobID(int $user_id ,int $job_id){
+        return $this->candidateRepository->findByUserIDandJobID($user_id, $job_id);
+    }
     /**
      * Create a new candidate.
      *
@@ -78,7 +84,13 @@ class CandidateService
         }
 
         $candidate = $this->candidateRepository->create($data);
-
+        if(!$candidate){
+            return [
+                'success' => false,
+                'message' => 'Already Applied',
+                'errors' => 'Already Applied'
+            ];
+        }
         return [
             'success' => true,
             'message' => 'Candidate created successfully',

@@ -7,6 +7,7 @@ use App\Services\CandidateService;
 use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Http\Request;
 use Illuminate\Http\JsonResponse;
+use Illuminate\Support\Facades\Auth;
 use PhpParser\ErrorHandler\Collecting;
 
 class CandidateController extends Controller
@@ -53,14 +54,45 @@ class CandidateController extends Controller
         if (!$result['success']) {
             return response()->json([
                 'message' => $result['message'],
-                'errors' => $result['errors'] ?? null
-            ], 422);
+                'errors' => $result['errors']
+            ]);
         }
 
         return response()->json([
             'message' => $result['message'],
             'data' => $result['data']
         ], 201);
+    }
+
+    public function getUserCandidateStatus($job_id){
+        $user = Auth::user();
+        $candidate = $this->findByUserIDandJobID($user['id'],$job_id);
+        if($candidate){
+            return response()->json([
+                'success' => true,
+                'data' => $candidate
+            ], 201);
+        }
+        return response()->json([
+            'success'=>false,
+            'errors' => "No candidates found"
+        ], 200);
+    }
+
+    public function getCandidatebyUserID(){
+        $user = Auth::user();
+        $candidates = $this->candidateService->getCandidatebyUserID($user["id"]);
+        if($candidates){
+            return response()->json([
+                'success' => true,
+                'data' => $candidates
+            ], 201);
+        }
+        return response()->json([
+            'success'=>false,
+            'errors' => "No candidates found"
+        ], 200);
+
     }
 
     /**
@@ -172,5 +204,9 @@ class CandidateController extends Controller
         return Candidate::where('email', 'like', "%{$searchTerm}%")
             ->orWhere('name', 'like', "%{$searchTerm}%")
             ->get();
+    }
+
+    public function findByUserIDandJobID($user_id, $job_id){
+        return $this->candidateService->findByUserIDandJobID($user_id, $job_id);
     }
 }

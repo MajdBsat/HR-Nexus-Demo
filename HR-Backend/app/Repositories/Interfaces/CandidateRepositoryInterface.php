@@ -21,14 +21,16 @@ interface CandidateRepositoryInterface
      * @return Candidate|null
      */
     public function findById(int $id): ?Candidate;
+    public function getCandidatebyUserID($user_id);
 
+    public function findByUserIDandJobID(int $user_id, int $job_id): ?Candidate;
     /**
      * Create a new candidate
      *
      * @param array $data
      * @return Candidate
      */
-    public function create(array $data): Candidate;
+    public function create(array $data);
 
     /**
      * Update a candidate
