@@ -3,7 +3,6 @@
 namespace App\Repositories;
 
 use App\Models\HrProject;
-use App\Models\User;
 use App\Repositories\Interfaces\HrProjectRepositoryInterface;
 use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Collection;
@@ -17,7 +16,8 @@ class HrProjectRepository implements HrProjectRepositoryInterface
      */
     public function getAll(): Collection
     {
-        return HrProject::with(['assignedUser', 'tasks'])->get();
+        // return HrProject::with( 'tasks')->get();
+        return HrProject::all();
     }
 
     /**
@@ -28,7 +28,8 @@ class HrProjectRepository implements HrProjectRepositoryInterface
      */
     public function findById(int $id): ?HrProject
     {
-        return HrProject::with(['assignedUser', 'tasks'])->find($id);
+        // return HrProject::with('tasks')->find($id);
+        return HrProject::find($id);
     }
 
     /**
@@ -78,18 +79,6 @@ class HrProjectRepository implements HrProjectRepositoryInterface
         return $hrProject->delete();
     }
 
-    /**
-     * Get HR projects by assigned user ID.
-     *
-     * @param int $userId
-     * @return Collection
-     */
-    public function getByAssignedUserId(int $userId): Collection
-    {
-        return HrProject::with(['assignedUser', 'tasks'])
-            ->where('assigned_to', $userId)
-            ->get();
-    }
 
     /**
      * Get HR projects by status.
@@ -99,9 +88,11 @@ class HrProjectRepository implements HrProjectRepositoryInterface
      */
     public function getByStatus(string $status): Collection
     {
-        return HrProject::with(['assignedUser', 'tasks'])
-            ->where('status', $status)
-            ->get();
+        // return HrProject::with('tasks')
+        //     ->where('status', $status)
+        //     ->get();
+
+        return HrProject::where('status', $status)->get();
     }
 
     /**
@@ -112,9 +103,11 @@ class HrProjectRepository implements HrProjectRepositoryInterface
      */
     public function getByPriority(string $priority): Collection
     {
-        return HrProject::with(['assignedUser', 'tasks'])
-            ->where('priority', $priority)
-            ->get();
+        // return HrProject::with( 'tasks')
+        //     ->where('priority', $priority)
+        //     ->get();
+        return HrProject::where('priority', $priority)->get();
+
     }
 
     /**
@@ -128,20 +121,13 @@ class HrProjectRepository implements HrProjectRepositoryInterface
         $today = Carbon::today();
         $future = Carbon::today()->addDays($days);
 
-        return HrProject::with(['assignedUser', 'tasks'])
-            ->whereBetween('due_date', [$today, $future])
+        // return HrProject::with('tasks')
+        //     ->whereBetween('due_date', [$today, $future])
+        //     ->orderBy('due_date')
+        //     ->get();
+
+        return HrProject::whereBetween('due_date', [$today, $future])
             ->orderBy('due_date')
             ->get();
-    }
-
-    /**
-     * Check if a user exists.
-     *
-     * @param int $userId
-     * @return bool
-     */
-    public function userExists(int $userId): bool
-    {
-        return User::where('id', $userId)->exists();
     }
 }

@@ -359,7 +359,7 @@ Route::group(['middleware' => ['auth.api']], function () {
 
 
 
-
+// =============Mohammad Zeineddine====================
 // // Candidate routes
 // Route::prefix('candidates')->group(function () {
 //     Route::get('/', [CandidateController::class, 'index']);
@@ -367,15 +367,12 @@ Route::group(['middleware' => ['auth.api']], function () {
 //     Route::get('/{id}', [CandidateController::class, 'show']);
 //     Route::put('/{id}', [CandidateController::class, 'update']);
 //     Route::delete('/{id}', [CandidateController::class, 'destroy']);
-
 //     // Additional specialized routes
 //     Route::get('/status/{status}', [CandidateController::class, 'getByStatus']);
 //     Route::post('/search', [CandidateController::class, 'search']);
 //     Route::put('/next/{id}', [CandidateController::class, 'nextStep']);
 //     Route::put('/reject/{id}', [CandidateController::class, 'reject']);
 // });
-
-
 
 // // Task routes
 // Route::prefix('tasks')->group(function () {
@@ -384,7 +381,6 @@ Route::group(['middleware' => ['auth.api']], function () {
 //     Route::get('/{id}', [TaskController::class, 'show'])->where('id', '[0-9]+');
 //     Route::put('/{id}', [TaskController::class, 'update'])->where('id', '[0-9]+');
 //     Route::delete('/{id}', [TaskController::class, 'destroy'])->where('id', '[0-9]+');
-
 //     // Additional specialized routes
 //     Route::get('/status/{status}', [TaskController::class, 'getByStatus']);
 //     Route::get('/priority/{priority}', [TaskController::class, 'getByPriority']);
@@ -415,9 +411,19 @@ Route::group(['middleware' => ['auth.api']], function () {
 //     Route::get('/employee/{employeeId}', [OnboardingTaskController::class, 'getByEmployeeId']);
 // });
 
+// HR Project routes
+Route::prefix('hr-projects')->group(function () {
+    Route::get('/', [HrProjectController::class, 'index']);
+    Route::post('/', [HrProjectController::class, 'store']);
+    Route::get('/{id}', [HrProjectController::class, 'show']);
+    Route::put('/{id}', [HrProjectController::class, 'update']);
+    Route::delete('/{id}', [HrProjectController::class, 'destroy']);
 
-
-
+    // Additional specialized routes
+    Route::get('/status/{status}', [HrProjectController::class, 'getByStatus']);
+    Route::get('/priority/{priority}', [HrProjectController::class, 'getByPriority']);
+    Route::get('/upcoming/{days?}', [HrProjectController::class, 'getUpcomingProjects']);
+});
 
 // HR Project Task routes
 Route::prefix('hr-project-tasks')->group(function () {
@@ -429,19 +435,6 @@ Route::prefix('hr-project-tasks')->group(function () {
     // Additional specialized routes
     Route::get('/project/{projectId}/tasks', [HrProjectTaskController::class, 'getProjectTasks']);
     Route::get('/task/{taskId}/projects', [HrProjectTaskController::class, 'getTaskProjects']);
-});
-
-// HR Project routes
-Route::prefix('hr-projects')->group(function () {
-    Route::get('/', [HrProjectController::class, 'index']);
-    Route::post('/', [HrProjectController::class, 'store']);
-    Route::get('/{id}', [HrProjectController::class, 'show']);
-    Route::put('/{id}', [HrProjectController::class, 'update']);
-    Route::delete('/{id}', [HrProjectController::class, 'destroy']);
-
-    // Additional specialized routes
-    Route::get('/user/{userId}', [HrProjectController::class, 'getByAssignedUserId']);
-    Route::get('/status/{status}', [HrProjectController::class, 'getByStatus']);
-    Route::get('/priority/{priority}', [HrProjectController::class, 'getByPriority']);
-    Route::get('/upcoming/{days?}', [HrProjectController::class, 'getUpcomingProjects']);
+    Route::put('/next/{id}', [TaskController::class, 'nextStep']);
+    Route::put('/reject/{id}', [TaskController::class, 'reject']);
 });

@@ -48,13 +48,23 @@ class TaskService
     static public function createTask(array $data): array
     {
         // Validate data
-        $validator = Validator::make($data, [
-            'title' => 'required|string|max:255',
-            'status' => 'required|string|in:pending,in_progress,completed',
-            'priority' => 'required|string|in:low,medium,high',
-            'due_date' => 'required|date',
-            'assigned_to' => 'integer|exists:users,id',
-        ]);
+        if($data['assigned_to']==-1){
+            $validator = Validator::make($data, [
+                'title' => 'required|string|max:255',
+                'status' => 'required|string|in:pending,in_progress,completed',
+                'priority' => 'required|string|in:low,medium,high',
+                'due_date' => 'required|date',
+            ]);
+        }else{
+            $validator = Validator::make($data, [
+                'title' => 'required|string|max:255',
+                'status' => 'required|string|in:pending,in_progress,completed',
+                'priority' => 'required|string|in:low,medium,high',
+                'due_date' => 'required|date',
+                'assigned_to' => 'integer|exists:users,id',
+            ]);
+        }
+
 
         if ($validator->fails()) {
             return [
@@ -66,10 +76,10 @@ class TaskService
         $user = (new UserService(new UserRepository))->getUserById($data['assigned_to']);
 
 
-        if ($user["user_type"]!=1 &&  $user["user_type"]!=2) {
+        if (isset($user["user_type"])  && $user["user_type"]!=1 &&  $user["user_type"]!=2) {
             return [
                 'success' => false,
-                'message' => 'Assigned user is neither an employee nor a HR'
+                '' => 'Assigned user is neither an employee nor a HR'
             ];
         }
 
