@@ -1,7 +1,7 @@
 import React, { useState } from "react";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, Link } from "react-router-dom";
 import { authService } from "../../services/apiService";
-import "./index.css";
+import "../../styles/SharedAuthStyles.css";
 
 const Login = () => {
   const navigate = useNavigate();
@@ -60,39 +60,82 @@ const Login = () => {
   };
 
   return (
-    <div className="login-container">
-      <div className="login-box">
-        <h2>Login to HR-Nexus</h2>
-        {error && <div className="error-message">{error}</div>}
+    <div className="form-container fade-in">
+      <div className="auth-card slide-up">
+        <div className="auth-header">
+          <h2 className="auth-title">Welcome to HR-Nexus</h2>
+          <p className="auth-subtitle">Log in to access your dashboard</p>
+        </div>
+
+        {error && (
+          <div className="error-message">
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              width="20"
+              height="20"
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              strokeWidth="2"
+              strokeLinecap="round"
+              strokeLinejoin="round"
+            >
+              <circle cx="12" cy="12" r="10"></circle>
+              <line x1="12" y1="8" x2="12" y2="12"></line>
+              <line x1="12" y1="16" x2="12.01" y2="16"></line>
+            </svg>
+            {error}
+          </div>
+        )}
+
         <form onSubmit={handleSubmit}>
           <div className="form-group">
-            <label htmlFor="email">Email</label>
+            <label htmlFor="email" className="form-label">
+              Email Address
+            </label>
             <input
               type="email"
               id="email"
               name="email"
+              className="form-input"
               value={formData.email}
               onChange={handleChange}
+              placeholder="your@email.com"
               required
+              autoFocus
             />
           </div>
+
           <div className="form-group">
-            <label htmlFor="password">Password</label>
+            <label htmlFor="password" className="form-label">
+              Password
+            </label>
             <input
               type="password"
               id="password"
               name="password"
+              className="form-input"
               value={formData.password}
               onChange={handleChange}
+              placeholder="••••••••"
               required
             />
           </div>
-          <button type="submit" disabled={loading}>
-            {loading ? "Logging in..." : "Login"}
+
+          <button
+            type="submit"
+            className={`btn btn-primary ${loading ? "btn-loading" : ""}`}
+            disabled={loading}
+          >
+            {loading ? "Logging in..." : "Log In"}
           </button>
         </form>
-        <div className="register-link">
-          Don't have an account? <a href="/register">Register here</a>
+
+        <div className="auth-footer">
+          Don't have an account?{" "}
+          <Link to="/register" className="auth-link">
+            Register here
+          </Link>
         </div>
       </div>
     </div>
