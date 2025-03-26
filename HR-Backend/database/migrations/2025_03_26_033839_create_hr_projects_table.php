@@ -13,13 +13,13 @@ return new class extends Migration
      */
     public function up()
     {
-        Schema::create('tasks', function (Blueprint $table) {
+        Schema::create('hr_projects', function (Blueprint $table) {
             $table->id();
-            $table->string('title');
-            $table->enum('status', ['pending', 'in-progress', 'completed'])->default('pending');
-            $table->enum('priority', ['low', 'medium', 'high', ])->default('medium');
-            $table->integer('assigned_to');
-            $table->date('due_date')->nullable();
+            $table->string("name");
+            $table->string("type");
+            $table->string('status')->default('pending');
+            $table->string('priority');
+            $table->timestamp('due_date');
             $table->timestamps();
         });
     }
@@ -31,6 +31,6 @@ return new class extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('tasks');
+        Schema::dropIfExists('hr_projects');
     }
 };

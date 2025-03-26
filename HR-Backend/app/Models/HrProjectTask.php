@@ -15,7 +15,7 @@ class HrProjectTask extends Pivot
      *
      * @var string
      */
-    protected $table = 'hr_project_tasks';
+    protected $table = 'hr_projects_tasks';
 
     /**
      * Indicates if the model's ID is auto-incrementing.

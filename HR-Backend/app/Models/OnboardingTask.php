@@ -10,7 +10,6 @@ class OnboardingTask extends Model
 {
     use HasFactory;
 
-
     protected $fillable = [
         'user_id',
         'task_id',
@@ -24,20 +23,4 @@ class OnboardingTask extends Model
         return $this->belongsTo(User::class, 'user_id');
     }
 
-    /**
-     * Get the role for the onboarding task.
-     */
-
-    // public function role(): BelongsTo
-    // {
-    //     return $this->belongsTo(Role::class);
-    // }
-
-    /**
-     * Get the task for the onboarding task.
-     */
-    public function task(): BelongsTo
-    {
-        return $this->belongsTo(Task::class);
-    }
 }

@@ -119,23 +119,6 @@ class HrProjectController extends Controller
     }
 
     /**
-     * Get HR projects by assigned user ID.
-     *
-     * @param int $userId
-     * @return JsonResponse
-     */
-    public function getByAssignedUserId(int $userId): JsonResponse
-    {
-        $result = $this->hrProjectService->getHrProjectsByAssignedUserId($userId);
-
-        if (!$result['success']) {
-            return response()->json($result, 404);
-        }
-
-        return response()->json($result);
-    }
-
-    /**
      * Get HR projects by status.
      *
      * @param string $status

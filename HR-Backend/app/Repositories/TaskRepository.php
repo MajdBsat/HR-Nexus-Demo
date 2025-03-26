@@ -15,7 +15,7 @@ class TaskRepository implements TaskRepositoryInterface
      *
      * @return Collection
      */
-    public function getAll(): Collection
+    static public function getAll(): Collection
     {
         return Task::all();
     }
@@ -26,7 +26,7 @@ class TaskRepository implements TaskRepositoryInterface
      * @param int $id
      * @return Task|null
      */
-    public function findById(int $id): ?Task
+    static public function findById(int $id): ?Task
     {
         return Task::find($id);
     }
@@ -37,7 +37,7 @@ class TaskRepository implements TaskRepositoryInterface
      * @param array $data
      * @return Task
      */
-    public function create(array $data): Task
+    static public function create(array $data): Task
     {
         return Task::create($data);
     }
@@ -49,9 +49,9 @@ class TaskRepository implements TaskRepositoryInterface
      * @param array $data
      * @return Task|null
      */
-    public function update(int $id, array $data): ?Task
+    static public function update(int $id, array $data): ?Task
     {
-        $task = $this->findById($id);
+        $task = TaskRepository::findById($id);
 
         if (!$task) {
             return null;
@@ -67,9 +67,9 @@ class TaskRepository implements TaskRepositoryInterface
      * @param int $id
      * @return bool
      */
-    public function delete(int $id): bool
+    static public function delete(int $id): bool
     {
-        $task = $this->findById($id);
+        $task = TaskRepository::findById($id);
 
         if (!$task) {
             return false;
@@ -84,7 +84,7 @@ class TaskRepository implements TaskRepositoryInterface
      * @param string $status
      * @return Collection
      */
-    public function getByStatus(string $status): Collection
+    static public function getByStatus(string $status): Collection
     {
         return Task::where('status', $status)->get();
     }
@@ -95,7 +95,7 @@ class TaskRepository implements TaskRepositoryInterface
      * @param string $priority
      * @return Collection
      */
-    public function getByPriority(string $priority): Collection
+    static public function getByPriority(string $priority): Collection
     {
         return Task::where('priority', $priority)->get();
     }
@@ -106,7 +106,7 @@ class TaskRepository implements TaskRepositoryInterface
      * @param int $userId
      * @return Collection
      */
-    public function getByUserId(int $userId): Collection
+    static public function getByUserId(int $userId): Collection
     {
         return Task::where('assigned_to', $userId)->get();
     }
@@ -117,7 +117,7 @@ class TaskRepository implements TaskRepositoryInterface
      * @param int $days
      * @return Collection
      */
-    public function getUpcomingTasks(int $days = 7): Collection
+    static public function getUpcomingTasks(int $days = 7): Collection
     {
         $today = Carbon::now();
         $endDate = Carbon::now()->addDays($days);
@@ -133,7 +133,7 @@ class TaskRepository implements TaskRepositoryInterface
      * @param int $userId
      * @return bool
      */
-    public function userExists(int $userId): bool
+    static public function userExists(int $userId): bool
     {
         return User::where('id', $userId)->exists();
     }
