@@ -29,14 +29,26 @@ class CandidateRepository implements CandidateRepositoryInterface
         return Candidate::find($id);
     }
 
+    public function getCandidatebyUserID($user_id){
+        return Candidate::where( "user_id",$user_id)->get();
+    }
+    public function findByUserIDandJobID(int $user_id, int $job_id): ?Candidate
+    {
+        return Candidate::where( "user_id",$user_id)
+        ->where("job_id",$job_id)->first();
+    }
+
     /**
      * Create a new candidate
      *
      * @param array $data
      * @return Candidate
      */
-    public function create(array $data): Candidate
+    public function create(array $data)
     {
+        if($this->findByUserIDandJobID($data['user_id'],$data['job_id'])){
+            return false;
+        }
         return Candidate::create($data);
     }
 
@@ -49,7 +61,7 @@ class CandidateRepository implements CandidateRepositoryInterface
      */
     public function update(int $id, array $data): ?Candidate
     {
-        $candidate = $this->findById($id);
+        $candidate = $this->findById($id)->with('user')->first();
 
         if ($candidate) {
             $candidate->update($data);
@@ -82,10 +94,10 @@ class CandidateRepository implements CandidateRepositoryInterface
      * @param string $position
      * @return Collection
      */
-    public function getByPosition(string $position): Collection
-    {
-        return Candidate::where('position', $position)->get();
-    }
+    // public function getByPosition(string $position): Collection
+    // {
+    //     return Candidate::where('position', $position)->get();
+    // }
 
     /**
      * Get candidates by status
@@ -106,8 +118,7 @@ class CandidateRepository implements CandidateRepositoryInterface
      */
     public function search(string $searchTerm): Collection
     {
-        return Candidate::where('first_name', 'like', "%{$searchTerm}%")
-            ->orWhere('last_name', 'like', "%{$searchTerm}%")
+        return Candidate::where('name', 'like', "%{$searchTerm}%")
             ->orWhere('email', 'like', "%{$searchTerm}%")
             ->get();
     }

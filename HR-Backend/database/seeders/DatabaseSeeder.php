@@ -23,14 +23,12 @@ class DatabaseSeeder extends Seeder
         $this->call([
             // Add departments and jobs first since other seeders depend on them
             DepartmentSeeder::class,
-            JobSeeder::class,
+
 
             // Then run the rest of the seeders
             HealthCarePlanSeeder::class,
-            HrProjectSeeder::class,
-            TaskSeeder::class,
+
             MonthlyPayrollSeeder::class,
-            JobApplicationSeeder::class,
         ]);
     }
 }
