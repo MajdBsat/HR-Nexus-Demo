@@ -4,7 +4,9 @@ namespace App\Services;
 
 use App\Models\Candidate;
 use App\Repositories\Interfaces\CandidateRepositoryInterface;
+use App\Repositories\Interfaces\UserRepositoryInterface;
 use Illuminate\Database\Eloquent\Collection;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Validator;
 
 class CandidateService
@@ -15,6 +17,8 @@ class CandidateService
      * @var CandidateRepositoryInterface
      */
     protected $candidateRepository;
+    protected $userService;
+
 
     /**
      * Create a new service instance.
@@ -22,9 +26,11 @@ class CandidateService
      * @param CandidateRepositoryInterface $candidateRepository
      * @return void
      */
-    public function __construct(CandidateRepositoryInterface $candidateRepository)
+    public function __construct(CandidateRepositoryInterface $candidateRepository,
+                                UserService $userService    )
     {
         $this->candidateRepository = $candidateRepository;
+        $this->userService = $userService;
     }
 
     /**
@@ -48,6 +54,12 @@ class CandidateService
         return $this->candidateRepository->findById($id);
     }
 
+    public function getCandidatebyUserID($user_id){
+        return $this->candidateRepository->getCandidatebyUserID($user_id);
+    }
+    public function findByUserIDandJobID(int $user_id ,int $job_id){
+        return $this->candidateRepository->findByUserIDandJobID($user_id, $job_id);
+    }
     /**
      * Create a new candidate.
      *
@@ -57,21 +69,12 @@ class CandidateService
     public function createCandidate(array $data): array
     {
         $validator = Validator::make($data, [
-            'first_name' => 'required|string|max:100',
-            'last_name' => 'required|string|max:100',
-            'email' => 'required|email|unique:candidates,email',
-            'phone' => 'nullable|string|max:20',
-            'address' => 'nullable|string|max:255',
-            'resume_path' => 'nullable|string|max:255',
-            'position' => 'required|string|max:100',
-            'status' => 'required|in:applied,screening,interview,offered,hired,rejected',
-            'skills' => 'nullable|string|max:255',
-            'experience_years' => 'nullable|integer|min:0',
-            'education' => 'nullable|string|max:255',
-            'notes' => 'nullable|string',
-            'application_date' => 'required|date',
+            'status' => 'nullable|in:applied,interviewed,hired,rejected',
+            'job_id' => 'required|integer|exists:jobs,id',
+            // 'user_id' => 'required|integer|exists:users,id'
         ]);
-
+        $user=Auth::user();
+        $data["user_id"]=$user["id"];
         if ($validator->fails()) {
             return [
                 'success' => false,
@@ -81,7 +84,13 @@ class CandidateService
         }
 
         $candidate = $this->candidateRepository->create($data);
-
+        if(!$candidate){
+            return [
+                'success' => false,
+                'message' => 'Already Applied',
+                'errors' => 'Already Applied'
+            ];
+        }
         return [
             'success' => true,
             'message' => 'Candidate created successfully',
@@ -99,19 +108,9 @@ class CandidateService
     public function updateCandidate(int $id, array $data): array
     {
         $validator = Validator::make($data, [
-            'first_name' => 'sometimes|string|max:100',
-            'last_name' => 'sometimes|string|max:100',
-            'email' => 'sometimes|email|unique:candidates,email,' . $id,
-            'phone' => 'nullable|string|max:20',
-            'address' => 'nullable|string|max:255',
-            'resume_path' => 'nullable|string|max:255',
-            'position' => 'sometimes|string|max:100',
-            'status' => 'sometimes|in:applied,screening,interview,offered,hired,rejected',
-            'skills' => 'nullable|string|max:255',
-            'experience_years' => 'nullable|integer|min:0',
-            'education' => 'nullable|string|max:255',
-            'notes' => 'nullable|string',
-            'application_date' => 'sometimes|date',
+            'status' => 'required|in:applied,interviewed,hired,rejected',
+            'job_id' => 'required|integer|exists:jobs,id',
+            'user_id' => 'required|integer|exists:users,id'
         ]);
 
         if ($validator->fails()) {
@@ -138,6 +137,8 @@ class CandidateService
         ];
     }
 
+
+
     /**
      * Delete a candidate.
      *
@@ -161,21 +162,65 @@ class CandidateService
         ];
     }
 
+    public function updateCandidateStatus(int $id): array
+    {
+        $candidate = $this->candidateRepository->findById($id);
+        if (!$candidate) {
+            return [
+                'success' => false,
+                'message' => 'Candidate not found'
+            ];
+        }
+        if($candidate['status'] == 'applied'){
+            $new_candidate = $this->candidateRepository->update($id,["status"=>"interviewed"]);
+        }
+
+        if($candidate['status'] == 'interviewed'){
+            $this->candidateRepository->update($id,["status"=>"hired"]);
+            $this->userService->updateUser($candidate['user']['id'], ["user_type"=>1]);
+            $this->candidateRepository->delete($id);
+        }
+
+        return [
+            'success' => true,
+            'message' => 'Candidate updated successfully',
+            'data' => $new_candidate? $new_candidate : $candidate
+        ];
+    }
+
+    public function updateCandidateReject(int $id): array
+    {
+        $candidate = $this->candidateRepository->findById($id);
+        if (!$candidate) {
+            return [
+                'success' => false,
+                'message' => 'Candidate not found'
+            ];
+        }
+        $this->candidateRepository->update($id,["status"=>"rejected"]);
+
+        return [
+            'success' => true,
+            'message' => 'Candidate updated successfully',
+            'data' => $candidate
+        ];
+    }
+
     /**
      * Get candidates by position.
      *
      * @param string $position
      * @return array
      */
-    public function getCandidatesByPosition(string $position): array
-    {
-        $candidates = $this->candidateRepository->getByPosition($position);
+    // public function getCandidatesByPosition(string $position): array
+    // {
+    //     $candidates = $this->candidateRepository->getByPosition($position);
 
-        return [
-            'success' => true,
-            'data' => $candidates
-        ];
-    }
+    //     return [
+    //         'success' => true,
+    //         'data' => $candidates
+    //     ];
+    // }
 
     /**
      * Get candidates by status.

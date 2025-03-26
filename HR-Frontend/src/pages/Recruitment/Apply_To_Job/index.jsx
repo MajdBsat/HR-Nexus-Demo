@@ -1,26 +1,45 @@
 import { useLocation, useNavigate } from "react-router-dom";
 import "./index.css"
 import { useState } from "react";
+import { request } from "../../../utils/axios";
+import { requestMethods } from "../../../utils/request_methods";
 const Apply_To_Job = () => {
     const navigate = useNavigate();
     const location = useLocation();
     const props = location.state?.props;
-
     const [form,] = useState({
         job_title: props.title,
         job_description: props.description,
-        job_requirements: props.requirements
+        job_requirement: props.requirement
     });
 
-    console.log("Apply: " + props.title)
+    console.log("Apply: " + props.id)
     const cancel = (e) =>{
         e.preventDefault()
         console.log('Cancel')
         navigate("/emp/recruitment/jobs/")
     }
 
-    const applyJob = (e) =>{
+    const applyJob = async (e) =>{
         e.preventDefault()
+        const base = "http://localhost:8000/api/";
+        const response = await request({
+            method: requestMethods.POST,
+            url: base + 'candidates/',
+            headers: {
+                Authorization: "Bearer " + localStorage.getItem("token"),
+            },
+            data:{
+                'job_id': props.id  
+            }
+        });
+        if(response.success){
+            // alert(response.message)
+            navigate("/emp/recruitment/jobs/")
+        }else{
+            alert(response.errors)
+            navigate("/emp/recruitment/jobs/")
+        }
         console.log('Applied')
     }
 
@@ -41,7 +60,7 @@ const Apply_To_Job = () => {
                 <div className="label_input flex column width50">
                     <label htmlFor="requirements">Job Requirements</label>
                     <textarea rows={10} id="requirements" type="text" placeholder="HTML, CSS, JS, PHP, Laravel"
-                    value={form.job_requirements} readOnly/>
+                    value={form.job_requirement} readOnly/>
                 </div>
 
                 <div className="buttons flex row center width50">

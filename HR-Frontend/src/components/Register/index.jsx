@@ -1,7 +1,7 @@
 import React, { useState } from "react";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, Link } from "react-router-dom";
 import { authService } from "../../services/apiService";
-import "./index.css";
+import "../../styles/SharedAuthStyles.css";
 
 const Register = () => {
   const navigate = useNavigate();
@@ -41,61 +41,114 @@ const Register = () => {
   };
 
   return (
-    <div className="register-container">
-      <div className="register-box">
-        <h2>Create an Account</h2>
-        {error && <div className="error-message">{error}</div>}
+    <div className="form-container fade-in">
+      <div className="auth-card slide-up">
+        <div className="auth-header">
+          <h2 className="auth-title">Join HR-Nexus</h2>
+          <p className="auth-subtitle">Create your account to get started</p>
+        </div>
+
+        {error && (
+          <div className="error-message">
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              width="20"
+              height="20"
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              strokeWidth="2"
+              strokeLinecap="round"
+              strokeLinejoin="round"
+            >
+              <circle cx="12" cy="12" r="10"></circle>
+              <line x1="12" y1="8" x2="12" y2="12"></line>
+              <line x1="12" y1="16" x2="12.01" y2="16"></line>
+            </svg>
+            {error}
+          </div>
+        )}
+
         <form onSubmit={handleSubmit}>
           <div className="form-group">
-            <label htmlFor="name">Full Name</label>
+            <label htmlFor="name" className="form-label">
+              Full Name
+            </label>
             <input
               type="text"
               id="name"
               name="name"
+              className="form-input"
               value={formData.name}
               onChange={handleChange}
+              placeholder="John Doe"
               required
+              autoFocus
             />
           </div>
+
           <div className="form-group">
-            <label htmlFor="email">Email</label>
+            <label htmlFor="email" className="form-label">
+              Email Address
+            </label>
             <input
               type="email"
               id="email"
               name="email"
+              className="form-input"
               value={formData.email}
               onChange={handleChange}
+              placeholder="your@email.com"
               required
             />
           </div>
+
           <div className="form-group">
-            <label htmlFor="password">Password</label>
+            <label htmlFor="password" className="form-label">
+              Password
+            </label>
             <input
               type="password"
               id="password"
               name="password"
+              className="form-input"
               value={formData.password}
               onChange={handleChange}
+              placeholder="••••••••"
               required
             />
           </div>
+
           <div className="form-group">
-            <label htmlFor="password_confirmation">Confirm Password</label>
+            <label htmlFor="password_confirmation" className="form-label">
+              Confirm Password
+            </label>
             <input
               type="password"
               id="password_confirmation"
               name="password_confirmation"
+              className="form-input"
               value={formData.password_confirmation}
               onChange={handleChange}
+              placeholder="••••••••"
               required
             />
           </div>
-          <button type="submit" disabled={loading}>
-            {loading ? "Registering..." : "Register"}
+
+          <button
+            type="submit"
+            className={`btn btn-primary ${loading ? "btn-loading" : ""}`}
+            disabled={loading}
+          >
+            {loading ? "Creating Account..." : "Create Account"}
           </button>
         </form>
-        <div className="login-link">
-          Already have an account? <a href="/login">Login here</a>
+
+        <div className="auth-footer">
+          Already have an account?{" "}
+          <Link to="/login" className="auth-link">
+            Log in here
+          </Link>
         </div>
       </div>
     </div>

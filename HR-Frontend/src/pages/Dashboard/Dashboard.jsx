@@ -86,6 +86,7 @@ const Dashboard = () => {
           { key: "taskCompletion", url: "/api/tasks/completion" },
         ];
 
+        //test 
         const results = {};
 
         const responses = await Promise.allSettled(
@@ -98,47 +99,8 @@ const Dashboard = () => {
             results[key] = response.value.data || [];
           } else {
             console.error(`Failed to fetch ${key}:`, response.reason);
-            // Provide fallback data for visualization purposes
-            if (key === "departmentStats") {
-              results[key] = [
-                { name: "Engineering", count: 24 },
-                { name: "Marketing", count: 12 },
-                { name: "Sales", count: 18 },
-                { name: "HR", count: 8 },
-                { name: "Finance", count: 10 },
-              ];
-            } else if (key === "userTypeDistribution") {
-              results[key] = [
-                { type: "Admin", count: 5 },
-                { type: "Manager", count: 12 },
-                { type: "Employee", count: 83 },
-              ];
-            } else if (key === "employeeGrowth") {
-              results[key] = [
-                { date: "Jan", count: 65 },
-                { date: "Feb", count: 72 },
-                { date: "Mar", count: 78 },
-                { date: "Apr", count: 85 },
-                { date: "May", count: 93 },
-                { date: "Jun", count: 100 },
-              ];
-            } else if (key === "jobStats") {
-              results[key] = [
-                { status: "Open", count: 12 },
-                { status: "Closed", count: 8 },
-                { status: "Draft", count: 3 },
-              ];
-            } else if (key === "attendanceHours") {
-              results[key] = [
-                { day: "Mon", average_hours: 7.8 },
-                { day: "Tue", average_hours: 8.1 },
-                { day: "Wed", average_hours: 8.0 },
-                { day: "Thu", average_hours: 7.9 },
-                { day: "Fri", average_hours: 7.5 },
-              ];
-            } else {
-              results[key] = [];
-            }
+            // Return empty array instead of fallback data
+            results[key] = [];
           }
         });
 
@@ -154,17 +116,17 @@ const Dashboard = () => {
     fetchDashboardData();
   }, []);
 
-  const renderNoData = () => <div className="no-data">No data available</div>;
+  const renderNoData = () => <div className="no-data">Data invalid</div>;
 
   const getTotalEmployees = () => {
     if (
       !dashboardData.employeeGrowth ||
       dashboardData.employeeGrowth.length === 0
     )
-      return 0;
+      return "Data invalid";
     return (
       dashboardData.employeeGrowth[dashboardData.employeeGrowth.length - 1]
-        ?.count || 0
+        ?.count || "Data invalid"
     );
   };
 
@@ -173,7 +135,7 @@ const Dashboard = () => {
       !dashboardData.attendanceHours ||
       dashboardData.attendanceHours.length === 0
     )
-      return 0;
+      return "Data invalid";
     const total = dashboardData.attendanceHours.reduce(
       (sum, day) =>
         sum + (typeof day.average_hours === "number" ? day.average_hours : 0),
@@ -184,11 +146,11 @@ const Dashboard = () => {
 
   const getOpenJobs = () => {
     if (!dashboardData.jobStats || dashboardData.jobStats.length === 0)
-      return 0;
+      return "Data invalid";
     const openJobs = dashboardData.jobStats.find(
       (job) => job.status === "Open"
     );
-    return openJobs ? openJobs.count : 0;
+    return openJobs ? openJobs.count : "Data invalid";
   };
 
   if (loading) {
@@ -316,7 +278,7 @@ const Dashboard = () => {
             <div className="summary-data">
               <h3>Departments</h3>
               <div className="summary-value">
-                {dashboardData.departmentStats?.length || 0}
+                {dashboardData.departmentStats?.length || "Data invalid"}
               </div>
             </div>
           </div>
@@ -525,27 +487,32 @@ const Dashboard = () => {
         <div className="chart-card">
           <h2 className="chart-title">Job Applications by Status</h2>
           <div className="chart-container radar-chart-container">
-            <ResponsiveContainer width="100%" height="100%">
-              <RadarChart
-                outerRadius={90}
-                data={dashboardData.jobApplicationStats}
-              >
-                <PolarGrid />
-                <PolarAngleAxis dataKey="status" />
-                <PolarRadiusAxis angle={30} domain={[0, "auto"]} />
-                <Radar
-                  name="Applications"
-                  dataKey="count"
-                  stroke="#FF8042"
-                  fill="#FF8042"
-                  fillOpacity={0.6}
-                />
-                <Legend />
-                <Tooltip
-                  formatter={(value) => safeFormatter(value, "applications")}
-                />
-              </RadarChart>
-            </ResponsiveContainer>
+            {dashboardData.jobApplicationStats &&
+            dashboardData.jobApplicationStats.length > 0 ? (
+              <ResponsiveContainer width="100%" height="100%">
+                <RadarChart
+                  outerRadius={90}
+                  data={dashboardData.jobApplicationStats}
+                >
+                  <PolarGrid />
+                  <PolarAngleAxis dataKey="status" />
+                  <PolarRadiusAxis angle={30} domain={[0, "auto"]} />
+                  <Radar
+                    name="Applications"
+                    dataKey="count"
+                    stroke="#FF8042"
+                    fill="#FF8042"
+                    fillOpacity={0.6}
+                  />
+                  <Legend />
+                  <Tooltip
+                    formatter={(value) => safeFormatter(value, "applications")}
+                  />
+                </RadarChart>
+              </ResponsiveContainer>
+            ) : (
+              renderNoData()
+            )}
           </div>
         </div>
 
@@ -553,34 +520,39 @@ const Dashboard = () => {
         <div className="chart-card">
           <h2 className="chart-title">Projects by Status</h2>
           <div className="chart-container pie-chart-container">
-            <ResponsiveContainer width="100%" height="100%">
-              <PieChart>
-                <Pie
-                  data={dashboardData.projectStats}
-                  dataKey="count"
-                  nameKey="status"
-                  cx="50%"
-                  cy="50%"
-                  outerRadius={100}
-                  label={({ name, percent }) =>
-                    name && percent && typeof percent === "number"
-                      ? `${name}: ${(percent * 100).toFixed(0)}%`
-                      : ""
-                  }
-                >
-                  {dashboardData.projectStats.map((entry, index) => (
-                    <Cell
-                      key={`cell-${index}`}
-                      fill={COLORS[index % COLORS.length]}
-                    />
-                  ))}
-                </Pie>
-                <Tooltip
-                  formatter={(value) => safeFormatter(value, "projects")}
-                />
-                <Legend />
-              </PieChart>
-            </ResponsiveContainer>
+            {dashboardData.projectStats &&
+            dashboardData.projectStats.length > 0 ? (
+              <ResponsiveContainer width="100%" height="100%">
+                <PieChart>
+                  <Pie
+                    data={dashboardData.projectStats}
+                    dataKey="count"
+                    nameKey="status"
+                    cx="50%"
+                    cy="50%"
+                    outerRadius={100}
+                    label={({ name, percent }) =>
+                      name && percent && typeof percent === "number"
+                        ? `${name}: ${(percent * 100).toFixed(0)}%`
+                        : ""
+                    }
+                  >
+                    {dashboardData.projectStats.map((entry, index) => (
+                      <Cell
+                        key={`cell-${index}`}
+                        fill={COLORS[index % COLORS.length]}
+                      />
+                    ))}
+                  </Pie>
+                  <Tooltip
+                    formatter={(value) => safeFormatter(value, "projects")}
+                  />
+                  <Legend />
+                </PieChart>
+              </ResponsiveContainer>
+            ) : (
+              renderNoData()
+            )}
           </div>
         </div>
 
@@ -588,16 +560,21 @@ const Dashboard = () => {
         <div className="chart-card">
           <h2 className="chart-title">Employee Onboarding Progress</h2>
           <div className="chart-container bar-chart-container">
-            <ResponsiveContainer width="100%" height="100%">
-              <BarChart data={dashboardData.onboardingProgress}>
-                <CartesianGrid strokeDasharray="3 3" />
-                <XAxis dataKey="name" />
-                <YAxis domain={[0, 100]} />
-                <Tooltip formatter={(value) => safeFormatter(value, "%")} />
-                <Legend />
-                <Bar dataKey="percentage" fill="#82ca9d" />
-              </BarChart>
-            </ResponsiveContainer>
+            {dashboardData.onboardingProgress &&
+            dashboardData.onboardingProgress.length > 0 ? (
+              <ResponsiveContainer width="100%" height="100%">
+                <BarChart data={dashboardData.onboardingProgress}>
+                  <CartesianGrid strokeDasharray="3 3" />
+                  <XAxis dataKey="name" />
+                  <YAxis domain={[0, 100]} />
+                  <Tooltip formatter={(value) => safeFormatter(value, "%")} />
+                  <Legend />
+                  <Bar dataKey="percentage" fill="#82ca9d" />
+                </BarChart>
+              </ResponsiveContainer>
+            ) : (
+              renderNoData()
+            )}
           </div>
         </div>
 
@@ -605,30 +582,35 @@ const Dashboard = () => {
         <div className="chart-card">
           <h2 className="chart-title">Department Managers</h2>
           <div className="chart-container table-container">
-            <table className="min-w-full">
-              <thead>
-                <tr>
-                  <th className="px-6 py-3 border-b-2 border-gray-200 bg-gray-100 text-left text-xs font-semibold text-gray-600 uppercase tracking-wider">
-                    Department
-                  </th>
-                  <th className="px-6 py-3 border-b-2 border-gray-200 bg-gray-100 text-left text-xs font-semibold text-gray-600 uppercase tracking-wider">
-                    Manager
-                  </th>
-                </tr>
-              </thead>
-              <tbody>
-                {dashboardData.departmentManagers.map((item, index) => (
-                  <tr key={index}>
-                    <td className="px-6 py-4 whitespace-nowrap border-b border-gray-200">
-                      {item.department}
-                    </td>
-                    <td className="px-6 py-4 whitespace-nowrap border-b border-gray-200">
-                      {item.manager}
-                    </td>
+            {dashboardData.departmentManagers &&
+            dashboardData.departmentManagers.length > 0 ? (
+              <table className="min-w-full">
+                <thead>
+                  <tr>
+                    <th className="px-6 py-3 border-b-2 border-gray-200 bg-gray-100 text-left text-xs font-semibold text-gray-600 uppercase tracking-wider">
+                      Department
+                    </th>
+                    <th className="px-6 py-3 border-b-2 border-gray-200 bg-gray-100 text-left text-xs font-semibold text-gray-600 uppercase tracking-wider">
+                      Manager
+                    </th>
                   </tr>
-                ))}
-              </tbody>
-            </table>
+                </thead>
+                <tbody>
+                  {dashboardData.departmentManagers.map((item, index) => (
+                    <tr key={index}>
+                      <td className="px-6 py-4 whitespace-nowrap border-b border-gray-200">
+                        {item.department}
+                      </td>
+                      <td className="px-6 py-4 whitespace-nowrap border-b border-gray-200">
+                        {item.manager}
+                      </td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+            ) : (
+              renderNoData()
+            )}
           </div>
         </div>
 
@@ -636,29 +618,36 @@ const Dashboard = () => {
         <div className="chart-card">
           <h2 className="chart-title">Task Completion Trends</h2>
           <div className="chart-container area-chart-container">
-            <ResponsiveContainer width="100%" height="100%">
-              <AreaChart data={dashboardData.taskCompletion}>
-                <CartesianGrid strokeDasharray="3 3" />
-                <XAxis dataKey="date" />
-                <YAxis />
-                <Tooltip formatter={(value) => safeFormatter(value, "tasks")} />
-                <Legend />
-                <Area
-                  type="monotone"
-                  dataKey="completed"
-                  stackId="1"
-                  stroke="#82ca9d"
-                  fill="#82ca9d"
-                />
-                <Area
-                  type="monotone"
-                  dataKey="pending"
-                  stackId="1"
-                  stroke="#ffc658"
-                  fill="#ffc658"
-                />
-              </AreaChart>
-            </ResponsiveContainer>
+            {dashboardData.taskCompletion &&
+            dashboardData.taskCompletion.length > 0 ? (
+              <ResponsiveContainer width="100%" height="100%">
+                <AreaChart data={dashboardData.taskCompletion}>
+                  <CartesianGrid strokeDasharray="3 3" />
+                  <XAxis dataKey="date" />
+                  <YAxis />
+                  <Tooltip
+                    formatter={(value) => safeFormatter(value, "tasks")}
+                  />
+                  <Legend />
+                  <Area
+                    type="monotone"
+                    dataKey="completed"
+                    stackId="1"
+                    stroke="#82ca9d"
+                    fill="#82ca9d"
+                  />
+                  <Area
+                    type="monotone"
+                    dataKey="pending"
+                    stackId="1"
+                    stroke="#ffc658"
+                    fill="#ffc658"
+                  />
+                </AreaChart>
+              </ResponsiveContainer>
+            ) : (
+              renderNoData()
+            )}
           </div>
         </div>
       </div>

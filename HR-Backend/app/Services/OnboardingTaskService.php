@@ -59,7 +59,6 @@ class OnboardingTaskService
     {
         $validator = Validator::make($data, [
             'employee_id' => 'required|integer|exists:users,id',
-            'role_id' => 'required|integer|exists:roles,id',
             'task_id' => 'required|integer|exists:tasks,id',
         ]);
 
@@ -68,27 +67,6 @@ class OnboardingTaskService
                 'success' => false,
                 'message' => 'Validation failed',
                 'errors' => $validator->errors()
-            ];
-        }
-
-        if (!$this->onboardingTaskRepository->employeeExists($data['employee_id'])) {
-            return [
-                'success' => false,
-                'message' => 'Employee not found'
-            ];
-        }
-
-        if (!$this->onboardingTaskRepository->roleExists($data['role_id'])) {
-            return [
-                'success' => false,
-                'message' => 'Role not found'
-            ];
-        }
-
-        if (!$this->onboardingTaskRepository->taskExists($data['task_id'])) {
-            return [
-                'success' => false,
-                'message' => 'Task not found'
             ];
         }
 
@@ -112,7 +90,6 @@ class OnboardingTaskService
     {
         $validator = Validator::make($data, [
             'employee_id' => 'sometimes|integer|exists:users,id',
-            'role_id' => 'sometimes|integer|exists:roles,id',
             'task_id' => 'sometimes|integer|exists:tasks,id',
         ]);
 
@@ -124,26 +101,19 @@ class OnboardingTaskService
             ];
         }
 
-        if (isset($data['employee_id']) && !$this->onboardingTaskRepository->employeeExists($data['employee_id'])) {
-            return [
-                'success' => false,
-                'message' => 'Employee not found'
-            ];
-        }
+        // if (isset($data['employee_id']) && !$this->onboardingTaskRepository->employeeExists($data['employee_id'])) {
+        //     return [
+        //         'success' => false,
+        //         'message' => 'Employee not found'
+        //     ];
+        // }
 
-        if (isset($data['role_id']) && !$this->onboardingTaskRepository->roleExists($data['role_id'])) {
-            return [
-                'success' => false,
-                'message' => 'Role not found'
-            ];
-        }
-
-        if (isset($data['task_id']) && !$this->onboardingTaskRepository->taskExists($data['task_id'])) {
-            return [
-                'success' => false,
-                'message' => 'Task not found'
-            ];
-        }
+        // if (isset($data['task_id']) && !$this->onboardingTaskRepository->taskExists($data['task_id'])) {
+        //     return [
+        //         'success' => false,
+        //         'message' => 'Task not found'
+        //     ];
+        // }
 
         $onboardingTask = $this->onboardingTaskRepository->update($id, $data);
 
@@ -213,37 +183,37 @@ class OnboardingTaskService
      * @param int $roleId
      * @return array
      */
-    public function getOnboardingTasksByRoleId(int $roleId): array
-    {
-        if (!$this->onboardingTaskRepository->roleExists($roleId)) {
-            return [
-                'success' => false,
-                'message' => 'Role not found'
-            ];
-        }
+    // public function getOnboardingTasksByRoleId(int $roleId): array
+    // {
+    //     if (!$this->onboardingTaskRepository->roleExists($roleId)) {
+    //         return [
+    //             'success' => false,
+    //             'message' => 'Role not found'
+    //         ];
+    //     }
 
-        $onboardingTasks = $this->onboardingTaskRepository->getByRoleId($roleId);
+    //     $onboardingTasks = $this->onboardingTaskRepository->getByRoleId($roleId);
 
-        return [
-            'success' => true,
-            'data' => $onboardingTasks
-        ];
-    }
+    //     return [
+    //         'success' => true,
+    //         'data' => $onboardingTasks
+    //     ];
+    // }
 
     /**
      * Get all roles.
      *
      * @return array
      */
-    public function getAllRoles(): array
-    {
-        $roles = $this->onboardingTaskRepository->getAllRoles();
+    // public function getAllRoles(): array
+    // {
+    //     $roles = $this->onboardingTaskRepository->getAllRoles();
 
-        return [
-            'success' => true,
-            'data' => $roles
-        ];
-    }
+    //     return [
+    //         'success' => true,
+    //         'data' => $roles
+    //     ];
+    // }
 
     /**
      * Get role by ID.
@@ -251,22 +221,22 @@ class OnboardingTaskService
      * @param int $id
      * @return array
      */
-    public function getRoleById(int $id): array
-    {
-        $role = $this->onboardingTaskRepository->getRoleById($id);
+    // public function getRoleById(int $id): array
+    // {
+    //     $role = $this->onboardingTaskRepository->getRoleById($id);
 
-        if (!$role) {
-            return [
-                'success' => false,
-                'message' => 'Role not found'
-            ];
-        }
+    //     if (!$role) {
+    //         return [
+    //             'success' => false,
+    //             'message' => 'Role not found'
+    //         ];
+    //     }
 
-        return [
-            'success' => true,
-            'data' => $role
-        ];
-    }
+    //     return [
+    //         'success' => true,
+    //         'data' => $role
+    //     ];
+    // }
 
     /**
      * Create a new role.
@@ -274,30 +244,30 @@ class OnboardingTaskService
      * @param array $data
      * @return array
      */
-    public function createRole(array $data): array
-    {
-        $validator = Validator::make($data, [
-            'title' => 'required|string|max:255|unique:roles,title',
-            'description' => 'required|string',
-            'requirements' => 'nullable|string',
-        ]);
+    // public function createRole(array $data): array
+    // {
+    //     $validator = Validator::make($data, [
+    //         'title' => 'required|string|max:255|unique:roles,title',
+    //         'description' => 'required|string',
+    //         'requirements' => 'nullable|string',
+    //     ]);
 
-        if ($validator->fails()) {
-            return [
-                'success' => false,
-                'message' => 'Validation failed',
-                'errors' => $validator->errors()
-            ];
-        }
+    //     if ($validator->fails()) {
+    //         return [
+    //             'success' => false,
+    //             'message' => 'Validation failed',
+    //             'errors' => $validator->errors()
+    //         ];
+    //     }
 
-        $role = $this->onboardingTaskRepository->createRole($data);
+    //     $role = $this->onboardingTaskRepository->createRole($data);
 
-        return [
-            'success' => true,
-            'message' => 'Role created successfully',
-            'data' => $role
-        ];
-    }
+    //     return [
+    //         'success' => true,
+    //         'message' => 'Role created successfully',
+    //         'data' => $role
+    //     ];
+    // }
 
     /**
      * Update a role.
@@ -306,37 +276,37 @@ class OnboardingTaskService
      * @param array $data
      * @return array
      */
-    public function updateRole(int $id, array $data): array
-    {
-        $validator = Validator::make($data, [
-            'title' => 'sometimes|string|max:255|unique:roles,title,' . $id,
-            'description' => 'sometimes|string',
-            'requirements' => 'nullable|string',
-        ]);
+    // public function updateRole(int $id, array $data): array
+    // {
+    //     $validator = Validator::make($data, [
+    //         'title' => 'sometimes|string|max:255|unique:roles,title,' . $id,
+    //         'description' => 'sometimes|string',
+    //         'requirements' => 'nullable|string',
+    //     ]);
 
-        if ($validator->fails()) {
-            return [
-                'success' => false,
-                'message' => 'Validation failed',
-                'errors' => $validator->errors()
-            ];
-        }
+    //     if ($validator->fails()) {
+    //         return [
+    //             'success' => false,
+    //             'message' => 'Validation failed',
+    //             'errors' => $validator->errors()
+    //         ];
+    //     }
 
-        $role = $this->onboardingTaskRepository->updateRole($id, $data);
+    //     $role = $this->onboardingTaskRepository->updateRole($id, $data);
 
-        if (!$role) {
-            return [
-                'success' => false,
-                'message' => 'Role not found'
-            ];
-        }
+    //     if (!$role) {
+    //         return [
+    //             'success' => false,
+    //             'message' => 'Role not found'
+    //         ];
+    //     }
 
-        return [
-            'success' => true,
-            'message' => 'Role updated successfully',
-            'data' => $role
-        ];
-    }
+    //     return [
+    //         'success' => true,
+    //         'message' => 'Role updated successfully',
+    //         'data' => $role
+    //     ];
+    // }
 
     /**
      * Delete a role.
@@ -344,31 +314,31 @@ class OnboardingTaskService
      * @param int $id
      * @return array
      */
-    public function deleteRole(int $id): array
-    {
-        // Check if there are any onboarding tasks associated with this role
-        $tasks = $this->onboardingTaskRepository->getByRoleId($id);
-        if ($tasks->isNotEmpty()) {
-            return [
-                'success' => false,
-                'message' => 'Cannot delete role with associated onboarding tasks'
-            ];
-        }
+    // public function deleteRole(int $id): array
+    // {
+    //     // Check if there are any onboarding tasks associated with this role
+    //     $tasks = $this->onboardingTaskRepository->getByRoleId($id);
+    //     if ($tasks->isNotEmpty()) {
+    //         return [
+    //             'success' => false,
+    //             'message' => 'Cannot delete role with associated onboarding tasks'
+    //         ];
+    //     }
 
-        $result = $this->onboardingTaskRepository->deleteRole($id);
+    //     $result = $this->onboardingTaskRepository->deleteRole($id);
 
-        if (!$result) {
-            return [
-                'success' => false,
-                'message' => 'Role not found'
-            ];
-        }
+    //     if (!$result) {
+    //         return [
+    //             'success' => false,
+    //             'message' => 'Role not found'
+    //         ];
+    //     }
 
-        return [
-            'success' => true,
-            'message' => 'Role deleted successfully'
-        ];
-    }
+    //     return [
+    //         'success' => true,
+    //         'message' => 'Role deleted successfully'
+    //     ];
+    // }
 
     /**
      * Get tasks by role ID.
@@ -376,22 +346,22 @@ class OnboardingTaskService
      * @param int $roleId
      * @return array
      */
-    public function getTasksByRoleId(int $roleId): array
-    {
-        if (!$this->onboardingTaskRepository->roleExists($roleId)) {
-            return [
-                'success' => false,
-                'message' => 'Role not found'
-            ];
-        }
+    // public function getTasksByRoleId(int $roleId): array
+    // {
+    //     if (!$this->onboardingTaskRepository->roleExists($roleId)) {
+    //         return [
+    //             'success' => false,
+    //             'message' => 'Role not found'
+    //         ];
+    //     }
 
-        $tasks = $this->onboardingTaskRepository->getTasksByRoleId($roleId);
+    //     $tasks = $this->onboardingTaskRepository->getTasksByRoleId($roleId);
 
-        return [
-            'success' => true,
-            'data' => $tasks
-        ];
-    }
+    //     return [
+    //         'success' => true,
+    //         'data' => $tasks
+    //     ];
+    // }
 
     /**
      * Assign a task to a role.
@@ -400,36 +370,36 @@ class OnboardingTaskService
      * @param int $taskId
      * @return array
      */
-    public function assignTaskToRole(int $roleId, int $taskId): array
-    {
-        if (!$this->onboardingTaskRepository->roleExists($roleId)) {
-            return [
-                'success' => false,
-                'message' => 'Role not found'
-            ];
-        }
+    // public function assignTaskToRole(int $roleId, int $taskId): array
+    // {
+    //     if (!$this->onboardingTaskRepository->roleExists($roleId)) {
+    //         return [
+    //             'success' => false,
+    //             'message' => 'Role not found'
+    //         ];
+    //     }
 
-        if (!$this->onboardingTaskRepository->taskExists($taskId)) {
-            return [
-                'success' => false,
-                'message' => 'Task not found'
-            ];
-        }
+    //     if (!$this->onboardingTaskRepository->taskExists($taskId)) {
+    //         return [
+    //             'success' => false,
+    //             'message' => 'Task not found'
+    //         ];
+    //     }
 
-        $result = $this->onboardingTaskRepository->assignTaskToRole($roleId, $taskId);
+    //     $result = $this->onboardingTaskRepository->assignTaskToRole($roleId, $taskId);
 
-        if (!$result) {
-            return [
-                'success' => false,
-                'message' => 'Task is already assigned to this role'
-            ];
-        }
+    //     if (!$result) {
+    //         return [
+    //             'success' => false,
+    //             'message' => 'Task is already assigned to this role'
+    //         ];
+    //     }
 
-        return [
-            'success' => true,
-            'message' => 'Task assigned to role successfully'
-        ];
-    }
+    //     return [
+    //         'success' => true,
+    //         'message' => 'Task assigned to role successfully'
+    //     ];
+    // }
 
     /**
      * Remove a task from a role.
@@ -438,36 +408,36 @@ class OnboardingTaskService
      * @param int $taskId
      * @return array
      */
-    public function removeTaskFromRole(int $roleId, int $taskId): array
-    {
-        if (!$this->onboardingTaskRepository->roleExists($roleId)) {
-            return [
-                'success' => false,
-                'message' => 'Role not found'
-            ];
-        }
+    // public function removeTaskFromRole(int $roleId, int $taskId): array
+    // {
+    //     if (!$this->onboardingTaskRepository->roleExists($roleId)) {
+    //         return [
+    //             'success' => false,
+    //             'message' => 'Role not found'
+    //         ];
+    //     }
 
-        if (!$this->onboardingTaskRepository->taskExists($taskId)) {
-            return [
-                'success' => false,
-                'message' => 'Task not found'
-            ];
-        }
+    //     if (!$this->onboardingTaskRepository->taskExists($taskId)) {
+    //         return [
+    //             'success' => false,
+    //             'message' => 'Task not found'
+    //         ];
+    //     }
 
-        $result = $this->onboardingTaskRepository->removeTaskFromRole($roleId, $taskId);
+    //     $result = $this->onboardingTaskRepository->removeTaskFromRole($roleId, $taskId);
 
-        if (!$result) {
-            return [
-                'success' => false,
-                'message' => 'Task is not assigned to this role or has already been assigned to employees'
-            ];
-        }
+    //     if (!$result) {
+    //         return [
+    //             'success' => false,
+    //             'message' => 'Task is not assigned to this role or has already been assigned to employees'
+    //         ];
+    //     }
 
-        return [
-            'success' => true,
-            'message' => 'Task removed from role successfully'
-        ];
-    }
+    //     return [
+    //         'success' => true,
+    //         'message' => 'Task removed from role successfully'
+    //     ];
+    // }
 
     /**
      * Assign role tasks to an employee.
@@ -476,49 +446,49 @@ class OnboardingTaskService
      * @param int $roleId
      * @return array
      */
-    public function assignRoleTasksToEmployee(int $employeeId, int $roleId): array
-    {
-        if (!$this->onboardingTaskRepository->employeeExists($employeeId)) {
-            return [
-                'success' => false,
-                'message' => 'Employee not found'
-            ];
-        }
+    // public function assignRoleTasksToEmployee(int $employeeId, int $roleId): array
+    // {
+    //     if (!$this->onboardingTaskRepository->employeeExists($employeeId)) {
+    //         return [
+    //             'success' => false,
+    //             'message' => 'Employee not found'
+    //         ];
+    //     }
 
-        if (!$this->onboardingTaskRepository->roleExists($roleId)) {
-            return [
-                'success' => false,
-                'message' => 'Role not found'
-            ];
-        }
+    //     if (!$this->onboardingTaskRepository->roleExists($roleId)) {
+    //         return [
+    //             'success' => false,
+    //             'message' => 'Role not found'
+    //         ];
+    //     }
 
-        // Get all tasks for this role (from templates where employee_id is null)
-        $roleTasks = OnboardingTask::where('role_id', $roleId)
-            ->whereNull('employee_id')
-            ->get();
+    //     // Get all tasks for this role (from templates where employee_id is null)
+    //     $roleTasks = OnboardingTask::where('role_id', $roleId)
+    //         ->whereNull('employee_id')
+    //         ->get();
 
-        if ($roleTasks->isEmpty()) {
-            return [
-                'success' => false,
-                'message' => 'No tasks found for this role'
-            ];
-        }
+    //     if ($roleTasks->isEmpty()) {
+    //         return [
+    //             'success' => false,
+    //             'message' => 'No tasks found for this role'
+    //         ];
+    //     }
 
-        // Create employee-specific onboarding tasks
-        $createdTasks = [];
-        foreach ($roleTasks as $roleTask) {
-            $newTask = $this->onboardingTaskRepository->create([
-                'employee_id' => $employeeId,
-                'role_id' => $roleId,
-                'task_id' => $roleTask->task_id
-            ]);
-            $createdTasks[] = $newTask;
-        }
+    //     // Create employee-specific onboarding tasks
+    //     $createdTasks = [];
+    //     foreach ($roleTasks as $roleTask) {
+    //         $newTask = $this->onboardingTaskRepository->create([
+    //             'employee_id' => $employeeId,
+    //             'role_id' => $roleId,
+    //             'task_id' => $roleTask->task_id
+    //         ]);
+    //         $createdTasks[] = $newTask;
+    //     }
 
-        return [
-            'success' => true,
-            'message' => count($createdTasks) . ' onboarding tasks assigned to employee',
-            'data' => $createdTasks
-        ];
-    }
+    //     return [
+    //         'success' => true,
+    //         'message' => count($createdTasks) . ' onboarding tasks assigned to employee',
+    //         'data' => $createdTasks
+    //     ];
+    // }
 }
