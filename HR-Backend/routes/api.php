@@ -133,7 +133,10 @@ Route::group(['middleware' => ['jwt', 'role:hr']], function () {
     // Job Routes
     Route::prefix('jobs')->group(function () {
         Route::get('/', [JobController::class, 'index']);
+        Route::post('/', [JobController::class, 'store']);
         Route::get('/{id}', [JobController::class, 'show'])->where('id', '[0-9]+');
+        Route::put('/{id}', [JobController::class, 'update'])->where('id', '[0-9]+');
+        Route::delete('/{id}', [JobController::class, 'destroy'])->where('id', '[0-9]+');
         Route::post('/search', [JobController::class, 'search']);
     });
 
@@ -384,6 +387,7 @@ Route::group(['middleware' => ['auth.api']], function () {
 
 
 
+Route::get('jobs/', [JobController::class, 'index']);
 
 
 // =============Mohammad Zeineddine====================

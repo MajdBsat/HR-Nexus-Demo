@@ -10,7 +10,7 @@ const Job_Emp_Card = ({props}) => {
         <div className="emp_job_card flex column center item-start">
             <p className="emp_job_title">{props["title"]}</p>
             <p className="emp_job_description">{props["description"]}</p>
-            <p className="emp_job_requirements">{props["requirements"]}</p>
+            <p className="emp_job_requirements">{props["requirement"]}</p>
             <div className="emp_button flex content-end width100">
                 <button className="" onClick={applyJob}>Apply</button>
             </div>
