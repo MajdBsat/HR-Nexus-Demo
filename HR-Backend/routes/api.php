@@ -40,6 +40,8 @@ Route::middleware(['auth:sanctum'])->get('/user', function (Request $request) {
 });
 
 // Authentication routes - public
+Route::get('jobs/', [JobController::class, 'index']);
+
 Route::group(['prefix' => 'auth'], function () {
     Route::post('register', [AuthController::class, 'register']);
     Route::post('login', [AuthController::class, 'login']);
@@ -54,25 +56,27 @@ Route::group(['prefix' => 'auth'], function () {
 
 // Public routes
 Route::get('jobs', [JobController::class, 'index']); // Available to everyone
-
 // Guest routes - User type 0
 Route::group(['middleware' => ['jwt', 'role:guest']], function () {
-    // Jobs - read only
     Route::get('jobs/{id}', [JobController::class, 'show']);
+    Route::post('candidates/', [CandidateController::class, 'store']);
 });
 
 // Employee routes - User type 1
 Route::group(['middleware' => ['jwt', 'role:employee']], function () {
-    // Tasks
-    Route::get('tasks', [TaskController::class, 'index']);
-    Route::get('tasks/{id}', [TaskController::class, 'show']);
-    Route::post('tasks', [TaskController::class, 'store']);
-    Route::put('tasks/{id}', [TaskController::class, 'update']);
-    Route::delete('tasks/{id}', [TaskController::class, 'destroy']);
-    Route::get('tasks/status/{status}', [TaskController::class, 'getByStatus']);
-    Route::get('tasks/priority/{priority}', [TaskController::class, 'getByPriority']);
-    Route::get('tasks/user/{userId}', [TaskController::class, 'getByUserId']);
-    Route::get('tasks/upcoming/{days?}', [TaskController::class, 'getUpcomingTasks']);
+
+    // Task routes
+    Route::prefix('tasks')->group(function () {
+        Route::get('/', [TaskController::class, 'index']);
+        Route::get('/{id}', [TaskController::class, 'show'])->where('id', '[0-9]+');
+
+        // Additional specialized routes
+        Route::get('/status/{status}', [TaskController::class, 'getByStatus']);
+        Route::get('/priority/{priority}', [TaskController::class, 'getByPriority']);
+        Route::get('/user/{userId}', [TaskController::class, 'getByUserId'])->where('userId', '[0-9]+');
+        Route::put('/next/{id}', [TaskController::class, 'nextStep']);
+        Route::get('/upcoming/{days?}', [TaskController::class, 'getUpcomingTasks'])->where('days', '[0-9]+');
+    });
 
     // Job Applications
     Route::get('job-applications', [JobApplicationController::class, 'index']);
@@ -80,12 +84,6 @@ Route::group(['middleware' => ['jwt', 'role:employee']], function () {
     Route::post('job-applications', [JobApplicationController::class, 'store']);
     Route::put('job-applications/{id}', [JobApplicationController::class, 'update']);
     Route::delete('job-applications/{id}', [JobApplicationController::class, 'destroy']);
-
-    // Jobs
-    Route::post('jobs', [JobController::class, 'store']);
-    Route::put('jobs/{id}', [JobController::class, 'update']);
-    Route::delete('jobs/{id}', [JobController::class, 'destroy']);
-    Route::post('jobs/search', [JobController::class, 'search']);
 
     // Insurance Plans
     Route::get('insurance-plans', [InsurancePlanController::class, 'index']);
@@ -132,23 +130,45 @@ Route::group(['middleware' => ['jwt', 'role:hr']], function () {
     Route::delete('roles/{id}', [RoleController::class, 'destroy']);
     Route::get('roles/{id}/tasks', [RoleController::class, 'getTasks']);
 
-    // Onboarding Tasks
-    Route::get('onboarding-tasks', [OnboardingTaskController::class, 'index']);
-    Route::get('onboarding-tasks/{id}', [OnboardingTaskController::class, 'show']);
-    Route::post('onboarding-tasks', [OnboardingTaskController::class, 'store']);
-    Route::put('onboarding-tasks/{id}', [OnboardingTaskController::class, 'update']);
-    Route::delete('onboarding-tasks/{id}', [OnboardingTaskController::class, 'destroy']);
-    Route::get('onboarding-tasks/employee/{employeeId}', [OnboardingTaskController::class, 'getByEmployeeId']);
-    Route::get('onboarding-tasks/role/{roleId}', [OnboardingTaskController::class, 'getByRoleId']);
-    Route::get('onboarding-tasks/roles', [OnboardingTaskController::class, 'roles']);
-    Route::get('onboarding-tasks/roles/{id}', [OnboardingTaskController::class, 'roleShow']);
-    Route::post('onboarding-tasks/roles', [OnboardingTaskController::class, 'roleStore']);
-    Route::put('onboarding-tasks/roles/{id}', [OnboardingTaskController::class, 'roleUpdate']);
-    Route::delete('onboarding-tasks/roles/{id}', [OnboardingTaskController::class, 'roleDestroy']);
-    Route::get('onboarding-tasks/roles/{roleId}/tasks', [OnboardingTaskController::class, 'getTasksByRoleId']);
-    Route::post('onboarding-tasks/roles/assign-task', [OnboardingTaskController::class, 'assignTaskToRole']);
-    Route::post('onboarding-tasks/roles/remove-task', [OnboardingTaskController::class, 'removeTaskFromRole']);
-    Route::post('onboarding-tasks/employees/assign-role-tasks', [OnboardingTaskController::class, 'assignRoleTasksToEmployee']);
+    // Job Routes
+    Route::prefix('jobs')->group(function () {
+        Route::get('/', [JobController::class, 'index']);
+        Route::get('/{id}', [JobController::class, 'show'])->where('id', '[0-9]+');
+        Route::post('/search', [JobController::class, 'search']);
+    });
+
+    // Task routes
+    Route::prefix('tasks')->group(function () {
+        Route::get('/', [TaskController::class, 'index']);
+        Route::post('/', [TaskController::class, 'store']);
+        Route::get('/{id}', [TaskController::class, 'show'])->where('id', '[0-9]+');
+        Route::put('/{id}', [TaskController::class, 'update'])->where('id', '[0-9]+');
+        Route::delete('/{id}', [TaskController::class, 'destroy'])->where('id', '[0-9]+');
+
+        // Additional specialized routes
+        Route::get('/status/{status}', [TaskController::class, 'getByStatus']);
+        Route::get('/priority/{priority}', [TaskController::class, 'getByPriority']);
+        Route::get('/user/{userId}', [TaskController::class, 'getByUserId'])->where('userId', '[0-9]+');
+        Route::put('/next/{id}', [TaskController::class, 'nextStep']);
+        Route::put('/reject/{id}', [TaskController::class, 'reject']);
+        Route::get('/upcoming/{days?}', [TaskController::class, 'getUpcomingTasks'])->where('days', '[0-9]+');
+    });
+
+
+    // Candidate routes
+    Route::prefix('candidates')->group(function () {
+        Route::get('/', [CandidateController::class, 'index']);
+        Route::post('/', [CandidateController::class, 'store']);
+        Route::get('/{id}', [CandidateController::class, 'show']);
+        Route::put('/{id}', [CandidateController::class, 'update']);
+        Route::delete('/{id}', [CandidateController::class, 'destroy']);
+
+        // Additional specialized routes
+        Route::get('/status/{status}', [CandidateController::class, 'getByStatus']);
+        Route::post('/search', [CandidateController::class, 'search']);
+        Route::put('/next/{id}', [CandidateController::class, 'nextStep']);
+        Route::put('/reject/{id}', [CandidateController::class, 'reject']);
+});
 });
 
 // User routes
@@ -340,49 +360,49 @@ Route::group(['middleware' => ['auth.api']], function () {
 
 
 
-// Candidate routes
-Route::prefix('candidates')->group(function () {
-    Route::get('/', [CandidateController::class, 'index']);
-    Route::post('/', [CandidateController::class, 'store']);
-    Route::get('/{id}', [CandidateController::class, 'show']);
-    Route::put('/{id}', [CandidateController::class, 'update']);
-    Route::delete('/{id}', [CandidateController::class, 'destroy']);
+// // Candidate routes
+// Route::prefix('candidates')->group(function () {
+//     Route::get('/', [CandidateController::class, 'index']);
+//     Route::post('/', [CandidateController::class, 'store']);
+//     Route::get('/{id}', [CandidateController::class, 'show']);
+//     Route::put('/{id}', [CandidateController::class, 'update']);
+//     Route::delete('/{id}', [CandidateController::class, 'destroy']);
 
-    // Additional specialized routes
-    Route::get('/status/{status}', [CandidateController::class, 'getByStatus']);
-    Route::post('/search', [CandidateController::class, 'search']);
-    Route::put('/next/{id}', [CandidateController::class, 'nextStep']);
-    Route::put('/reject/{id}', [CandidateController::class, 'reject']);
-});
+//     // Additional specialized routes
+//     Route::get('/status/{status}', [CandidateController::class, 'getByStatus']);
+//     Route::post('/search', [CandidateController::class, 'search']);
+//     Route::put('/next/{id}', [CandidateController::class, 'nextStep']);
+//     Route::put('/reject/{id}', [CandidateController::class, 'reject']);
+// });
 
 
 
-// Task routes
-Route::prefix('tasks')->group(function () {
-    Route::get('/', [TaskController::class, 'index']);
-    Route::post('/', [TaskController::class, 'store']);
-    Route::get('/{id}', [TaskController::class, 'show'])->where('id', '[0-9]+');
-    Route::put('/{id}', [TaskController::class, 'update'])->where('id', '[0-9]+');
-    Route::delete('/{id}', [TaskController::class, 'destroy'])->where('id', '[0-9]+');
+// // Task routes
+// Route::prefix('tasks')->group(function () {
+//     Route::get('/', [TaskController::class, 'index']);
+//     Route::post('/', [TaskController::class, 'store']);
+//     Route::get('/{id}', [TaskController::class, 'show'])->where('id', '[0-9]+');
+//     Route::put('/{id}', [TaskController::class, 'update'])->where('id', '[0-9]+');
+//     Route::delete('/{id}', [TaskController::class, 'destroy'])->where('id', '[0-9]+');
 
-    // Additional specialized routes
-    Route::get('/status/{status}', [TaskController::class, 'getByStatus']);
-    Route::get('/priority/{priority}', [TaskController::class, 'getByPriority']);
-    Route::get('/user/{userId}', [TaskController::class, 'getByUserId'])->where('userId', '[0-9]+');
-    Route::put('/next/{id}', [TaskController::class, 'nextStep']);
-    Route::put('/reject/{id}', [TaskController::class, 'reject']);
-    Route::get('/upcoming/{days?}', [TaskController::class, 'getUpcomingTasks'])->where('days', '[0-9]+');
-});
+//     // Additional specialized routes
+//     Route::get('/status/{status}', [TaskController::class, 'getByStatus']);
+//     Route::get('/priority/{priority}', [TaskController::class, 'getByPriority']);
+//     Route::get('/user/{userId}', [TaskController::class, 'getByUserId'])->where('userId', '[0-9]+');
+//     Route::put('/next/{id}', [TaskController::class, 'nextStep']);
+//     Route::put('/reject/{id}', [TaskController::class, 'reject']);
+//     Route::get('/upcoming/{days?}', [TaskController::class, 'getUpcomingTasks'])->where('days', '[0-9]+');
+// });
 
-// Job Routes
-Route::prefix('jobs')->group(function () {
-    Route::get('/', [JobController::class, 'index']);
-    Route::post('/', [JobController::class, 'store']);
-    Route::get('/{id}', [JobController::class, 'show'])->where('id', '[0-9]+');
-    Route::put('/{id}', [JobController::class, 'update'])->where('id', '[0-9]+');
-    Route::delete('/{id}', [JobController::class, 'destroy'])->where('id', '[0-9]+');
-    Route::post('/search', [JobController::class, 'search']);
-});
+// // Job Routes
+// Route::prefix('jobs')->group(function () {
+//     Route::get('/', [JobController::class, 'index']);
+//     Route::post('/', [JobController::class, 'store']);
+//     Route::get('/{id}', [JobController::class, 'show'])->where('id', '[0-9]+');
+//     Route::put('/{id}', [JobController::class, 'update'])->where('id', '[0-9]+');
+//     Route::delete('/{id}', [JobController::class, 'destroy'])->where('id', '[0-9]+');
+//     Route::post('/search', [JobController::class, 'search']);
+// });
 
 // Onboarding Task routes
 // Route::prefix('onboarding-tasks')->group(function () {

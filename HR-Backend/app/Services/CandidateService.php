@@ -6,6 +6,7 @@ use App\Models\Candidate;
 use App\Repositories\Interfaces\CandidateRepositoryInterface;
 use App\Repositories\Interfaces\UserRepositoryInterface;
 use Illuminate\Database\Eloquent\Collection;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Validator;
 
 class CandidateService
@@ -64,9 +65,10 @@ class CandidateService
         $validator = Validator::make($data, [
             'status' => 'nullable|in:applied,interviewed,hired,rejected',
             'job_id' => 'required|integer|exists:jobs,id',
-            'user_id' => 'required|integer|exists:users,id'
+            // 'user_id' => 'required|integer|exists:users,id'
         ]);
-
+        $user=Auth::user();
+        $data["user_id"]=$user["id"];
         if ($validator->fails()) {
             return [
                 'success' => false,
