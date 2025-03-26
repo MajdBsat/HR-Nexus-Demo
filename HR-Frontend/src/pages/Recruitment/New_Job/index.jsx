@@ -28,6 +28,10 @@ const Add_new_job = () =>{
         });
         if(response.success){
             alert(response.message)
+            navigate("/hr/recruitment/jobs/")
+        }else{
+            alert(response.errors)
+            navigate("/hr/recruitment/jobs/")
         }
     }
 

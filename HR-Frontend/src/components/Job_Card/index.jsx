@@ -1,4 +1,3 @@
-import { useState } from "react";
 import { request } from "../../utils/axios";
 import { requestMethods } from "../../utils/request_methods";
 import "./index.css"
@@ -26,7 +25,7 @@ const Jobs_Card = ({props, f}) => {
         <div className="job_card flex column center item-start">
             <p className="job_title">{props["title"]}</p>
             <p className="job_description">{props["description"]}</p>
-            <p className="job_requirements">{props["requirements"]}</p>
+            <p className="job_requirements">{props["requirement"]}</p>
             <div className="button flex content-end width100">
                 <button className="" onClick={deleteJob}>Delete</button>
             </div>

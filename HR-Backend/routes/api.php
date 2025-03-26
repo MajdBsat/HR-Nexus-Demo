@@ -59,6 +59,7 @@ Route::get('jobs', [JobController::class, 'index']); // Available to everyone
 // Guest routes - User type 0
 Route::group(['middleware' => ['jwt', 'role:guest']], function () {
     Route::get('jobs/{id}', [JobController::class, 'show']);
+    Route::get('jobs/{id}', [JobController::class, 'show']);
     Route::post('candidates/', [CandidateController::class, 'store']);
 });
 
@@ -76,6 +77,16 @@ Route::group(['middleware' => ['jwt', 'role:employee']], function () {
         Route::get('/user/{userId}', [TaskController::class, 'getByUserId'])->where('userId', '[0-9]+');
         Route::put('/next/{id}', [TaskController::class, 'nextStep']);
         Route::get('/upcoming/{days?}', [TaskController::class, 'getUpcomingTasks'])->where('days', '[0-9]+');
+    });
+    // Candidate routes
+    Route::prefix('candidates')->group(function () {
+        Route::get('/', [CandidateController::class, 'index']);
+        Route::post('/', [CandidateController::class, 'store']);
+        Route::get('/{id}', [CandidateController::class, 'show']);
+        Route::get('/getUserCandidateStatus/{job_id}', [CandidateController::class, 'getUserCandidateStatus']);
+        // Additional specialized routes
+        Route::get('/status/{status}', [CandidateController::class, 'getByStatus']);
+        Route::post('/search', [CandidateController::class, 'search']);
     });
 
     // Job Applications
@@ -198,7 +209,7 @@ Route::group(['middleware' => ['jwt', 'role:hr']], function () {
         Route::post('/search', [CandidateController::class, 'search']);
         Route::put('/next/{id}', [CandidateController::class, 'nextStep']);
         Route::put('/reject/{id}', [CandidateController::class, 'reject']);
-});
+    });
 });
 
 // User routes

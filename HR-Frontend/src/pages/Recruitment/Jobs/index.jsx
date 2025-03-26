@@ -41,7 +41,7 @@ const Jobs = () => {
         <>
             <div className="r1 flex center content-end">
                 <div className='main flex column center'>
-                    <Recruitment_Header fun={newJob}/>
+                    <Recruitment_Header  fun={newJob}/>
                 </div>
             </div>
             

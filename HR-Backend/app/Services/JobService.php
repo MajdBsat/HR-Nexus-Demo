@@ -37,6 +37,13 @@ class JobService
         return $this->jobRepository->getAll();
     }
 
+    public function getJobWithCandidates($job_id){
+        return $this->jobRepository->getJobWithCandidates($job_id);
+    }
+
+    public function getAllJobsWithCandidates(){
+        return $this->jobRepository->getAllJobsWithCandidates();
+    }
     /**
      * Get job by ID.
      *

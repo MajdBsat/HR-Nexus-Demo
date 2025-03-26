@@ -29,14 +29,26 @@ class CandidateRepository implements CandidateRepositoryInterface
         return Candidate::find($id);
     }
 
+    public function getCandidatebyUserID($user_id){
+        return Candidate::where( "user_id",$user_id)->get();
+    }
+    public function findByUserIDandJobID(int $user_id, int $job_id): ?Candidate
+    {
+        return Candidate::where( "user_id",$user_id)
+        ->where("job_id",$job_id)->first();
+    }
+
     /**
      * Create a new candidate
      *
      * @param array $data
      * @return Candidate
      */
-    public function create(array $data): Candidate
+    public function create(array $data)
     {
+        if($this->findByUserIDandJobID($data['user_id'],$data['job_id'])){
+            return false;
+        }
         return Candidate::create($data);
     }
 

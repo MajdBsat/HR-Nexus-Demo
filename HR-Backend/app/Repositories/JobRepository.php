@@ -77,4 +77,12 @@ class JobRepository implements JobRepositoryInterface
 
         return $job->delete();
     }
+
+    public function getJobWithCandidates(int $job_id){
+        return Job::find($job_id)->with("candidates")->get();
+    }
+
+    public function getAllJobsWithCandidates(){
+        return Job::all()->with("candidates")->get();
+    }
 }

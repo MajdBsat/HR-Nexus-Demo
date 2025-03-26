@@ -46,4 +46,7 @@ interface JobRepositoryInterface
      * @return bool
      */
     public function delete(int $id): bool;
+    public function getJobWithCandidates(int $job_id);
+    public function getAllJobsWithCandidates();
+
 }

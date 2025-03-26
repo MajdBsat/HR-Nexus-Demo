@@ -16,7 +16,6 @@ const Jobs_Emp = () => {
         //     ];
 
     const [jobs, setJobs] = useState([])
-
     const base = "http://localhost:8000/api/";
     const getJobs = async() => {        
         const response = await request({
@@ -26,9 +25,10 @@ const Jobs_Emp = () => {
         if(response.success){
             setJobs(response.data)
         }else{  
-            alert(response.error)
+            alert(response.message)
         }
     }
+
     useEffect(() => {
         getJobs()
     }, []);
@@ -44,8 +44,7 @@ const Jobs_Emp = () => {
                 <div className='main flex row center wrap'>
                     {
                         jobs.map((job,index) => {
-                            console.log(job)
-                            return <Job_Emp_Card key={index} props={job}/>
+                            return <Job_Emp_Card key={index} props={job} status={status}/>
                         })
                     }
                 </div>
