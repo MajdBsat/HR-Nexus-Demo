@@ -17,51 +17,53 @@ import UserProfile from "./pages/Profile/UserProfile";
 import Dashboard from "./pages/Dashboard/Dashboard";
 import Attendance from "./pages/Attendance/Attendance";
 import Sidebar from "./components/Side_Bar";
+import Document from "./pages/DocumentManagement/Document";
 
 function App() {
   return (
-    <>
-      <div>
-        <Sidebar />
-      </div>
-      <Routes>
-        <Route path="/attendance" element={<Attendance />} />
-        <Route path="/login" element={<Login />} />
-        <Route path="/register" element={<Register />} />
-        <Route path="/profile" element={<UserProfile />} />
-        <Route path="/hr">
-          <Route path="dashboard" element={<Dashboard />} />
-          <Route path="employees" element={<EmployeeList />} />
-          <Route path="recruitment">
-            <Route path="" element={<Recruitment />} />
-            <Route path="jobs">
-              <Route path="" element={<Jobs />} />
-              <Route path="newJob" element={<Add_new_job />} />
+    <div className="width100">
+      <Sidebar />
+      <div className="page-content">
+        <Routes>
+          <Route path="/login" element={<Login />} />
+          <Route path="/register" element={<Register />} />
+          <Route path="/profile" element={<UserProfile />} />
+          <Route path="/attendance" element={<Attendance />} />
+          <Route path="/document" element={<Document />} />
+          <Route path="/hr">
+            <Route path="dashboard" element={<Dashboard />} />
+            <Route path="employees" element={<EmployeeList />} />
+            <Route path="recruitment">
+              <Route path="" element={<Recruitment />} />
+              <Route path="jobs">
+                <Route path="" element={<Jobs />} />
+                <Route path="newJob" element={<Add_new_job />} />
+              </Route>
+              <Route path="candidates" element={<Candidates />} />
+              <Route path="onboarding">
+                <Route path="" element={<Onboarding />} />
+                <Route path="newTask" element={<Add_New_Onboarding_Task />} />
+              </Route>
             </Route>
-            <Route path="candidates" element={<Candidates />} />
-            <Route path="onboarding">
-              <Route path="" element={<Onboarding />} />
-              <Route path="newTask" element={<Add_New_Onboarding_Task />} />
+            <Route path="payroll">
+              <Route path="" element={<PayrollMain />} />
             </Route>
           </Route>
-          <Route path="payroll">
-            <Route path="" element={<PayrollMain />} />
-          </Route>
-        </Route>
 
-        <Route path="/emp">
-          <Route path="recruitment">
-            <Route path="jobs">
-              <Route path="" element={<Jobs_Emp />} />
-              <Route path="apply" element={<Apply_To_Job />} />
-            </Route>
-            <Route path="onboarding">
-              <Route path="" element={<Onboarding_Emp />} />
+          <Route path="/emp">
+            <Route path="recruitment">
+              <Route path="jobs">
+                <Route path="" element={<Jobs_Emp />} />
+                <Route path="apply" element={<Apply_To_Job />} />
+              </Route>
+              <Route path="onboarding">
+                <Route path="" element={<Onboarding_Emp />} />
+              </Route>
             </Route>
           </Route>
-        </Route>
-      </Routes>
-    </>
+        </Routes>
+      </div>
+    </div>
   );
 }
 

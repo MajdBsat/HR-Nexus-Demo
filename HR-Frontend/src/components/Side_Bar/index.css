@@ -5,6 +5,9 @@
     border-right: 1px solid #ddd;
     padding: 10px;
     transition: width 0.3s ease;
+    position: fixed;
+    left: 0;
+    top: 0;
   }
   
   .closed {
@@ -23,22 +26,20 @@
     list-style-type: none;
     padding: 0;
   }
-  
   .menu li {
-    padding: 10px;
+    padding: 8px;
+    text-align: center;
+  }
+  .menu li a {
     color: #1478AE;
     cursor: pointer;
     transition: background 0.3s;
   }
   
-  .menu li.active {
+  .menu li a.active  {
     background-color: #1478AE;
     color: white;
     font-weight: bold;
     text-align: center;
-  }
-  
-  .menu li:hover {
-    background-color: #f0f0f0;
   }
   

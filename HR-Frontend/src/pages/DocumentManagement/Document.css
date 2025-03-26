@@ -1,0 +1,86 @@
+
+.container {
+  width: 100%;
+  max-width: 100%;
+  font-family: Arial, sans-serif;
+}
+
+/* Controls Section (Dropdown + Button) */
+.controls {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 15px;
+}
+
+/* Dropdown */
+.dropdown {
+  padding: 8px;
+  font-size: 16px;
+  width: 200px; /* Fixed width */
+}
+
+/* Upload Button */
+.uploadButton {
+  padding: 8px 15px;
+  background-color: #1478AE;
+  color: white;
+  border: none;
+  cursor: pointer;
+  border-radius: 5px;
+  font-size: 16px;
+  width: 120px; /* Fixed width */
+}
+
+.uploadButton:hover {
+  background-color: #1478AE;
+}
+
+/* Search Bar */
+.searchBar {
+  width: 100%;
+  max-width: 400px; /* Limits search bar width */
+  padding: 8px;
+  margin-bottom: 15px;
+  font-size: 16px;
+  border: 1px solid #ccc;
+  border-radius: 5px;
+}
+
+/* Table */
+.table {
+  display: flex;
+  flex-direction: column;
+  border: 1px solid #ccc;
+  border-radius: 5px;
+  overflow: hidden;
+}
+
+/* Table Headers */
+.headerRow {
+  display: flex;
+  background-color: #f4f4f4;
+  padding: 10px;
+  font-weight: bold;
+  text-align: center;
+}
+
+/* Table Rows */
+.row {
+  display: flex;
+  padding: 10px;
+  border-bottom: 1px solid #ccc;
+}
+
+.column {
+  flex: 1;
+  text-align: center;
+  padding: 5px;
+}
+
+/* Edit Link */
+.edit {
+  color: 1478AE;
+  cursor: pointer;
+  text-decoration: underline;
+}

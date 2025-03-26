@@ -8,6 +8,20 @@ const Sidebar = () => {
   const toggleSidebar = () => {
     setIsOpen(!isOpen);
   };
+  const menuItems = [
+    { name: "HR Projects", link: "/hr-projects" },
+    { name: "Compliance", link: "/compliance" },
+    { name: "Recruitment", link: "/recruitment" },
+    { name: "Dashboard", link: "/dashboard" },
+    { name: "Attendance", link: "/attendance" },
+    { name: "KPI Statistics", link: "/kpi-statistics" },
+    { name: "Documents", link: "/document" },
+    { name: "Add User", link: "/add-user" },
+    { name: "Reviews", link: "/reviews" },
+    { name: "Payroll", link: "/payroll" },
+    { name: "Performance", link: "/performance" },
+    { name: "Benefits", link: "/benefits" },
+  ];
 
   return (
     <div className={`sidebar ${isOpen ? "open" : "closed"}`}>
@@ -15,18 +29,11 @@ const Sidebar = () => {
         <FaBars />
       </button>
       <ul className="menu">
-        <li className="active">HR Projects</li>
-        <li>Compliance</li>
-        <li>Recruitment</li>
-        <li>Dashboard</li>
-        <li>Attendance</li>
-        <li>KPI Statistics</li>
-        <li>Documents</li>
-        <li>Add User</li>
-        <li>Reviews</li>
-        <li>Payroll</li>
-        <li>Performance</li>
-        <li>Benefits</li>
+        {menuItems.map((item, index) => (
+          <li key={index}>
+            <a href={item.link}>{item.name}</a>
+          </li>
+        ))}
       </ul>
     </div>
   );
