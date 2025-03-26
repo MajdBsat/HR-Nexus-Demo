@@ -154,6 +154,33 @@ Route::group(['middleware' => ['jwt', 'role:hr']], function () {
         Route::get('/upcoming/{days?}', [TaskController::class, 'getUpcomingTasks'])->where('days', '[0-9]+');
     });
 
+    // HR Project routes
+    Route::prefix('hr-projects')->group(function () {
+        Route::get('/', [HrProjectController::class, 'index']);
+        Route::post('/', [HrProjectController::class, 'store']);
+        Route::get('/{id}', [HrProjectController::class, 'show']);
+        Route::put('/{id}', [HrProjectController::class, 'update']);
+        Route::delete('/{id}', [HrProjectController::class, 'destroy']);
+
+        // Additional specialized routes
+        Route::get('/status/{status}', [HrProjectController::class, 'getByStatus']);
+        Route::get('/priority/{priority}', [HrProjectController::class, 'getByPriority']);
+        Route::get('/upcoming/{days?}', [HrProjectController::class, 'getUpcomingProjects']);
+    });
+
+    // HR Project Task routes
+    Route::prefix('hr-project-tasks')->group(function () {
+        Route::get('/', [HrProjectTaskController::class, 'index']);
+        Route::post('/', [HrProjectTaskController::class, 'store']);
+        Route::get('/{id}', [HrProjectTaskController::class, 'show']);
+        Route::delete('/{id}', [HrProjectTaskController::class, 'destroy']);
+
+        // Additional specialized routes
+        Route::get('/project/{projectId}/tasks', [HrProjectTaskController::class, 'getProjectTasks']);
+        Route::get('/task/{taskId}/projects', [HrProjectTaskController::class, 'getTaskProjects']);
+        Route::put('/next/{id}', [TaskController::class, 'nextStep']);
+        Route::put('/reject/{id}', [TaskController::class, 'reject']);
+    });
 
     // Candidate routes
     Route::prefix('candidates')->group(function () {
@@ -411,30 +438,30 @@ Route::group(['middleware' => ['auth.api']], function () {
 //     Route::get('/employee/{employeeId}', [OnboardingTaskController::class, 'getByEmployeeId']);
 // });
 
-// HR Project routes
-Route::prefix('hr-projects')->group(function () {
-    Route::get('/', [HrProjectController::class, 'index']);
-    Route::post('/', [HrProjectController::class, 'store']);
-    Route::get('/{id}', [HrProjectController::class, 'show']);
-    Route::put('/{id}', [HrProjectController::class, 'update']);
-    Route::delete('/{id}', [HrProjectController::class, 'destroy']);
+// // HR Project routes
+// Route::prefix('hr-projects')->group(function () {
+//     Route::get('/', [HrProjectController::class, 'index']);
+//     Route::post('/', [HrProjectController::class, 'store']);
+//     Route::get('/{id}', [HrProjectController::class, 'show']);
+//     Route::put('/{id}', [HrProjectController::class, 'update']);
+//     Route::delete('/{id}', [HrProjectController::class, 'destroy']);
 
-    // Additional specialized routes
-    Route::get('/status/{status}', [HrProjectController::class, 'getByStatus']);
-    Route::get('/priority/{priority}', [HrProjectController::class, 'getByPriority']);
-    Route::get('/upcoming/{days?}', [HrProjectController::class, 'getUpcomingProjects']);
-});
+//     // Additional specialized routes
+//     Route::get('/status/{status}', [HrProjectController::class, 'getByStatus']);
+//     Route::get('/priority/{priority}', [HrProjectController::class, 'getByPriority']);
+//     Route::get('/upcoming/{days?}', [HrProjectController::class, 'getUpcomingProjects']);
+// });
 
-// HR Project Task routes
-Route::prefix('hr-project-tasks')->group(function () {
-    Route::get('/', [HrProjectTaskController::class, 'index']);
-    Route::post('/', [HrProjectTaskController::class, 'store']);
-    Route::get('/{id}', [HrProjectTaskController::class, 'show']);
-    Route::delete('/{id}', [HrProjectTaskController::class, 'destroy']);
+// // HR Project Task routes
+// Route::prefix('hr-project-tasks')->group(function () {
+//     Route::get('/', [HrProjectTaskController::class, 'index']);
+//     Route::post('/', [HrProjectTaskController::class, 'store']);
+//     Route::get('/{id}', [HrProjectTaskController::class, 'show']);
+//     Route::delete('/{id}', [HrProjectTaskController::class, 'destroy']);
 
-    // Additional specialized routes
-    Route::get('/project/{projectId}/tasks', [HrProjectTaskController::class, 'getProjectTasks']);
-    Route::get('/task/{taskId}/projects', [HrProjectTaskController::class, 'getTaskProjects']);
-    Route::put('/next/{id}', [TaskController::class, 'nextStep']);
-    Route::put('/reject/{id}', [TaskController::class, 'reject']);
-});
+//     // Additional specialized routes
+//     Route::get('/project/{projectId}/tasks', [HrProjectTaskController::class, 'getProjectTasks']);
+//     Route::get('/task/{taskId}/projects', [HrProjectTaskController::class, 'getTaskProjects']);
+//     Route::put('/next/{id}', [TaskController::class, 'nextStep']);
+//     Route::put('/reject/{id}', [TaskController::class, 'reject']);
+// });

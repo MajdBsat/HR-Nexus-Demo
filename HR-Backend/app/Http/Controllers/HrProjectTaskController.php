@@ -122,7 +122,7 @@ class HrProjectTaskController extends Controller
             return response()->json([
                 'success' => false,
                 'message' => 'Project not found.'
-            ], Response::HTTP_NOT_FOUND);
+            ]);
         }
 
         $tasks = $this->hrProjectTaskService->getTasksByProjectId($projectId);
@@ -145,7 +145,7 @@ class HrProjectTaskController extends Controller
             return response()->json([
                 'success' => false,
                 'message' => 'Task not found.'
-            ], Response::HTTP_NOT_FOUND);
+            ]);
         }
 
         $projects = $this->hrProjectTaskService->getProjectsByTaskId($taskId);
@@ -170,7 +170,7 @@ class HrProjectTaskController extends Controller
             return response()->json([
                 'success' => false,
                 'message' => 'Project task not found.'
-            ], Response::HTTP_NOT_FOUND);
+            ]);
         }
 
         return response()->json([
