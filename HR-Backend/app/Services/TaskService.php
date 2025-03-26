@@ -196,10 +196,11 @@ class TaskService
         if($task['status'] == 'in-progress'){
             $updated_task = TaskRepository::update($id,["status"=>"completed"]);
         }
-        // $user = Auth::user();
-        // if($user["user_type"] == 2 && $task['status'] == 'completed'){
-            // TaskRepository::delete($id);
-        // }
+        //After checking the user type
+        $user = Auth::user();
+        if($user["user_type"] == 2 && $task['status'] == 'completed'){
+            TaskRepository::delete($id);
+        }
         return [
             'success' => true,
             'message' => 'Task updated successfully',
