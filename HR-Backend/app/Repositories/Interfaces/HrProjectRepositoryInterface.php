@@ -48,14 +48,6 @@ interface HrProjectRepositoryInterface
     public function delete(int $id): bool;
 
     /**
-     * Get HR projects by assigned user ID.
-     *
-     * @param int $userId
-     * @return Collection
-     */
-    public function getByAssignedUserId(int $userId): Collection;
-
-    /**
      * Get HR projects by status.
      *
      * @param string $status
@@ -78,12 +70,4 @@ interface HrProjectRepositoryInterface
      * @return Collection
      */
     public function getUpcomingDueDates(int $days): Collection;
-
-    /**
-     * Check if a user exists.
-     *
-     * @param int $userId
-     * @return bool
-     */
-    public function userExists(int $userId): bool;
 }

@@ -10,10 +10,8 @@ class OnboardingTask extends Model
 {
     use HasFactory;
 
-   
     protected $fillable = [
-        'employee_id',
-        'role_id',
+        'user_id',
         'task_id',
     ];
 
@@ -22,22 +20,7 @@ class OnboardingTask extends Model
      */
     public function employee(): BelongsTo
     {
-        return $this->belongsTo(User::class, 'employee_id');
+        return $this->belongsTo(User::class, 'user_id');
     }
 
-    /**
-     * Get the role for the onboarding task.
-     */
-    public function role(): BelongsTo
-    {
-        return $this->belongsTo(Role::class);
-    }
-
-    /**
-     * Get the task for the onboarding task.
-     */
-    public function task(): BelongsTo
-    {
-        return $this->belongsTo(Task::class);
-    }
 }

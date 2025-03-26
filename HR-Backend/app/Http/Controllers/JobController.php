@@ -117,36 +117,20 @@ class JobController extends Controller
 
         return response()->json($result);
     }
-
-    /**
-     * Get jobs by status.
-     *
-     * @param string $status
-     * @return JsonResponse
-     */
-    public function getByStatus(string $status): JsonResponse
-    {
-        $jobs = $this->jobService->getJobsByStatus($status);
-        return response()->json([
-            'success' => true,
-            'data' => $jobs
-        ]);
-    }
-
     /**
      * Get jobs by department.
      *
      * @param string $department
      * @return JsonResponse
      */
-    public function getByDepartment(string $department): JsonResponse
-    {
-        $jobs = $this->jobService->getJobsByDepartment($department);
-        return response()->json([
-            'success' => true,
-            'data' => $jobs
-        ]);
-    }
+    // public function getByDepartment(string $department): JsonResponse
+    // {
+    //     $jobs = $this->jobService->getJobsByDepartment($department);
+    //     return response()->json([
+    //         'success' => true,
+    //         'data' => $jobs
+    //     ]);
+    // }
 
     /**
      * Get jobs by job type.
@@ -154,28 +138,28 @@ class JobController extends Controller
      * @param string $jobType
      * @return JsonResponse
      */
-    public function getByJobType(string $jobType): JsonResponse
-    {
-        $jobs = $this->jobService->getJobsByJobType($jobType);
-        return response()->json([
-            'success' => true,
-            'data' => $jobs
-        ]);
-    }
+    // public function getByJobType(string $jobType): JsonResponse
+    // {
+    //     $jobs = $this->jobService->getJobsByJobType($jobType);
+    //     return response()->json([
+    //         'success' => true,
+    //         'data' => $jobs
+    //     ]);
+    // }
 
     /**
      * Get active jobs.
      *
      * @return JsonResponse
      */
-    public function getActiveJobs(): JsonResponse
-    {
-        $jobs = $this->jobService->getActiveJobs();
-        return response()->json([
-            'success' => true,
-            'data' => $jobs
-        ]);
-    }
+    // public function getActiveJobs(): JsonResponse
+    // {
+    //     $jobs = $this->jobService->getActiveJobs();
+    //     return response()->json([
+    //         'success' => true,
+    //         'data' => $jobs
+    //     ]);
+    // }
 
     /**
      * Get jobs by location.
@@ -183,14 +167,14 @@ class JobController extends Controller
      * @param string $location
      * @return JsonResponse
      */
-    public function getByLocation(string $location): JsonResponse
-    {
-        $jobs = $this->jobService->getJobsByLocation($location);
-        return response()->json([
-            'success' => true,
-            'data' => $jobs
-        ]);
-    }
+    // public function getByLocation(string $location): JsonResponse
+    // {
+    //     $jobs = $this->jobService->getJobsByLocation($location);
+    //     return response()->json([
+    //         'success' => true,
+    //         'data' => $jobs
+    //     ]);
+    // }
 
     /**
      * Get jobs by remote status.
@@ -198,14 +182,14 @@ class JobController extends Controller
      * @param bool $isRemote
      * @return JsonResponse
      */
-    public function getByRemoteStatus(bool $isRemote): JsonResponse
-    {
-        $jobs = $this->jobService->getJobsByRemoteStatus($isRemote);
-        return response()->json([
-            'success' => true,
-            'data' => $jobs
-        ]);
-    }
+    // public function getByRemoteStatus(bool $isRemote): JsonResponse
+    // {
+    //     $jobs = $this->jobService->getJobsByRemoteStatus($isRemote);
+    //     return response()->json([
+    //         'success' => true,
+    //         'data' => $jobs
+    //     ]);
+    // }
 
     /**
      * Search jobs by criteria.
@@ -215,7 +199,8 @@ class JobController extends Controller
      */
     public function search(Request $request): JsonResponse
     {
-        $jobs = $this->jobService->searchJobs($request->all());
+        $search = $request->search;
+        $jobs = $this->jobService->search($search);
         return response()->json([
             'success' => true,
             'data' => $jobs

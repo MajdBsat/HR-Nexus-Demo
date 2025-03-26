@@ -58,12 +58,11 @@ class HrProjectService
     {
         $validator = Validator::make($data, [
             'name' => 'required|string|max:255',
-            'status' => 'required|string|in:pending,in-progress,completed,on-hold,cancelled',
-            'priority' => 'required|string|in:low,medium,high,urgent',
+            'type' => 'required|string|max:255',
+            'status' => 'required|string|in:pending,in-progress,completed,cancelled',
+            'priority' => 'required|string|in:low,medium,high',
             'due_date' => 'required|date',
-            'assigned_to' => 'required|integer|exists:users,id',
         ]);
-
         if ($validator->fails()) {
             return [
                 'success' => false,
@@ -91,11 +90,11 @@ class HrProjectService
     public function updateHrProject(int $id, array $data): array
     {
         $validator = Validator::make($data, [
-            'name' => 'sometimes|string|max:255',
-            'status' => 'sometimes|string|in:pending,in-progress,completed,on-hold,cancelled',
-            'priority' => 'sometimes|string|in:low,medium,high,urgent',
-            'due_date' => 'sometimes|date',
-            'assigned_to' => 'sometimes|integer|exists:users,id',
+            'name' => 'required|string|max:255',
+            'type' => 'required|string|max:255',
+            'status' => 'required|string|in:pending,in-progress,completed,cancelled',
+            'priority' => 'required|string|in:low,medium,high',
+            'due_date' => 'required|date',
         ]);
 
         if ($validator->fails()) {
@@ -144,30 +143,6 @@ class HrProjectService
             'message' => 'HR project deleted successfully'
         ];
     }
-
-    /**
-     * Get HR projects by assigned user ID.
-     *
-     * @param int $userId
-     * @return array
-     */
-    public function getHrProjectsByAssignedUserId(int $userId): array
-    {
-        if (!$this->hrProjectRepository->userExists($userId)) {
-            return [
-                'success' => false,
-                'message' => 'User not found'
-            ];
-        }
-
-        $hrProjects = $this->hrProjectRepository->getByAssignedUserId($userId);
-
-        return [
-            'success' => true,
-            'data' => $hrProjects
-        ];
-    }
-
     /**
      * Get HR projects by status.
      *

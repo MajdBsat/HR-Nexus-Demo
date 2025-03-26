@@ -12,7 +12,7 @@ interface TaskRepositoryInterface
      *
      * @return Collection
      */
-    public function getAll(): Collection;
+    static public function getAll(): Collection;
 
     /**
      * Find task by ID.
@@ -20,7 +20,7 @@ interface TaskRepositoryInterface
      * @param int $id
      * @return Task|null
      */
-    public function findById(int $id): ?Task;
+    static public function findById(int $id): ?Task;
 
     /**
      * Create a new task.
@@ -28,7 +28,7 @@ interface TaskRepositoryInterface
      * @param array $data
      * @return Task
      */
-    public function create(array $data): Task;
+    static public function create(array $data): Task;
 
     /**
      * Update an existing task.
@@ -37,7 +37,7 @@ interface TaskRepositoryInterface
      * @param array $data
      * @return Task|null
      */
-    public function update(int $id, array $data): ?Task;
+    static public function update(int $id, array $data): ?Task;
 
     /**
      * Delete a task.
@@ -45,7 +45,7 @@ interface TaskRepositoryInterface
      * @param int $id
      * @return bool
      */
-    public function delete(int $id): bool;
+    static public function delete(int $id): bool;
 
     /**
      * Get tasks by status.
@@ -53,7 +53,7 @@ interface TaskRepositoryInterface
      * @param string $status
      * @return Collection
      */
-    public function getByStatus(string $status): Collection;
+    static public function getByStatus(string $status): Collection;
 
     /**
      * Get tasks by priority.
@@ -61,7 +61,7 @@ interface TaskRepositoryInterface
      * @param string $priority
      * @return Collection
      */
-    public function getByPriority(string $priority): Collection;
+    static public function getByPriority(string $priority): Collection;
 
     /**
      * Get tasks by user ID.
@@ -69,7 +69,7 @@ interface TaskRepositoryInterface
      * @param int $userId
      * @return Collection
      */
-    public function getByUserId(int $userId): Collection;
+    static public function getByUserId(int $userId): Collection;
 
     /**
      * Get upcoming tasks.
@@ -77,7 +77,7 @@ interface TaskRepositoryInterface
      * @param int $days
      * @return Collection
      */
-    public function getUpcomingTasks(int $days = 7): Collection;
+    static public function getUpcomingTasks(int $days = 7): Collection;
 
     /**
      * Check if a user exists.
@@ -85,5 +85,5 @@ interface TaskRepositoryInterface
      * @param int $userId
      * @return bool
      */
-    public function userExists(int $userId): bool;
+    static public function userExists(int $userId): bool;
 }
