@@ -100,7 +100,7 @@ Route::group(['middleware' => ['jwt', 'role:employee']], function () {
     // Health Care Plans
     Route::get('healthcare-plans', [HealthCarePlanController::class, 'index']);
     Route::get('healthcare-plans/{id}', [HealthCarePlanController::class, 'show']);
-
+    
     // Documents
     Route::get('documents', [DocumentController::class, 'index']);
     Route::get('documents/{id}', [DocumentController::class, 'show']);
@@ -111,6 +111,10 @@ Route::group(['middleware' => ['jwt', 'role:employee']], function () {
     // Benefit Plans
     Route::get('benefit-plans', [BenefitPlanController::class, 'index']);
     Route::get('benefit-plans/{id}', [BenefitPlanController::class, 'show']);
+
+    // Attendance
+    Route::post('clock-in', [AttendanceController::class, 'store']);
+    Route::post('clock-update/{id}', [AttendanceController::class, 'update']);
 });
 
 // HR routes - User type 2

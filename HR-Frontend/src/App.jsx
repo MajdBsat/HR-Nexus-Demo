@@ -16,6 +16,7 @@ import Register from "./components/Register"
 import EmployeeList from "./pages/EmployeeManagement/EmployeeList"
 import UserProfile from "./pages/Profile/UserProfile"
 import Dashboard from "./pages/Dashboard/Dashboard"
+import Attendance from './pages/Attendance/Attendance'
 
 
 
@@ -23,6 +24,7 @@ function App() {
   return (
     <>
       <Routes>
+        <Route path="/attendance" element={<Attendance />} />
         <Route path="/login" element={<Login />} />
         <Route path="/register" element={<Register />} />
         <Route path="/profile" element={<UserProfile />} />

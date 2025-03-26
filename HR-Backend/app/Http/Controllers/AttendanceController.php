@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Services\AttendanceService;
 use Illuminate\Http\Request;
 use Illuminate\Http\JsonResponse;
+use Illuminate\Support\Facades\Auth;
 
 class AttendanceController extends Controller
 {
@@ -45,7 +46,10 @@ class AttendanceController extends Controller
      */
     public function store(Request $request): JsonResponse
     {
-        $result = $this->attendanceService->createAttendance($request->all());
+        $user = Auth::user();
+        $data = $request->all();
+        $data['user_id'] = $user->id;
+        $result = $this->attendanceService->createAttendance($data);
 
         if (!$result['success']) {
             return response()->json([

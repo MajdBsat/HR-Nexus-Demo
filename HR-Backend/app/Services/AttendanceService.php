@@ -58,11 +58,13 @@ class AttendanceService
     {
         $validator = Validator::make($data, [
             'user_id' => 'required|integer|exists:users,id',
-            'date' => 'required|date',
-            'check_in' => 'required|date_format:H:i',
-            'check_out' => 'nullable|date_format:H:i|after:check_in',
-            'status' => 'required|in:present,absent,late,half_day,leave',
-            'remarks' => 'nullable|string|max:255',
+            'attendance_date' => 'required|date',
+            'clock_in' => 'required|date_format:H:i',
+            'clock_out' => 'nullable|date_format:H:i|after:clock_in',
+            'break_in' => 'nullable|date_format:H:i',
+            'break_out' => 'nullable|date_format:H:i|after:break_in',
+            // 'status' => 'required|in:present,absent,late,half_day,leave',
+            // 'remarks' => 'nullable|string|max:255',
         ]);
 
         if ($validator->fails()) {
@@ -72,6 +74,7 @@ class AttendanceService
                 'errors' => $validator->errors()
             ];
         }
+
 
         $attendance = $this->repository->create($data);
 
@@ -92,12 +95,14 @@ class AttendanceService
     public function updateAttendance(int $id, array $data): array
     {
         $validator = Validator::make($data, [
-            'user_id' => 'sometimes|integer|exists:users,id',
-            'date' => 'sometimes|date',
-            'check_in' => 'sometimes|date_format:H:i',
-            'check_out' => 'nullable|date_format:H:i|after:check_in',
-            'status' => 'sometimes|in:present,absent,late,half_day,leave',
-            'remarks' => 'nullable|string|max:255',
+            // 'user_id' => 'sometimes|integer|exists:users,id',
+            'attendance_date' => 'sometimes|date',
+            'clock_in' => 'sometimes|date_format:H:i',
+            'clock_out' => 'nullable|date_format:H:i|after:clock_in',
+            'break_in' => 'nullable|date_format:H:i',
+            'break_out' => 'nullable|date_format:H:i|after:break_in',
+            // 'status' => 'sometimes|in:present,absent,late,half_day,leave',
+            // 'remarks' => 'nullable|string|max:255',
         ]);
 
         if ($validator->fails()) {
