@@ -154,6 +154,13 @@ class CandidateController extends Controller
         return response()->json(['data' => $result['data']], 200);
     }
 
+    public function nextStep(int $id){
+        return $this->candidateService->updateCandidateStatus($id);
+    }
+
+    public function reject(int $id){
+        return $this->candidateService->updateCandidateReject($id);
+    }
     /**
      * Search candidates by name or email
      *

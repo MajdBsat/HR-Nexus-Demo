@@ -44,10 +44,12 @@ use App\Repositories\UserRepository;
 use App\Repositories\Interfaces\HrProjectRepositoryInterface;
 use App\Repositories\Interfaces\InsurancePlanRepositoryInterface;
 use App\Repositories\Interfaces\JobApplicationRepositoryInterface;
+use App\Repositories\Interfaces\JobRepositoryInterface;
 use App\Repositories\Interfaces\MonthlyPayrollRepositoryInterface;
 use App\Repositories\Interfaces\OnboardingTaskRepositoryInterface;
 use App\Repositories\Interfaces\RoleRepositoryInterface;
 use App\Repositories\Interfaces\TaskRepositoryInterface;
+use App\Repositories\JobRepository;
 use Illuminate\Support\ServiceProvider;
 
 class RepositoryServiceProvider extends ServiceProvider
@@ -103,6 +105,9 @@ class RepositoryServiceProvider extends ServiceProvider
             DocumentRepositoryInterface::class,
             DocumentRepository::class
         );
+
+        $this->app->bind(JobRepositoryInterface::class, JobRepository::class);
+
 
         $this->app->bind(EmployeeRepositoryInterface::class, EmployeeRepository::class);
         $this->app->bind(DesignationRepositoryInterface::class, DesignationRepository::class);

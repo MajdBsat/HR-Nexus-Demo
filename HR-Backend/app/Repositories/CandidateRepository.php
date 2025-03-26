@@ -49,7 +49,7 @@ class CandidateRepository implements CandidateRepositoryInterface
      */
     public function update(int $id, array $data): ?Candidate
     {
-        $candidate = $this->findById($id);
+        $candidate = $this->findById($id)->with('user')->first();
 
         if ($candidate) {
             $candidate->update($data);

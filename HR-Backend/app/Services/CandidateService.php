@@ -4,6 +4,7 @@ namespace App\Services;
 
 use App\Models\Candidate;
 use App\Repositories\Interfaces\CandidateRepositoryInterface;
+use App\Repositories\Interfaces\UserRepositoryInterface;
 use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Support\Facades\Validator;
 
@@ -15,6 +16,8 @@ class CandidateService
      * @var CandidateRepositoryInterface
      */
     protected $candidateRepository;
+    protected $userService;
+
 
     /**
      * Create a new service instance.
@@ -22,9 +25,11 @@ class CandidateService
      * @param CandidateRepositoryInterface $candidateRepository
      * @return void
      */
-    public function __construct(CandidateRepositoryInterface $candidateRepository)
+    public function __construct(CandidateRepositoryInterface $candidateRepository,
+                                UserService $userService    )
     {
         $this->candidateRepository = $candidateRepository;
+        $this->userService = $userService;
     }
 
     /**
@@ -57,7 +62,7 @@ class CandidateService
     public function createCandidate(array $data): array
     {
         $validator = Validator::make($data, [
-            'status' => 'required|in:applied,interviewed,hired,rejected',
+            'status' => 'nullable|in:applied,interviewed,hired,rejected',
             'job_id' => 'required|integer|exists:jobs,id',
             'user_id' => 'required|integer|exists:users,id'
         ]);
@@ -118,6 +123,8 @@ class CandidateService
         ];
     }
 
+
+
     /**
      * Delete a candidate.
      *
@@ -138,6 +145,50 @@ class CandidateService
         return [
             'success' => true,
             'message' => 'Candidate deleted successfully'
+        ];
+    }
+
+    public function updateCandidateStatus(int $id): array
+    {
+        $candidate = $this->candidateRepository->findById($id);
+        if (!$candidate) {
+            return [
+                'success' => false,
+                'message' => 'Candidate not found'
+            ];
+        }
+        if($candidate['status'] == 'applied'){
+            $new_candidate = $this->candidateRepository->update($id,["status"=>"interviewed"]);
+        }
+
+        if($candidate['status'] == 'interviewed'){
+            $this->candidateRepository->update($id,["status"=>"hired"]);
+            $this->userService->updateUser($candidate['user']['id'], ["user_type"=>1]);
+            $this->candidateRepository->delete($id);
+        }
+
+        return [
+            'success' => true,
+            'message' => 'Candidate updated successfully',
+            'data' => $new_candidate? $new_candidate : $candidate
+        ];
+    }
+
+    public function updateCandidateReject(int $id): array
+    {
+        $candidate = $this->candidateRepository->findById($id);
+        if (!$candidate) {
+            return [
+                'success' => false,
+                'message' => 'Candidate not found'
+            ];
+        }
+        $this->candidateRepository->update($id,["status"=>"rejected"]);
+
+        return [
+            'success' => true,
+            'message' => 'Candidate updated successfully',
+            'data' => $candidate
         ];
     }
 

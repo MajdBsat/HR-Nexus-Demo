@@ -17,7 +17,7 @@ return new class extends Migration
             $table->id();
             $table->integer("job_id");
             $table->integer("user_id");
-            $table->string("status");
+            $table->string("status")->default('applied');
             $table->timestamps();
         });
     }

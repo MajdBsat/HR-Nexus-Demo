@@ -207,20 +207,6 @@ Route::prefix('benefit-plans')->group(function () {
     Route::get('/active', [BenefitPlanController::class, 'getActivePlans']);
 });
 
-// Candidate routes
-Route::prefix('candidates')->group(function () {
-    Route::get('/', [CandidateController::class, 'index']);
-    Route::post('/', [CandidateController::class, 'store']);
-    Route::get('/{id}', [CandidateController::class, 'show']);
-    Route::put('/{id}', [CandidateController::class, 'update']);
-    Route::delete('/{id}', [CandidateController::class, 'destroy']);
-
-    // Additional specialized routes
-    Route::get('/position/{position}', [CandidateController::class, 'getByPosition']);
-    Route::get('/status/{status}', [CandidateController::class, 'getByStatus']);
-    Route::post('/search', [CandidateController::class, 'search']);
-});
-
 // Compliance routes
 Route::prefix('compliance')->group(function () {
     Route::get('/', [ComplianceController::class, 'index']);
@@ -354,6 +340,20 @@ Route::group(['middleware' => ['auth.api']], function () {
 
 
 
+// Candidate routes
+Route::prefix('candidates')->group(function () {
+    Route::get('/', [CandidateController::class, 'index']);
+    Route::post('/', [CandidateController::class, 'store']);
+    Route::get('/{id}', [CandidateController::class, 'show']);
+    Route::put('/{id}', [CandidateController::class, 'update']);
+    Route::delete('/{id}', [CandidateController::class, 'destroy']);
+
+    // Additional specialized routes
+    Route::get('/status/{status}', [CandidateController::class, 'getByStatus']);
+    Route::post('/search', [CandidateController::class, 'search']);
+    Route::put('/next/{id}', [CandidateController::class, 'nextStep']);
+    Route::put('/reject/{id}', [CandidateController::class, 'reject']);
+});
 
 
 
@@ -369,6 +369,8 @@ Route::prefix('tasks')->group(function () {
     Route::get('/status/{status}', [TaskController::class, 'getByStatus']);
     Route::get('/priority/{priority}', [TaskController::class, 'getByPriority']);
     Route::get('/user/{userId}', [TaskController::class, 'getByUserId'])->where('userId', '[0-9]+');
+    Route::put('/next/{id}', [TaskController::class, 'nextStep']);
+    Route::put('/reject/{id}', [TaskController::class, 'reject']);
     Route::get('/upcoming/{days?}', [TaskController::class, 'getUpcomingTasks'])->where('days', '[0-9]+');
 });
 
@@ -383,15 +385,15 @@ Route::prefix('jobs')->group(function () {
 });
 
 // Onboarding Task routes
-Route::prefix('onboarding-tasks')->group(function () {
-    Route::get('/', [OnboardingTaskController::class, 'index']);
-    Route::post('/', [OnboardingTaskController::class, 'store']);
-    Route::get('/{id}', [OnboardingTaskController::class, 'show']);
-    Route::put('/{id}', [OnboardingTaskController::class, 'update']);
-    Route::delete('/{id}', [OnboardingTaskController::class, 'destroy']);
-    // Additional specialized routes
-    Route::get('/employee/{employeeId}', [OnboardingTaskController::class, 'getByEmployeeId']);
-});
+// Route::prefix('onboarding-tasks')->group(function () {
+//     Route::get('/', [OnboardingTaskController::class, 'index']);
+//     Route::post('/', [OnboardingTaskController::class, 'store']);
+//     Route::get('/{id}', [OnboardingTaskController::class, 'show']);
+//     Route::put('/{id}', [OnboardingTaskController::class, 'update']);
+//     Route::delete('/{id}', [OnboardingTaskController::class, 'destroy']);
+//     // Additional specialized routes
+//     Route::get('/employee/{employeeId}', [OnboardingTaskController::class, 'getByEmployeeId']);
+// });
 
 
 

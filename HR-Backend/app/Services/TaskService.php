@@ -4,7 +4,10 @@ namespace App\Services;
 
 use App\Models\Task;
 use App\Repositories\Interfaces\TaskRepositoryInterface;
+use App\Repositories\TaskRepository;
+use App\Repositories\UserRepository;
 use Illuminate\Database\Eloquent\Collection;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Validator;
 
 class TaskService
@@ -14,27 +17,15 @@ class TaskService
      *
      * @var TaskRepositoryInterface
      */
-    protected $taskRepository;
-
-    /**
-     * Create a new service instance.
-     *
-     * @param TaskRepositoryInterface $taskRepository
-     * @return void
-     */
-    public function __construct(TaskRepositoryInterface $taskRepository)
-    {
-        $this->taskRepository = $taskRepository;
-    }
 
     /**
      * Get all tasks.
      *
      * @return Collection
      */
-    public function getAllTasks(): Collection
+    static public function getAllTasks(): Collection
     {
-        return $this->taskRepository->getAll();
+        return TaskRepository::getAll();
     }
 
     /**
@@ -43,9 +34,9 @@ class TaskService
      * @param int $id
      * @return Task|null
      */
-    public function getTaskById(int $id): ?Task
+    static public function getTaskById(int $id): ?Task
     {
-        return $this->taskRepository->findById($id);
+        return TaskRepository::findById($id);
     }
 
     /**
@@ -54,7 +45,7 @@ class TaskService
      * @param array $data
      * @return array
      */
-    public function createTask(array $data): array
+    static public function createTask(array $data): array
     {
         // Validate data
         $validator = Validator::make($data, [
@@ -62,7 +53,7 @@ class TaskService
             'status' => 'required|string|in:pending,in_progress,completed',
             'priority' => 'required|string|in:low,medium,high',
             'due_date' => 'required|date',
-            'assigned_to' => 'nullable|integer|exists:users,id',
+            'assigned_to' => 'integer|exists:users,id',
         ]);
 
         if ($validator->fails()) {
@@ -72,16 +63,17 @@ class TaskService
                 'errors' => $validator->errors()
             ];
         }
+        $user = (new UserService(new UserRepository))->getUserById($data['assigned_to']);
 
-        // Check if assigned user exists
-        if (isset($data['assigned_to']) && !$this->taskRepository->userExists($data['assigned_to'])) {
+
+        if ($user["user_type"]!=1 &&  $user["user_type"]!=2) {
             return [
                 'success' => false,
-                'message' => 'Assigned user not found'
+                'message' => 'Assigned user is neither an employee nor a HR'
             ];
         }
 
-        $task = $this->taskRepository->create($data);
+        $task = TaskRepository::create($data);
 
         return [
             'success' => true,
@@ -97,9 +89,9 @@ class TaskService
      * @param array $data
      * @return array
      */
-    public function updateTask(int $id, array $data): array
+    static public function updateTask(int $id, array $data): array
     {
-        $task = $this->taskRepository->findById($id);
+        $task = TaskRepository::findById($id);
 
         if (!$task) {
             return [
@@ -113,7 +105,7 @@ class TaskService
             'title' => 'sometimes|required|string|max:255',
             'description' => 'nullable|string',
             'status' => 'sometimes|required|string|in:pending,in_progress,completed,cancelled',
-            'priority' => 'sometimes|required|string|in:low,medium,high,urgent',
+            'priority' => 'sometimes|required|string|in:low,medium,high',
             'due_date' => 'sometimes|required|date',
             'assigned_to' => 'nullable|integer|exists:users,id',
         ]);
@@ -125,17 +117,16 @@ class TaskService
                 'errors' => $validator->errors()
             ];
         }
-
+        $user = (new UserService(new UserRepository))->getUserById($data['assigned_to']);
         // Check if assigned user exists
-        if (isset($data['assigned_to']) && !$this->taskRepository->userExists($data['assigned_to'])) {
+        if ($user["user_type"]!=1 &&  $user["user_type"]!=2) {
             return [
                 'success' => false,
-                'message' => 'Assigned user not found'
+                'message' => 'Assigned user is neither an employee nor a HR'
             ];
         }
 
-        $updatedTask = $this->taskRepository->update($id, $data);
-
+        $updatedTask = TaskRepository::update($id, $data);
         return [
             'success' => true,
             'message' => 'Task updated successfully',
@@ -149,9 +140,9 @@ class TaskService
      * @param int $id
      * @return array
      */
-    public function deleteTask(int $id): array
+    static public function deleteTask(int $id): array
     {
-        $task = $this->taskRepository->findById($id);
+        $task = TaskRepository::findById($id);
 
         if (!$task) {
             return [
@@ -160,7 +151,7 @@ class TaskService
             ];
         }
 
-        $this->taskRepository->delete($id);
+        TaskRepository::delete($id);
 
         return [
             'success' => true,
@@ -174,9 +165,52 @@ class TaskService
      * @param string $status
      * @return Collection
      */
-    public function getTasksByStatus(string $status): Collection
+    static public function getTasksByStatus(string $status): Collection
     {
-        return $this->taskRepository->getByStatus($status);
+        return TaskRepository::getByStatus($status);
+    }
+
+
+    static public function updateTaskStatus(int $id){
+        $task = TaskRepository::findById($id);
+        if (!$task) {
+            return [
+                'success' => false,
+                'message' => 'Task not found'
+            ];
+        }
+        if($task['status'] == 'pending'){
+            $updated_task = TaskRepository::update($id,["status"=>"in-progress"]);
+        }
+
+        if($task['status'] == 'in-progress'){
+            $updated_task = TaskRepository::update($id,["status"=>"completed"]);
+        }
+        // $user = Auth::user();
+        // if($user["user_type"] == 2 && $task['status'] == 'completed'){
+            // TaskRepository::delete($id);
+        // }
+        return [
+            'success' => true,
+            'message' => 'Task updated successfully',
+            'data' => $updated_task? $updated_task: $task
+        ];
+    }
+
+    static function updateTaskReject(int $id){
+        $task = TaskRepository::findById($id);
+        if (!$task) {
+            return [
+                'success' => false,
+                'message' => 'Task not found'
+            ];
+        }
+        $updated_task = TaskRepository::update($id,["status"=>"pending"]);
+        return [
+            'success' => true,
+            'message' => 'Task updated successfully',
+            'data' => $updated_task? $updated_task: $task
+        ];
     }
 
     /**
@@ -185,9 +219,9 @@ class TaskService
      * @param string $priority
      * @return Collection
      */
-    public function getTasksByPriority(string $priority): Collection
+    static public function getTasksByPriority(string $priority): Collection
     {
-        return $this->taskRepository->getByPriority($priority);
+        return TaskRepository::getByPriority($priority);
     }
 
     /**
@@ -196,16 +230,16 @@ class TaskService
      * @param int $userId
      * @return array
      */
-    public function getTasksByUserId(int $userId): array
+    static public function getTasksByUserId(int $userId): array
     {
-        if (!$this->taskRepository->userExists($userId)) {
+        if (!TaskRepository::userExists($userId)) {
             return [
                 'success' => false,
                 'message' => 'User not found'
             ];
         }
 
-        $tasks = $this->taskRepository->getByUserId($userId);
+        $tasks = TaskRepository::getByUserId($userId);
 
         return [
             'success' => true,
@@ -219,8 +253,8 @@ class TaskService
      * @param int $days
      * @return Collection
      */
-    public function getUpcomingTasks(int $days = 7): Collection
+    static public function getUpcomingTasks(int $days = 7): Collection
     {
-        return $this->taskRepository->getUpcomingTasks($days);
+        return TaskRepository::getUpcomingTasks($days);
     }
 }

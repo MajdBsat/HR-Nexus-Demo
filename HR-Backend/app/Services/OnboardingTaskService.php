@@ -70,20 +70,6 @@ class OnboardingTaskService
             ];
         }
 
-        // if (!$this->onboardingTaskRepository->employeeExists($data['employee_id'])) {
-        //     return [
-        //         'success' => false,
-        //         'message' => 'Employee not found'
-        //     ];
-        // }
-
-        // if (!$this->onboardingTaskRepository->taskExists($data['task_id'])) {
-        //     return [
-        //         'success' => false,
-        //         'message' => 'Task not found'
-        //     ];
-        // }
-
         $onboardingTask = $this->onboardingTaskRepository->create($data);
 
         return [
