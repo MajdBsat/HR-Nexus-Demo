@@ -1,4 +1,8 @@
+
+import { Route, Routes } from "react-router-dom";
+
 import { Route, Routes, Navigate } from "react-router-dom";
+
 import Recruitment from "./pages/Recruitment";
 import "./styles/App.css";
 import Jobs from "./pages/Recruitment/Jobs";
@@ -9,11 +13,32 @@ import Add_new_job from "./pages/Recruitment/New_Job";
 import Add_New_Onboarding_Task from "./pages/Recruitment/New_Onboarding_Task";
 import Apply_To_Job from "./pages/Recruitment/Apply_To_Job";
 import Onboarding_Emp from "./pages/Recruitment/Onboarding_Emp";
+
+import PayrollMain from "./pages/Payroll/Payroll_Main_Page";
+
+
 import Login from "./components/Login";
 import Register from "./components/Register";
 import EmployeeList from "./pages/EmployeeManagement/EmployeeList";
 import UserProfile from "./pages/Profile/UserProfile";
 import Dashboard from "./pages/Dashboard/Dashboard";
+
+import Attendance from "./pages/Attendance/Attendance";
+import Sidebar from "./components/Side_Bar";
+import Document from "./pages/DocumentManagement/Document";
+
+function App() {
+  return (
+    <div className="width100">
+      <Sidebar />
+      <div className="page-content">
+        <Routes>
+          <Route path="/login" element={<Login />} />
+          <Route path="/register" element={<Register />} />
+          <Route path="/profile" element={<UserProfile />} />
+          <Route path="/attendance" element={<Attendance />} />
+          <Route path="/document" element={<Document />} />
+=======
 import ProtectedLayout from "./layouts/ProtectedLayout";
 import "./styles/Loading.css";
 import "./styles/ProtectedLayout.css";
@@ -35,6 +60,7 @@ function App() {
           <Route path="/profile" element={<UserProfile />} />
 
           {/* HR Routes */}
+
           <Route path="/hr">
             <Route path="dashboard" element={<Dashboard />} />
             <Route path="employees" element={<EmployeeList />} />
@@ -49,6 +75,7 @@ function App() {
                 <Route path="" element={<Onboarding />} />
                 <Route path="newTask" element={<Add_New_Onboarding_Task />} />
               </Route>
+
             </Route>
           </Route>
           <Route path="payroll">
@@ -57,6 +84,7 @@ function App() {
         </Route>
 
           {/* Employee Routes */}
+
           <Route path="/emp">
             <Route path="recruitment">
               <Route path="jobs">
@@ -69,11 +97,17 @@ function App() {
             </Route>
           </Route>
 
+        </Routes>
+      </div>
+    </div>
+
+
           {/* Redirect to login if no route matches */}
           <Route path="*" element={<Navigate to="/login" />} />
         </Route>
       </Routes>
     </>
+
   );
 }
 

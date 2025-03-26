@@ -13,10 +13,12 @@ class Attendance extends Model
    
     protected $fillable = [
         'user_id',
-        'date_of_attendance',
+        'attendance_date',
         'location',
-        'clock_in_time',
-        'clock_out_time',
+        'clock_in',
+        'clock_out',
+        'break_in',
+        'break_out',
         'total_hours',
     ];
 

@@ -224,6 +224,9 @@ return array(
     'Database\\Seeders\\DepartmentSeeder' => $baseDir . '/database/seeders/DepartmentSeeder.php',
     'Database\\Seeders\\HealthCarePlanSeeder' => $baseDir . '/database/seeders/HealthCarePlanSeeder.php',
     'Database\\Seeders\\MonthlyPayrollSeeder' => $baseDir . '/database/seeders/MonthlyPayrollSeeder.php',
+
+    'Database\\Seeders\\TaskSeeder' => $baseDir . '/database/seeders/TaskSeeder.php',
+
     'DateError' => $vendorDir . '/symfony/polyfill-php83/Resources/stubs/DateError.php',
     'DateException' => $vendorDir . '/symfony/polyfill-php83/Resources/stubs/DateException.php',
     'DateInvalidOperationException' => $vendorDir . '/symfony/polyfill-php83/Resources/stubs/DateInvalidOperationException.php',
@@ -233,6 +236,7 @@ return array(
     'DateMalformedStringException' => $vendorDir . '/symfony/polyfill-php83/Resources/stubs/DateMalformedStringException.php',
     'DateObjectError' => $vendorDir . '/symfony/polyfill-php83/Resources/stubs/DateObjectError.php',
     'DateRangeError' => $vendorDir . '/symfony/polyfill-php83/Resources/stubs/DateRangeError.php',
+
     'DeepCopy\\DeepCopy' => $vendorDir . '/myclabs/deep-copy/src/DeepCopy/DeepCopy.php',
     'DeepCopy\\Exception\\CloneException' => $vendorDir . '/myclabs/deep-copy/src/DeepCopy/Exception/CloneException.php',
     'DeepCopy\\Exception\\PropertyException' => $vendorDir . '/myclabs/deep-copy/src/DeepCopy/Exception/PropertyException.php',
